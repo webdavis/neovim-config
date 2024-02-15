@@ -65,6 +65,7 @@ return {
         'terraform',
         'toml',
         'typescript',
+        'vimdoc',
         'xml',
         'yaml',
         'zig',
