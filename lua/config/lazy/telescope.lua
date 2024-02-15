@@ -68,14 +68,14 @@ return {
       -- git mappings
       ---------------
       vim.keymap.set('n', '<C-g><C-g>',':Telescope git_grep live_grep<CR>', {})
-      vim.keymap.set('n', '<C-g>b', builtin.git_branches, {})
+      vim.keymap.set('n', '<C-g><space>', builtin.git_branches, {})
       vim.keymap.set('n', '<C-g>c', builtin.git_commits, {})
       vim.keymap.set('n', '<C-g>C', builtin.git_bcommits, {})
       vim.keymap.set('n', '<C-g>f', builtin.git_files, {})
       vim.keymap.set('n', '<C-g>g',':Telescope git_grep grep<CR>', {})
       vim.keymap.set('n', '<C-g>h',':Telescope gh gist<CR>', {})
       vim.keymap.set('n', '<C-g>i',':Telescope gh issues<CR>', {})
-      vim.keymap.set('n', '<C-g>p',':Telescope gh secret<CR>', {})
+      vim.keymap.set('n', '<C-g>o',':Telescope gh secret<CR>', {})
       vim.keymap.set('n', '<C-g>r',':Telescope gh run<CR>', {})
       vim.keymap.set('n', '<C-g>s', builtin.git_status, {})
       vim.keymap.set('n', '<C-g>S', builtin.git_stash, {})
@@ -83,7 +83,6 @@ return {
       ------------------------
       -- file-browser mappings
       ------------------------
-      -- Open file_browser with the path of the current buffer.
       vim.keymap.set('n', '<leader>fe', ':Telescope file_browser<CR>', {})
       -- Open file_browser with the path of the current buffer.
       vim.keymap.set('n', '<leader>fE', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', {})
