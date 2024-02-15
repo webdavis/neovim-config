@@ -2,7 +2,7 @@ return {
   'akinsho/toggleterm.nvim',
   version = "*",
   opts = {
-    open_mapping = [[<m-i>]],
+    -- open_mapping = [[<C-_>]],
     direction = 'float',
   },
 }

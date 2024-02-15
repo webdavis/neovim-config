@@ -10,3 +10,4 @@ vim.api.nvim_set_keymap('n', '<leader>qq', '<cmd>qa<cr>',         { noremap = tr
 vim.api.nvim_set_keymap('v', '<',          '<gv',                 {                                 desc = 'Shift left' })
 vim.api.nvim_set_keymap('v', '>',          '>gv',                 {                                 desc = 'Shift right' })
 vim.api.nvim_set_keymap('n', '<leader>ns', '<cmd>ASToggle<cr>',   { noremap = true, silent = false, desc = 'Activate Autosave' })
+vim.keymap.set({'n', 't', 'i', 'v'}, '<C-_>', '<cmd>ToggleTerm<cr>', { noremap = true, desc = 'Open floating terminal'} )
