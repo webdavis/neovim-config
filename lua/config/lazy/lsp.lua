@@ -183,7 +183,7 @@ return {
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+      ['<C-i>'] = cmp.mapping.confirm({ select = true }),
       ['<C-e>'] = cmp.config.disable,
       ['<C-c>'] = function(fallback) cmp.abort() fallback() end,
     }),
