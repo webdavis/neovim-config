@@ -3,6 +3,7 @@ return {
   dependencies = { "tpope/vim-rhubarb", },
   config = function()
     vim.keymap.set("n", "<C-g>s", vim.cmd.Git)
+    vim.keymap.set("n", "<C-g>a", "<cmd>Gwrite<cr>", {noremap = true})
     vim.keymap.set("n", "<C-g>cc", ":Git commit<CR>", {noremap = true})
     vim.keymap.set("n", "<C-g>cv", ":Git commit --verbose<CR>", {noremap = true})
     vim.keymap.set("n", "<C-g>ca", ":Git commit --amend<CR>", {noremap = true})
