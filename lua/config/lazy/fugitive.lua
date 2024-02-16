@@ -2,8 +2,12 @@ return {
   "tpope/vim-fugitive",
   dependencies = { "tpope/vim-rhubarb", },
   config = function()
-    vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
-    vim.keymap.set("n", "<leader>gc", ":Git commit %<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-g>s", vim.cmd.Git)
+    vim.keymap.set("n", "<C-g>cc", ":Git commit<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cv", ":Git commit --verbose<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-g>ca", ":Git commit --amend<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cn", ":Git commit --amend --no-edit<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cf", ":Git commit %<CR>", {noremap = true})
 
     local augroup = vim.api.nvim_create_augroup("webdavis_fugitive", {})
     local autocmd = vim.api.nvim_create_autocmd
