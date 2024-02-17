@@ -10,9 +10,6 @@ return {
     vim.keymap.set("n", "<C-g>cn", ":Git commit --amend --no-edit<CR>", {noremap = true})
     vim.keymap.set("n", "<C-g>cf", ":Git commit %<CR>", {noremap = true})
 
-    -- local augroup = vim.api.nvim_create_augroup("webdavis_fugitive", {})
-    -- local autocmd = vim.api.nvim_create_autocmd
-
     local bufnr = vim.api.nvim_get_current_buf()
     local opts = { buffer = bufnr, noremap = true }
 
