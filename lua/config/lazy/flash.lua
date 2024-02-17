@@ -9,6 +9,12 @@ return {
         jump_labels = true
       }
     },
+    label = {
+      -- allow uppercase labels
+      uppercase = true,
+    -- add any labels with the correct case here, that you want to exclude
+      exclude = "CDX",
+    },
   },
   -- stylua: ignore
   keys = {
