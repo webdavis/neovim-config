@@ -16,7 +16,7 @@ require("lazy").setup({
     { import = "plugins" },
   },
   change_detection = {
-    enabled = true,
+    enabled = false,
     notify = true
   },
   defaults = {
