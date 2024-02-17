@@ -45,5 +45,9 @@ return {
       yank_dry_run = true,
       search_back = true,
     })
+
+    vim.keymap.set("n", "<leader>rr", ":lua require('rest-nvim').run()<CR>", { desc = "Run HTTP Request" })
+    vim.keymap.set("n", "<leader>rl", ":lua require('rest-nvim').last()<CR>", { desc = "Run Last HTTP Request" })
+    vim.keymap.set("n", "<leader>rp", ":lua require('rest-nvim').run(true)<CR>", { desc = "Preview HTTP Request" })
   end
 }
