@@ -4,17 +4,13 @@ return {
   config = function()
     vim.keymap.set("n", "<C-g>s", vim.cmd.Git)
     vim.keymap.set("n", "<C-g>a", "<cmd>Gwrite<cr>", {noremap = true})
-    vim.keymap.set("n", "<C-g>cc", ":Git commit<CR>", {noremap = true})
-    vim.keymap.set("n", "<C-g>cv", ":Git commit --verbose<CR>", {noremap = true})
-    vim.keymap.set("n", "<C-g>ca", ":Git commit --amend<CR>", {noremap = true})
-    vim.keymap.set("n", "<C-g>cn", ":Git commit --amend --no-edit<CR>", {noremap = true})
-    vim.keymap.set("n", "<C-g>cf", ":Git commit %<CR>", {noremap = true})
-
-    local bufnr = vim.api.nvim_get_current_buf()
-    local opts = { buffer = bufnr, noremap = true }
-
-    vim.keymap.set('n', '<C-g>pp', function() vim.cmd.Git('push') end, opts)
-    vim.keymap.set('n', '<C-g>pr', function() vim.cmd.Git({'pull', '--rebase'}) end, opts)
+    vim.keymap.set("n", "<C-g>cc", "<cmd>Git commit<cr>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cv", "<cmd>Git commit --verbose<cr>", {noremap = true})
+    vim.keymap.set("n", "<C-g>ca", "<cmd>Git commit --amend<cr>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cn", "<cmd>Git commit --amend --no-edit<cr>", {noremap = true})
+    vim.keymap.set("n", "<C-g>cf", "<cmd>Git commit %<cr>", {noremap = true})
+    vim.keymap.set('n', '<C-g>pp', function() vim.cmd.Git('push') end, { noremap = true })
+    vim.keymap.set('n', '<C-g>pr', function() vim.cmd.Git({'pull', '--rebase'}) end, { noremap = true })
 
     vim.keymap.set('n', '<C-g>pu', function()
       local handle = io.popen("git branch --show-current")
@@ -41,7 +37,7 @@ return {
       else
         print("Error: no current 'git' branch detected")
       end
-    end, opts)
+    end, { noremap = true })
 
     vim.api.nvim_create_user_command('Browse', function (opts) vim.fn.system { 'open', opts.fargs[1] } end, { nargs = 1 })
     vim.api.nvim_set_keymap('n', '<C-g>br', '<cmd>GBrowse<cr>', { noremap = true, silent = true, desc = 'Opens the file on GitHub in the browser' })
