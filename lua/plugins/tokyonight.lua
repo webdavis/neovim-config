@@ -32,12 +32,12 @@ return {
       vim.cmd.colorscheme('tokyonight-night')
 
       -- Custom tokyonight settings.
-      vim.api.nvim_exec([[
+      vim.cmd([[
         set fillchars+=vert:\│
         highlight WinSeparator guifg=#3b4261
         highlight StatusLine   guibg=#242429
         highlight StatusLineNC guibg=#242429
-      ]], true)
+      ]])
 
     end,
   },

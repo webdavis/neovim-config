@@ -8,4 +8,4 @@ require('config.statusline')
 require('config.filetype.lua')
 
 -- Plugin manager.
-require('config.lazy-init')
+require('config.lazy')
