@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   ---@type Flash.Config
   opts = {
-    labels = "fghjklqwetyuopzvbnm0123456789",
+    labels = "fghjklqwetuopzvbnm",
     modes = {
       char = {
         jump_labels = true
@@ -13,7 +13,7 @@ return {
       -- allow uppercase labels
       uppercase = true,
     -- add any labels with the correct case here, that you want to exclude
-      exclude = "CDX",
+      exclude = "yCDX",
     },
   },
   -- stylua: ignore
