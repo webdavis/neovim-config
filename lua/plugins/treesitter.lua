@@ -11,7 +11,7 @@ return {
     -- Configure treesitter
     treesitter.setup({
       -- Install parsers synchronously (only applied to `ensure_installed`)
-      sync_install = false,
+      sync_install = true,
 
       modules = {},
 
@@ -36,6 +36,8 @@ return {
         'dockerfile',
         'eex',
         'elixir',
+        'git_config',
+        'git_rebase',
         'gitattributes',
         'gitcommit',
         'gitignore',
