@@ -15,8 +15,12 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
+  change_detection = {
+    enabled = true,
+    notify = true
+  },
   defaults = {
-    lazy = true,
+    lazy = false,
     version = false,
   },
   install = {
