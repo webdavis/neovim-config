@@ -9,7 +9,11 @@ return {
     opts = {},
   },
   {'pearofducks/ansible-vim'},
+  {'nanotee/zoxide.vim'},
+  {'webdavis/vim-rsi'},
   {'tpope/vim-unimpaired'},
-  {'tpope/vim-rsi'},
+  {'tpope/vim-eunuch'},
+  {'tpope/vim-sleuth'},
+  {'wellle/targets.vim'},
   {'rhysd/git-messenger.vim'},
 }
