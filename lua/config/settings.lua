@@ -111,8 +111,8 @@ vim.cmd('set shortmess-=f')
 vim.o.mouse = "a"
 
 -- Disable netrw.
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
 
 ----------------------
 -- Custom API Settings
