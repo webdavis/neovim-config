@@ -7,7 +7,7 @@ return {
     -- tmux = { enabled = false },
   },
   config = function()
-    vim.keymap.set("n", "<leader>m", function()
+    vim.keymap.set("n", "<leader>z", function()
       require("zen-mode").setup {
         window = {
           width = 90,
