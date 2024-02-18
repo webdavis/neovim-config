@@ -1,13 +1,6 @@
 return {
-  {
-    'windwp/nvim-autopairs',
-    event = "InsertEnter",
-    opts = {} -- this is equalent to setup({}) function
-  },
-  {
-    'stevearc/dressing.nvim',
-    opts = {},
-  },
+  {'windwp/nvim-autopairs', event = "InsertEnter", opts = {}},
+  {'stevearc/dressing.nvim', opts = {}},
   {'pearofducks/ansible-vim'},
   {'nanotee/zoxide.vim'},
   {'webdavis/vim-rsi'},
