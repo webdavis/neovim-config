@@ -15,6 +15,11 @@ return {
         { noremap = true, silent = true, desc = "Workspace Diagnostics (Trouble)" }
       )
 
+      vim.keymap.set("n", "<leader>tr",
+        "<cmd>Trouble lsp_references<cr>",
+        { noremap = true, silent = true, desc = "Show all workspace LSP references" }
+      )
+
       vim.keymap.set("n", "[t", function()
         require("trouble").next({skip_groups = true, jump = true});
       end)
