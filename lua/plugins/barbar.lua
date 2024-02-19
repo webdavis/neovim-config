@@ -16,7 +16,7 @@ return {
     },
     hide = {
       extensions = true,
-      inactive = true,
+      inactive = false,
     },
     gitsigns = {
       added = {enabled = true, icon = '+'},
