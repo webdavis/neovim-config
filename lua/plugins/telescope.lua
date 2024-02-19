@@ -68,7 +68,6 @@ return {
     -- Extension mappings
     ---------------------
     vim.keymap.set('n', '<leader>fH', ':Telescope http list<CR>', {})
-    vim.keymap.set('n', '<leader>fM', ':Telescope media_files<CR>', {})
     vim.keymap.set('n', '<leader>fp', ':Telescope project<CR>', {})
     vim.keymap.set('n', '<leader>fz', require('telescope').extensions.zoxide.list)
 
