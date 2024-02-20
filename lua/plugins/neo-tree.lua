@@ -84,6 +84,6 @@ return {
     vim.keymap.set('n', '<leader>jr', ":<C-u>Neotree reveal<CR>", {noremap = true, silent = true})
     vim.keymap.set('n', '<leader>jx', ":<C-u>Neotree close<CR>", {noremap = true, silent = true})
     vim.keymap.set('n', '<leader>jg', ":<C-u>Neotree git_status<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jG', ":<C-u>Neotree git_base=", {noremap = true, silent = true})
+    vim.keymap.set('n', '<leader>jG', ":<C-u>Neotree git_base=", {noremap = true, silent = false})
   end
 }
