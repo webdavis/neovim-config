@@ -20,11 +20,20 @@ return {
       mini = true,
       native_lsp = {
         enabled = true,
+        virtual_text = {
+          errors = { "italic" },
+          hints = { "italic" },
+          warnings = { "italic" },
+          information = { "italic" },
+        },
         underlines = {
           errors = { "undercurl" },
           hints = { "undercurl" },
           warnings = { "undercurl" },
           information = { "undercurl" },
+        },
+        inlay_hints = {
+          background = true,
         },
       },
       navic = { enabled = true, custom_bg = "lualine" },
@@ -39,4 +48,7 @@ return {
       which_key = true,
     },
   },
+  config = function()
+      vim.cmd.colorscheme('catppuccin-mocha')
+  end
 }

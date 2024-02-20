@@ -29,7 +29,7 @@ return {
       })
 
       -- My primary colorscheme.
-      vim.cmd.colorscheme('tokyonight-night')
+      -- vim.cmd.colorscheme('tokyonight-night')
 
       -- Custom tokyonight settings.
       vim.cmd([[
