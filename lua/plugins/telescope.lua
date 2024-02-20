@@ -61,6 +61,7 @@ return {
     vim.keymap.set('n', '<leader>ft', '<cmd>Telescope grep_string search=<cr>', {})
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
     vim.keymap.set('n', '<leader>fm', builtin.marks, {})
+    vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>', {})
     vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
     vim.keymap.set('n', '<leader>fr', builtin.command_history, {})
 
