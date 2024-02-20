@@ -70,6 +70,7 @@ return {
             "thumbs.db"
           },
         },
+        hijack_netrw_behavior = "open_current",
       },
       git_status = {
         window = {
