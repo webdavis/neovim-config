@@ -5,8 +5,8 @@ return {
     require('treesj').setup({
       use_default_keymaps = true,
     })
-    vim.keymap.set({'n'}, '<leader>K', function() require('treesj').toggle() end, { noremap = true })
-    vim.keymap.set({'n'}, '<leader>S', function() require('treesj').split() end, { noremap = true })
-    vim.keymap.set({'n'}, '<leader>J', function() require('treesj').join() end, { noremap = true })
+    vim.keymap.set({'n'}, '<leader>st', function() require('treesj').toggle() end, { noremap = true })
+    vim.keymap.set({'n'}, '<leader>ss', function() require('treesj').split() end, { noremap = true })
+    vim.keymap.set({'n'}, '<leader>sj', function() require('treesj').join() end, { noremap = true })
   end,
 }
