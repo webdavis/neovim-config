@@ -200,8 +200,13 @@ return {
 
     vim.diagnostic.config({
       -- update_in_insert = true,
+      virtual_text = true,
+      signs = true,
+      underline = true,
+      update_in_insert = false,
+      severity_sort = true,
       float = {
-        focusable = false,
+        focusable = true,
         style = 'minimal',
         border = 'rounded',
         source = 'always',
@@ -212,6 +217,10 @@ return {
 
     require('lspconfig').ansiblels.setup({
       filetypes = { 'yaml', 'ansible', 'yaml.ansible' }
+    })
+
+    require('lspconfig').bashls.setup({
+      filetypes = { 'sh', 'bash' }
     })
 
     -- Global mappings.
