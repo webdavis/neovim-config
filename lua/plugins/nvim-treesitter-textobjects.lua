@@ -23,8 +23,8 @@ return {
             ["ai"] = { query = "@conditional.outer", desc = "Select outer part of a conditional" },
             ["ii"] = { query = "@conditional.inner", desc = "Select inner part of a conditional" },
 
-            ["aL"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
-            ["iL"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
+            ["ao"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
+            ["io"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
 
             ["af"] = { query = "@call.outer", desc = "Select outer part of a function call" },
             ["if"] = { query = "@call.inner", desc = "Select inner part of a function call" },
