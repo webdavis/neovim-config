@@ -42,5 +42,5 @@ vim.keymap.set({ "o" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = t
 -- Make the current file executable.
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
--- Replace selected text with last yanked text.
-vim.keymap.set("x", "<leader>p", [["_dP]])
+-- Replace word under cursor text with last yanked text.
+vim.keymap.set("n", "<leader>p", [[viw"_dP]])
