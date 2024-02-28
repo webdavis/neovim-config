@@ -220,7 +220,8 @@ return {
     })
 
     require('lspconfig').bashls.setup({
-      filetypes = { 'sh', 'bash' }
+      filetypes = { 'sh', 'bash' },
+      autostart = false,
     })
 
     -- Global mappings.
