@@ -49,6 +49,18 @@ return {
     },
   },
   config = function()
-      vim.cmd.colorscheme('catppuccin-mocha')
+    require("catppuccin").setup({
+      flavour = "macchiato", -- latte, frappe, macchiato, mocha
+      background = { -- :h background
+        light = "latte",
+        dark = "macchiato",
+      },
+      dim_inactive = {
+        enabled = true, -- dims the background color of inactive window
+        shade = "light",
+        percentage = 0.35, -- percentage of the shade to apply to the inactive window
+      },
+    })
+    vim.cmd.colorscheme('catppuccin')
   end
 }
