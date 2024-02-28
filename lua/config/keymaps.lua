@@ -38,3 +38,9 @@ vim.keymap.set({ "o" }, "n", "'Nn'[v:searchforward]", { noremap = true, expr = t
 vim.keymap.set({ "n" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "Prev search result" })
 vim.keymap.set({ "x" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "Prev search result" })
 vim.keymap.set({ "o" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "Prev search result" })
+
+-- Make the current file executable.
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+-- Replace selected text with last yanked text.
+vim.keymap.set("x", "<leader>p", [["_dP]])
