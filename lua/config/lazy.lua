@@ -25,7 +25,7 @@ require("lazy").setup({
   },
   install = {
     missing = true,
-    colorscheme = { "tokyonight-night" },
+    colorscheme = { "catppuccin" },
   },
   checker = {
     enabled = true,
