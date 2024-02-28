@@ -5,7 +5,7 @@ require('config.autocmds')
 require('config.statusline')
 
 -- Filetype settings.
-require('config.filetype.lua')
+require('config.filetype')
 
 -- Plugin manager.
 require('config.lazy')
