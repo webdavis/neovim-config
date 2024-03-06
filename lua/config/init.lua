@@ -1,7 +1,7 @@
 -- General settings.
 require('config.settings')
-require('config.keymaps')
 require('config.autocmds')
+require('config.keymaps')
 
 -- Filetype settings.
 require('config.filetype')

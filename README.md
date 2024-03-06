@@ -1,11 +1,29 @@
 # Neovim Config
 
+This is how you stack lasagna:
+
+<img src="images/stacking-lasagna.jpg" width="300" height="300">
+
+## Navigating this Repo
+
 This is my Neovim config, mostly powered by [lazy.nvim](https://github.com/folke/lazy.nvim).
+
+The following files run the show:
+
+- [init](lua/config/init.lua)
+- [settings](lua/config/settings.lua)
+- [autocmds](lua/config/autocmds.lua)
+- [keymaps](lua/config/keymaps.lua)
+
+Most `plugin-specific-keymaps` are instantiated in their respective plugin files, located
+in the following directory:
+
+- [plugins/](./lua/plugins)
 
 ## Plugins used in this config
 
-> [!NOTE]
-> Some of the plugins listed here are *just dependencies* for other plugins in this list.
+This config makes use of the following plugins. Configuration for these plugins can be
+found in [lua/plugins/](./lua/plugins).
 
 - [JoosepAlviste/nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
 - [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip)
@@ -99,3 +117,7 @@ This is my Neovim config, mostly powered by [lazy.nvim](https://github.com/folke
 - [williamboman/mason.nvim](https://github.com/williamboman/mason.nvim)
 - [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs)
 - [wojciech-kulik/xcodebuild.nvim](https://github.com/wojciech-kulik/xcodebuild.nvim)
+
+> [!NOTE]
+> Some of the plugins listed here are *just dependencies* for other plugins in this list.
+
