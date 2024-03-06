@@ -18,5 +18,6 @@ return {
       }
     })
 
+    vim.keymap.set('n', '<leader>fj', '<cmd>Telescope just<cr>', { remap = false, silent = true, desc = 'search - justfile commands' })
   end
 }

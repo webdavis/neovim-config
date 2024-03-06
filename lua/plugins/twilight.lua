@@ -6,11 +6,6 @@ return {
     -- refer to the configuration section below
   },
   config = function()
-    vim.api.nvim_set_keymap(
-      'n',
-      '<leader>ti',
-      ':<C-u>Twilight<CR>',
-      { noremap = true, silent = true }
-    )
+    vim.api.nvim_set_keymap('n', '<leader>y', '<cmd>Twilight<cr>', { noremap = true, silent = true, desc = 'twilight - toggle' })
   end
 }

@@ -50,50 +50,53 @@ return {
     }
 
     local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>fM', builtin.man_pages, {})
-    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-    vim.keymap.set('n', '<leader>fc', builtin.colorscheme, {})
-    vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-    vim.keymap.set('n', '<leader>f/', builtin.current_buffer_fuzzy_find, {})
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-    vim.keymap.set('n', '<leader>fs', builtin.grep_string, {})
-    vim.keymap.set('n', '<leader>ft', '<cmd>Telescope grep_string search=<cr>', {})
-    vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-    vim.keymap.set('n', '<leader>fm', builtin.marks, {})
-    vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>', {})
-    vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
-    vim.keymap.set('n', '<leader>fr', builtin.command_history, {})
+    vim.keymap.set('n', '<leader>fM', builtin.man_pages, { desc = 'find - man pages' })
+    vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'find - buffers' })
+    vim.keymap.set('n', '<leader>fc', builtin.colorscheme, { desc = 'find - colorschemes' })
+    vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'find - diagnostics' })
+    vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'find - files' })
+    vim.keymap.set('n', '<leader>f/', builtin.current_buffer_fuzzy_find, { desc = 'find - text in current buffer' })
+    vim.keymap.set('n', '<leader>fg', '<cmd>Telescope grep_string search=<cr>', { desc = 'find - text in files (remove mismatches)' })
+    vim.keymap.set('n', '<leader>fG', builtin.live_grep, { desc = 'find - text in files (add matches)' })
+    vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = 'find - word under cursor' })
+    vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'find - help files' })
+    vim.keymap.set('n', '<leader>fm', builtin.marks, { desc = 'find - marks' })
+    vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>', { desc = 'find - notifications' })
+    vim.keymap.set('n', '<leader>fo', builtin.oldfiles, { desc = 'find - recent files' })
+    vim.keymap.set('n', '<leader>fr', builtin.command_history, { desc = 'find - vim command history' })
 
     ---------------------
     -- Extension mappings
     ---------------------
-    vim.keymap.set('n', '<leader>fH', ':Telescope http list<CR>', {})
-    vim.keymap.set('n', '<leader>fp', ':Telescope project<CR>', {})
-    vim.keymap.set('n', '<leader>fz', require('telescope').extensions.zoxide.list)
-
-    ---------------
-    -- git mappings
-    ---------------
-    vim.keymap.set('n', '<C-g><C-g>',':Telescope git_grep grep<CR>', {})
-    vim.keymap.set('n', '<C-g>g',':Telescope git_grep live_grep<CR>', {})
-    vim.keymap.set('n', '<C-g><space>', builtin.git_branches, {})
-    vim.keymap.set('n', '<C-g>l', builtin.git_commits, {})
-    vim.keymap.set('n', '<C-g>L', builtin.git_bcommits, {})
-    vim.keymap.set('n', '<C-g>f', builtin.git_files, {})
-    vim.keymap.set('n', '<C-g>h',':Telescope gh gist<CR>', {})
-    vim.keymap.set('n', '<C-g><C-p>',':Telescope gh pull_request<CR>', {})
-    vim.keymap.set('n', '<C-g>i',':Telescope gh issues<CR>', {})
-    vim.keymap.set('n', '<C-g>o',':Telescope gh secret<CR>', {})
-    vim.keymap.set('n', '<C-g>r',':Telescope gh run<CR>', {})
-    vim.keymap.set('n', '<C-g>S', builtin.git_status, {})
-    vim.keymap.set('n', '<C-g>n', builtin.git_stash, {})
+    vim.keymap.set('n', '<leader>fy', ':Telescope http list<CR>', { desc = 'find - http codes' })
+    vim.keymap.set('n', '<leader>fp', ':telescope project<cr>', { desc = 'find - projects' })
+    vim.keymap.set('n', '<leader>fz', require('telescope').extensions.zoxide.list, { desc = 'find - zoxide directories' })
 
     ------------------------
     -- file-browser mappings
     ------------------------
-    vim.keymap.set('n', '<leader>fe', ':Telescope file_browser<CR>', {})
-    -- Open file_browser with the path of the current buffer.
-    vim.keymap.set('n', '<leader>fE', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', {})
+    vim.keymap.set('n', '<leader>fe', ':Telescope file_browser<CR>', { desc = 'find - file browser' })
+    vim.keymap.set('n', '<leader>fE', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', { desc = 'find - file browser (current buffer path)' })
+
+    ---------------
+    -- git mappings
+    ---------------
+    vim.keymap.set('n', '<c-g><c-g>',':telescope git_grep grep<cr>', { desc = 'git - grep word under cursor' })
+    vim.keymap.set('n', '<C-g>g',':Telescope git_grep live_grep<CR>', { desc = 'git - grep all text' })
+    vim.keymap.set('n', '<C-g><space>', builtin.git_branches, { desc = 'git - search branches' })
+    vim.keymap.set('n', '<C-g>l', builtin.git_commits, { desc = 'git - search commits' })
+    vim.keymap.set('n', '<C-g>L', builtin.git_bcommits, { desc = 'git - search buffer commits' })
+    vim.keymap.set('n', '<C-g>f', builtin.git_files, { desc = 'git - search files' })
+    vim.keymap.set('n', '<C-g>s', builtin.git_status, { desc = 'git - search status' })
+    vim.keymap.set('n', '<C-g>n', builtin.git_stash, { desc = 'git - search stashes' })
+
+    --------------
+    -- gh mappings
+    --------------
+    vim.keymap.set('n', '<C-g>.',':Telescope gh secret<CR>', { desc = 'gh  - search secrets' })
+    vim.keymap.set('n', '<C-g><C-p>',':Telescope gh pull_request<CR>', { desc = 'gh  - search pull requests' })
+    vim.keymap.set('n', '<C-g>h',':Telescope gh gist<CR>', { desc = 'gh  - search gists' })
+    vim.keymap.set('n', '<C-g>i',':Telescope gh issues<CR>', { desc = 'gh  - search issues' })
+    vim.keymap.set('n', '<C-g>r',':Telescope gh run<CR>', { desc = 'gh  - search workflow runs' })
   end,
 }

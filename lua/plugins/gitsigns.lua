@@ -1,5 +1,5 @@
 return {
-  "lewis6991/gitsigns.nvim",
+  'lewis6991/gitsigns.nvim',
   dependencies = {'nvim-lua/plenary.nvim'},
   config = true,
   opts = {
@@ -10,19 +10,18 @@ return {
         vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
       end
 
-      -- stylua: ignore start
-      map("n", "]h", gs.next_hunk, "Next Hunk")
-      map("n", "[h", gs.prev_hunk, "Prev Hunk")
-      map({ "n", "v" }, "<leader>gha", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
-      map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
-      map("n", "<leader>ghA", gs.stage_buffer, "Stage Buffer")
-      map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
-      map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
-      map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
-      map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
-      map("n", "<leader>ghd", gs.diffthis, "Diff This")
-      map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
-      map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+      map('n', ']h', gs.next_hunk, 'git - jump to next hunk')
+      map('n', '[h', gs.prev_hunk, 'git - jump to prev hunk')
+      map({ 'n', 'v' }, '<leader>ga', gs.stage_hunk, 'git - stage hunk')
+      map({ 'n', 'v' }, '<leader>gr', gs.reset_hunk, 'git - reset hunk (undo changes)')
+      map('n', '<leader>gA', gs.stage_buffer, 'git - stage the entire buffer')
+      map('n', '<leader>gu', gs.undo_stage_hunk, 'git - unstage hunk under cursor')
+      map('n', '<leader>gR', gs.reset_buffer, 'git - reset entire buffer')
+      map('n', '<leader>gp', gs.preview_hunk_inline, 'git - show inline preview of hunk')
+      map('n', '<leader>gb', function() gs.blame_line({ full = true }) end, 'git - show blame in a floating window')
+      map('n', '<leader>gd', gs.diffthis, 'git - diff against the index')
+      map('n', '<leader>gD', function() gs.diffthis('~1') end, "git - diff against last commit")
+      map({ 'o', 'x' }, 'ih', gs.select_hunk, 'git - select hunk')
     end,
   },
 }

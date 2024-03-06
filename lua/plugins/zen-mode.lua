@@ -18,7 +18,7 @@ return {
       vim.wo.wrap = false
       vim.wo.number = true
       vim.wo.rnu = true
-    end)
+    end, { desc = 'zen-mode - toggle with twilight enabled' })
 
     vim.keymap.set("n", "<leader>Z", function()
       require("zen-mode").setup {
@@ -28,10 +28,10 @@ return {
         },
       }
       require("zen-mode").toggle()
-      vim.cmd[[TwilightDisable]]
+      vim.cmd('TwilightDisable')
       vim.wo.wrap = false
       vim.wo.number = false
       vim.wo.rnu = false
-    end)
+    end, { desc = 'zen-mode - toggle with tw=80 and twilight disabled' })
   end
 }

@@ -9,8 +9,8 @@ return {
     harpoon:setup({})
     -- REQUIRED
 
-    vim.keymap.set("n", "<leader>h", function() harpoon:list():append() end)
-    vim.keymap.set("n", "<leader>M", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+    vim.keymap.set("n", "<leader>h", function() harpoon:list():append() end, { desc = 'harpoon - add buffer to harpoon list' })
+    vim.keymap.set("n", "<leader>k", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'harpoon - show all buffers' })
 
     -- Toggle previous & next buffers stored within Harpoon list
     vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)

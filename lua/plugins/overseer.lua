@@ -216,7 +216,9 @@ return {
       end
     end
 
-    vim.keymap.set('n', '<leader>or', '<cmd>OverseerRun<cr>', opts)
+    vim.keymap.set('n', '<leader>or', '<cmd>OverseerRun<cr>', { remap = false, silent = true, desc = 'overseer - run' })
+    vim.keymap.set('n', '<leader>ob', '<cmd>OverseerBuild<cr>', { remap = false, silent = true, desc = 'overseer - build' })
+    vim.keymap.set('n', '<leader>ot', '<cmd>OverseerToggle<cr>', { remap = false, silent = true, desc = 'overseer - toggle' })
     vim.keymap.set('n', '<M-i>', function() toggle_runner('OverseerQuickAction open vsplit') end, opts)
     vim.keymap.set('n', '<M-o>', function() toggle_runner('OverseerQuickAction open float') end, opts)
   end

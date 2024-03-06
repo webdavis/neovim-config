@@ -14,7 +14,7 @@ return {
       end,
     })
     -- You probably also want to set a keymap to toggle aerial
-    vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
+    vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>", { desc = 'aerial - toggle' })
     require("telescope").load_extension("aerial")
     require("telescope").setup({
       extensions = {
@@ -29,6 +29,6 @@ return {
       },
     })
 
-    vim.api.nvim_set_keymap('n', '<leader>fa', '<cmd>Telescope aerial<cr>', { noremap = true, desc = 'Telescope Aerial Integration' })
+    vim.api.nvim_set_keymap('n', '<leader>fa', '<cmd>Telescope aerial<cr>', { noremap = true, desc = 'search - code outline (using aerial)' })
   end
 }

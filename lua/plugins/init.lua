@@ -1,12 +1,12 @@
 return {
-  {'windwp/nvim-autopairs', event = "InsertEnter", opts = {}},
+  {'windwp/nvim-autopairs', event = 'InsertEnter', opts = {}},
   {'stevearc/dressing.nvim', opts = {}},
   {'pearofducks/ansible-vim'},
+  {'NoahTheDuke/vim-just', ft = {'just'}},
   {'nanotee/zoxide.vim'},
   {'webdavis/vim-rsi'},
   {'tpope/vim-unimpaired'},
   {'tpope/vim-eunuch'},
   {'tpope/vim-sleuth'},
   {'wellle/targets.vim'},
-  {'rhysd/git-messenger.vim'},
 }

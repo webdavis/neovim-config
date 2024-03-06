@@ -50,7 +50,6 @@ return {
       timeout_ms = nil,
     },
     -- LSP Server Settings
-    ---@type lspconfig.options
     servers = {
       pyright = {},
       ruff_lsp = {
@@ -66,7 +65,7 @@ return {
                 },
               })
             end,
-            desc = "Organize Imports",
+            desc = "code-action - organize imports",
           },
         },
       },
@@ -149,7 +148,6 @@ return {
       },
       handlers = {
         function(server_name) -- default handler (optional)
-
           require('lspconfig')[server_name].setup {
             capabilities = capabilities
           }
@@ -185,7 +183,10 @@ return {
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-i>'] = cmp.mapping.confirm({ select = true }),
         ['<C-e>'] = cmp.config.disable,
-        ['<C-c>'] = function(fallback) cmp.abort() fallback() end,
+        ['<C-c>'] = function(fallback)
+          cmp.abort()
+          fallback()
+        end,
       }),
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
@@ -194,8 +195,8 @@ return {
         { name = 'git' },
         { name = 'rg' },
       }, {
-          { name = 'buffer' },
-        })
+        { name = 'buffer' },
+      })
     })
 
     vim.diagnostic.config({
@@ -220,16 +221,17 @@ return {
     })
 
     require('lspconfig').bashls.setup({
-      filetypes = { 'sh', 'bash' },
+      filetypes = { 'sh' },
+      -- Launch the bashls server explicitly with :LspStart
       autostart = false,
     })
 
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-    vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist)
+    vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, { desc = 'diagnostics - show in floating window' })
+    vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'diagnostics - show in loclist' })
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'diagnostics - goto previous' })
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'diagnostics - goto next' })
 
     -- Use LspAttach autocommand to only map the following keys
     -- after the language server attaches to the current buffer
@@ -239,22 +241,61 @@ return {
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-        -- Buffer local mappings.
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
-        local opts = { buffer = ev.buf }
-        vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format { async = true } end, opts)
-        vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, opts)
-        vim.keymap.set('n', '<leader>ls', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition, opts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set('n', 'K',          vim.lsp.buf.hover, opts)
-        vim.keymap.set('n', 'gD',         vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', 'gd',         vim.lsp.buf.definition, opts)
-        vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
-        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-        vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+        ------------------------
+        -- Buffer local mappings
+        ------------------------
+        -- See `:help vim.lsp.*` for documentation on any of the below functions.
+
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover,
+          { buffer = ev.buf, desc = 'lsp - display symbol info in hover window ' })
+
+        vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format { async = true } end,
+          { buffer = ev.buf, desc = 'lsp - format buffer' })
+        vim.keymap.set('n', '<leader>ls', vim.lsp.buf.signature_help,
+          { buffer = ev.buf, desc = 'lsp - show signature info (floating window)' })
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,
+          { buffer = ev.buf, desc = 'lsp - rename symbol under cursor' })
+        vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action,
+          { buffer = ev.buf, desc = 'code-action - run code action' })
+
+        --- Workspace mappings.
+        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,
+          { buffer = ev.buf, desc = 'lsp - add workspace folder' })
+        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder,
+          { buffer = ev.buf, desc = 'lsp - remove workspace folder' })
+        vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+          { buffer = ev.buf, desc = 'lsp - list workspace folders' })
+
+        local builtin = require('telescope.builtin')
+
+        -- Goto the definition of the word under the cursor.
+        -- This is where a variable was first declared, or where a function is defined, and etc.
+        -- To jump back press <C-T>.
+        vim.keymap.set('n', 'gd', builtin.lsp_definitions, { desc = 'lsp - goto definitions' })
+
+        -- This is not Goto Definition, this is Goto Declaration.
+        -- For example, in C this would take you to the header.
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
+          { buffer = ev.buf, desc = 'lsp - goto declaration (e.g. a header in C)' })
+
+        -- Find references for the word under the cursor.
+        vim.keymap.set('n', '<leader>lr', builtin.lsp_references, { desc = 'lsp - goto references' })
+
+        -- Goto the implementation of the word under the cursor.
+        -- Useful when your language has ways of declaring types without an actual implementation.
+        vim.keymap.set('n', '<leader>li', builtin.lsp_implementations, { desc = 'lsp - goto implementation' })
+
+        -- Goto the type of the word under the cursor.
+        -- Useful when you are not sure what type a variable is and you want to see the definition of its *type*, not where it was defined.
+        vim.keymap.set('n', '<leader>lt', builtin.lsp_type_definitions, { desc = 'lsp - goto type definition' })
+
+        -- Fuzzy find all the symbols in your current document.
+        -- Symbols are things like variables, functions, types, etc.
+        vim.keymap.set('n', '<leader>ld', builtin.lsp_document_symbols, { desc = 'lsp - fuzzy find document symbols' })
+
+        -- Fuzzy find all the symbols in your current workspace.
+        -- Similar to document symbols, but searches over the entire workspace.
+        vim.keymap.set('n', '<leader>lw', builtin.lsp_workspace_symbols, { desc = 'lsp - fuzzy find workspace symbols' })
       end,
     })
   end

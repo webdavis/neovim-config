@@ -10,19 +10,15 @@ vim.o.incsearch = true
 vim.o.backspace = [[indent,eol,start]]
 
 -- See :help fo-table
-vim.api.nvim_exec(
-  [[
-augroup custom_settings
-  autocmd!
-  autocmd BufEnter * set fo+=t
-  autocmd BufEnter * set fo+=n
-  autocmd BufEnter * set fo+=j
-  autocmd BufEnter * set fo-=o
-augroup END
->
-]] ,
-  true
-)
+vim.cmd([[
+  augroup custom_settings_fo
+    autocmd!
+    autocmd BufEnter * set fo+=t
+    autocmd BufEnter * set fo+=n
+    autocmd BufEnter * set fo+=j
+    autocmd BufEnter * set fo-=o
+  augroup END
+]])
 
 -- Specify the offset from the window border when scrolling.
 vim.o.scrolloff = 1
@@ -53,7 +49,12 @@ vim.o.smartcase = true
 vim.o.expandtab = true
 
 -- Do not wrap lines by default.
-vim.o.wrap = false
+vim.cmd([[
+  augroup custom_settings_nowrap
+    autocmd!
+    autocmd BufEnter * set nowrap
+  augroup END
+]])
 
 -- Indent wrapped lines the same amount as the beginning of the line.
 vim.o.breakindent = true

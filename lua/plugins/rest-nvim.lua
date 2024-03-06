@@ -1,14 +1,14 @@
 return {
-  "rest-nvim/rest.nvim",
-  dependencies = {"nvim-lua/plenary.nvim"},
+  'rest-nvim/rest.nvim',
+  dependencies = {'nvim-lua/plenary.nvim'},
   config = function()
-    require("rest-nvim").setup({
+    require('rest-nvim').setup({
       -- Open request results in a horizontal split.
       result_split_horizontal = false,
       -- Keep the http file buffer above|left when split horizontal|vertical.
       result_split_in_place = false,
       -- Stay in current windows (.http file) or change to results window (default).
-      stay_in_current_window_after_split = false,
+      stay_in_current_window_after_split = true,
       -- Skip SSL verification, useful for unknown certificates.
       skip_ssl_verification = false,
       -- Encode URL before making request.
@@ -32,9 +32,9 @@ return {
         -- Executables or functions for formatting response body [optional]. Set them to false
         -- if you want to disable them.
         formatters = {
-          json = "jq",
+          json = 'jq',
           html = function(body)
-            return vim.fn.system({"tidy", "-i", "-q", "-"}, body)
+            return vim.fn.system({'tidy', '-i', '-q', '-'}, body)
           end
         },
       },
@@ -46,8 +46,11 @@ return {
       search_back = true,
     })
 
-    vim.keymap.set("n", "<leader>rr", ":lua require('rest-nvim').run()<CR>", { desc = "Run HTTP Request" })
-    vim.keymap.set("n", "<leader>rl", ":lua require('rest-nvim').last()<CR>", { desc = "Run Last HTTP Request" })
-    vim.keymap.set("n", "<leader>rp", ":lua require('rest-nvim').run(true)<CR>", { desc = "Preview HTTP Request" })
+    vim.keymap.set('n', '<leader>rr', function() require('rest-nvim').run() end, { desc = 'rest - run HTTP request' })
+    vim.keymap.set('n', '<leader>rl', function() require('rest-nvim').last() end, { desc = 'rest - run last HTTP request' })
+    vim.keymap.set('n', '<leader>rp', function() require('rest-nvim').run(true) end, { desc = 'rest - preview HTTP request' })
+
+    require('telescope').load_extension('rest')
+    vim.keymap.set('n', '<leader>r0', function() require('telescope').extensions.rest.select_env() end, { desc = 'rest - select/load environment file' })
   end
 }

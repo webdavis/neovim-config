@@ -78,13 +78,13 @@ return {
         },
       },
     })
-    vim.keymap.set('n', '<leader>je', ":<C-u>Neotree toggle<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>js', ":<C-u>Neotree show<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jf', ":<C-u>Neotree focus<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jj', ":<C-u>Neotree reveal current<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jr', ":<C-u>Neotree reveal<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jx', ":<C-u>Neotree close<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jg', ":<C-u>Neotree git_status<CR>", {noremap = true, silent = true})
-    vim.keymap.set('n', '<leader>jG', ":<C-u>Neotree git_base=", {noremap = true, silent = false})
+    vim.keymap.set('n', '<leader>nt', "<cmd>Neotree toggle<cr>", {noremap = true, silent = true, desc = 'neotree - toggle' })
+    vim.keymap.set('n', '<leader>ns', "<cmd>Neotree show<cr>", {noremap = true, silent = true, desc = 'neotree - show' })
+    vim.keymap.set('n', '<leader>nn', "<cmd>Neotree focus<cr>", {noremap = true, silent = true, desc = 'neotree - focus' })
+    vim.keymap.set('n', '<leader>nc', "<cmd>Neotree reveal current<cr>", {noremap = true, silent = true, desc = 'neotree - focus on current file (buffer)' })
+    vim.keymap.set('n', '<leader>nr', "<cmd>Neotree reveal<cr>", {noremap = true, silent = true, desc = 'neotree - focus on current file (sidebar)' })
+    vim.keymap.set('n', '<leader>nq', "<cmd>Neotree close<cr>", {noremap = true, silent = true, desc = 'neotree - close' })
+    vim.keymap.set('n', '<leader>ng', "<cmd>Neotree git_status<cr>", {noremap = true, silent = true, desc = 'neotree - git status (floating window)' })
+    vim.keymap.set('n', '<leader>nG', ":<C-u>Neotree git_base=", {noremap = true, silent = false, desc = 'neotree - set git base to compare to' })
   end
 }
