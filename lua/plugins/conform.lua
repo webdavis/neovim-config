@@ -27,6 +27,7 @@ return {
 				just = { "just" },
 				markdown = { "mdformat" },
 				nix = { "nixfmt" },
+				yaml = { "yamlfmt" },
 				zig = { "zigfmt" },
 				["_"] = { "trim_whitespace" },
 				["*"] = { "typos" },
@@ -34,6 +35,16 @@ return {
 			formatters = {
 				shfmt = {
 					prepend_args = { "-i", "2" },
+				},
+				yamlfmt = {
+					command = "yamlfmt",
+					args = {
+						"-formatter",
+						"retain_line_breaks_single=true",
+						"-formatter",
+						"include_document_start=true",
+						"-",
+					},
 				},
 			},
 			format_on_save = function(bufnr)
