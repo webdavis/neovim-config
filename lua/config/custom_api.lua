@@ -12,10 +12,19 @@ set_option = function(option, context_dict)
 	end
 end
 
-map = function(mode, lhs, rhs, desc)
+map = function(mode, lhs, rhs, desc, notify)
 	local silent = (type(rhs) == "function" or rhs:match("<cr>$")) and true or false
-
 	local options = { noremap = true, desc = desc, silent = silent }
 
-	vim.keymap.set(mode, lhs, rhs, options)
+	local callback
+	if notify then
+		callback = function()
+			vim.cmd(rhs)
+			vim.notify(desc, "info")
+		end
+
+		vim.keymap.set(mode, lhs, callback, options)
+	else
+		vim.keymap.set(mode, lhs, rhs, options)
+	end
 end
