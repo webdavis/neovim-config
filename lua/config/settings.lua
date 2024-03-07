@@ -1,5 +1,3 @@
-local custom_api = require "config.custom_api"
-
 -- Display the colorcolumn at 1 greater than the buffers textwidth. FIXME
 vim.o.colorcolumn = tostring(vim.bo.textwidth + 1)
 
@@ -32,14 +30,14 @@ vim.o.splitbelow = false
 vim.o.selection = "inclusive"
 
 -- Set the characters used to separate windows and to indicate folds.
-vim.cmd "set fillchars+=vert:│,fold:―"
+vim.cmd("set fillchars+=vert:│,fold:―")
 
 -- Display ↪ at the beginning of a line when wrap is set, and → at the eol when nowrap is set.
 vim.o.showbreak = "↪ "
 vim.o.listchars = [[tab:>\ ,trail:-,extends:→,precedes:<]]
 
 -- Start diff mode with vertical splits.
-vim.cmd "set diffopt+=vertical"
+vim.cmd("set diffopt+=vertical")
 
 -- Override ignorecase option if search pat contains uppercase letters.
 vim.o.ignorecase = true
@@ -88,7 +86,7 @@ vim.fn.mkdir(vim.fn.stdpath("data") .. "/swap", "p")
 
 -- Set the undo file location.
 vim.o.undodir = vim.fn.stdpath("data") .. "/undo"
-custom_api.set_option("undofile", { o = true, bo = true })
+set_option("undofile", { o = true, bo = true })
 vim.fn.mkdir(vim.o.undodir, "p")
 
 -- Allow specified keys that move the cursor left/right to move to the previous/next line.
@@ -106,7 +104,7 @@ vim.o.cmdheight = 2
 -- shortmess: This option helps to avoid all the hit-enter prompts caused by file messages,
 -- for example with CTRL-G, and to avoid some other messages. It is a list of flags:
 --   * f: use "(3 of 5)" instead of "(file 3 of 5)".
-vim.cmd('set shortmess-=f')
+vim.cmd("set shortmess-=f")
 
 -- Turn on the mouse.
 vim.o.mouse = "a"
@@ -118,12 +116,12 @@ vim.o.mouse = "a"
 ----------------------
 -- Custom API Settings
 ----------------------
-custom_api.set_option("number", { o = true, wo = true })
-custom_api.set_option("relativenumber", { o = true, wo = true })
-custom_api.set_option("shiftwidth", { o = 4, bo = 4 })
-custom_api.set_option("softtabstop", { o = 4, bo = 4 })
-custom_api.set_option("textwidth", { o = 95, bo = 95 })
-custom_api.set_option("signcolumn", { o = "yes", wo = "yes" }) -- Always display the signcolumn.
+set_option("number", { o = true, wo = true })
+set_option("relativenumber", { o = true, wo = true })
+set_option("shiftwidth", { o = 4, bo = 4 })
+set_option("softtabstop", { o = 4, bo = 4 })
+set_option("textwidth", { o = 95, bo = 95 })
+set_option("signcolumn", { o = "yes", wo = "yes" }) -- Always display the signcolumn.
 
 --------------------
 -- Colorscheme stuff
@@ -133,5 +131,5 @@ vim.api.nvim_command("syntax enable")
 vim.opt.termguicolors = true -- Enable 24-bit colour.
 
 if vim.fn.has("nvim-0.10") == 1 then
-  vim.opt.smoothscroll = true
+	vim.opt.smoothscroll = true
 end

@@ -1,3 +1,5 @@
+require("config.custom_api")
+
 -- General settings.
 require("config.settings")
 require("config.autocmds")

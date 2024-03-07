@@ -79,14 +79,6 @@ return {
 			},
 		})
 
-		local map = function(mode, lhs, rhs, desc)
-			local silent = (type(rhs) == "function" or rhs:match("<cr>$")) and true or false
-
-			local options = { noremap = true, desc = desc, silent = silent }
-
-			vim.keymap.set(mode, lhs, rhs, options)
-		end
-
 		map("n", "<M-n>", "<cmd>Neotree toggle<cr>", "neotree - toggle")
 		map("n", "<leader>ns", "<cmd>Neotree show<cr>", "neotree - show")
 		map("n", "<leader>nn", "<cmd>Neotree focus<cr>", "neotree - focus")
