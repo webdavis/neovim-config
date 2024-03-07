@@ -84,5 +84,20 @@ return {
 		vim.keymap.set("n", "<C-g>or", function()
 			vim.fn.system({ "gh", "browse" })
 		end, { noremap = true, silent = true, desc = "browse repo in browser" })
+
+		vim.keymap.set("n", "<C-g>ww", function()
+			vim.cmd.Git("whatchanged")
+		end, { noremap = true, silent = false, desc = "whatchanged - all commits (workspace)" })
+
+		vim.keymap.set("n", "<C-g>wb", function()
+			vim.cmd.Git("whatchanged -- %")
+		end, { noremap = true, silent = false, desc = "whatchanged - all commits (buffer)" })
+
+		vim.keymap.set(
+			"n",
+			"<C-g>wc",
+			':<C-u>Git whatchanged --since="',
+			{ noremap = true, silent = false, desc = "whatchanged - time period (populate CLI)" }
+		)
 	end,
 }
