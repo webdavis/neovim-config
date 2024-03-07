@@ -66,33 +66,27 @@ return {
 			(args.bang and vim.b or vim.g)["disable_autoformat"] = true
 		end, { desc = "conform - disable format on save", bang = true })
 
-		vim.keymap.set(
-			"n",
-			"<leader>ce",
-			"<cmd>ConformEnable<cr>",
-			{ desc = "conform - enable format on save (global)" }
-		)
+		local run_and_notify = function(command, message)
+			vim.cmd(command)
+			vim.notify(message, "info")
+		end
 
-		vim.keymap.set(
-			"n",
-			"<leader>cE",
-			"<cmd>ConformEnable!<cr>",
-			{ desc = "conform - enable format on save (buffer)" }
-		)
+		vim.keymap.set("n", "<leader>ce", function()
+			run_and_notify("ConformEnable", "Format on save: Enabled Globally")
+		end, { desc = "conform - enable format on save (global)" })
 
-		vim.keymap.set(
-			"n",
-			"<leader>cd",
-			"<cmd>ConformDisable<cr>",
-			{ desc = "conform - disable format on save (global)" }
-		)
+		vim.keymap.set("n", "<leader>cE", function()
+			run_and_notify("ConformEnable!", "Format on save: Enabled for the current buffer")
+		end, { desc = "conform - enable format on save (buffer)" })
 
-		vim.keymap.set(
-			"n",
-			"<leader>cD",
-			"<cmd>ConformDisable!<cr>",
-			{ desc = "conform - disable format on save (buffer)" }
-		)
+		vim.keymap.set("n", "<leader>cd", function()
+			run_and_notify("ConformDisable", "Format on save: Disabled Globally")
+		end, { desc = "conform - disable format on save (global)" })
+
+		vim.keymap.set("n", "<leader>cD", function()
+			run_and_notify("ConformDisable!", "Format on save: Disabled for the current buffer")
+		end, { desc = "conform - disable format on save (buffer)" })
+
 	end,
 }
 
