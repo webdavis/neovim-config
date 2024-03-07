@@ -79,6 +79,8 @@ return {
 			},
 		})
 
+		local map = require("config.custom_api").map
+
 		map("n", "<M-n>", "<cmd>Neotree toggle<cr>", "neotree - toggle")
 		map("n", "<leader>ns", "<cmd>Neotree show<cr>", "neotree - show")
 		map("n", "<leader>nn", "<cmd>Neotree focus<cr>", "neotree - focus")

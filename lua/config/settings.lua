@@ -1,3 +1,5 @@
+local set_option = require("config.custom_api").set_option
+
 -- Display the colorcolumn at 1 greater than the buffers textwidth. FIXME
 vim.o.colorcolumn = tostring(vim.bo.textwidth + 1)
 

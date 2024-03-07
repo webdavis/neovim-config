@@ -66,6 +66,8 @@ return {
 			(args.bang and vim.b or vim.g)["disable_autoformat"] = true
 		end, { desc = "conform - disable format on save", bang = true })
 
+		local map = require("config.custom_api").map
+
 		map("n", "<leader>ce", "ConformEnable", "Format on save: Enabled (global)", true)
 		map("n", "<leader>cE", "ConformEnable!", "Format on save: Enabled (buffer)", true)
 		map("n", "<leader>cd", "ConformDisable", "Format on save: Disabled (global)", true)

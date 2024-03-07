@@ -1,4 +1,6 @@
-set_option = function(option, context_dict)
+local M = {}
+
+M.set_option = function(option, context_dict)
 	for k, v in pairs(context_dict) do
 		if k == "o" then
 			vim.api.nvim_set_option(option, v)
@@ -12,7 +14,7 @@ set_option = function(option, context_dict)
 	end
 end
 
-map = function(mode, lhs, rhs, desc, notify)
+M.map = function(mode, lhs, rhs, desc, notify)
 	local silent = (type(rhs) == "function" or rhs:match("<cr>$")) and true or false
 	local options = { noremap = true, desc = desc, silent = silent }
 
@@ -28,3 +30,5 @@ map = function(mode, lhs, rhs, desc, notify)
 		vim.keymap.set(mode, lhs, rhs, options)
 	end
 end
+
+return M
