@@ -1,10 +1,10 @@
 -- General settings.
-require('config.settings')
-require('config.autocmds')
-require('config.keymaps')
+require("config.settings")
+require("config.autocmds")
+require("config.keymaps")
 
 -- Filetype settings.
-require('config.filetype')
+require("config.filetype")
 
 -- Plugin manager.
-require('config.lazy')
+require("config.lazy")
