@@ -50,3 +50,6 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = false, desc 
 
 -- Replace word under cursor text with last yanked text.
 vim.keymap.set("n", "<leader>P", [[viw"_dP]], { desc = 'replace <cword> with yanked text' })
+
+-- Yank to end of line without line-ending character.
+vim.keymap.set("n", "Y", '"+yg_', { desc = "Yank to EOL (without line-ending)"})
