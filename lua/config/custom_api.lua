@@ -15,14 +15,16 @@ M.set_option = function(option, context_dict)
 end
 
 M.map = function(mode, lhs, rhs, desc, notify)
-	local silent = (type(rhs) == "function" or rhs:match("<cr>$")) and true or false
+	local silent = (type(rhs) == "function" or not rhs:match("^:<C%-u>")) and true or false
 	local options = { noremap = true, desc = desc, silent = silent }
 
 	local callback
-	if notify then
+	if silent then
 		callback = function()
 			vim.cmd(rhs)
-			vim.notify(desc, "info")
+			if notify then
+				vim.notify(desc, "info")
+			end
 		end
 
 		vim.keymap.set(mode, lhs, callback, options)

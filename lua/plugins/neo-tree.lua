@@ -81,13 +81,13 @@ return {
 
 		local map = require("config.custom_api").map
 
-		map("n", "<M-n>", "<cmd>Neotree toggle<cr>", "neotree - toggle")
-		map("n", "<leader>ns", "<cmd>Neotree show<cr>", "neotree - show")
-		map("n", "<leader>nn", "<cmd>Neotree focus<cr>", "neotree - focus")
-		map("n", "<leader>nc", "<cmd>Neotree reveal current<cr>", "neotree - focus on current file (buffer)")
-		map("n", "<leader>nr", "<cmd>Neotree reveal<cr>", "neotree - focus on current file (sidebar)")
-		map("n", "<leader>nq", "<cmd>Neotree close<cr>", "neotree - close")
-		map("n", "<leader>ng", "<cmd>Neotree git_status<cr>", "neotree - git status (floating window)")
+		map("n", "<M-n>", "Neotree toggle", "neotree - toggle")
+		map("n", "<leader>ns", "Neotree show", "neotree - show")
+		map("n", "<leader>nn", "Neotree focus", "neotree - focus")
+		map("n", "<leader>nc", "Neotree reveal current", "neotree - focus on current file (buffer)")
+		map("n", "<leader>nr", "Neotree reveal", "neotree - focus on current file (sidebar)")
+		map("n", "<leader>nq", "Neotree close", "neotree - close")
+		map("n", "<leader>ng", "Neotree git_status", "neotree - git status (floating window)")
 		map("n", "<leader>nG", ":<C-u>Neotree git_base=", "neotree - set git base to compare to")
 	end,
 }

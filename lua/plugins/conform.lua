@@ -66,8 +66,17 @@ return {
 			(args.bang and vim.b or vim.g)["disable_autoformat"] = true
 		end, { desc = "conform - disable format on save", bang = true })
 
+		vim.api.nvim_create_user_command("ConformToggle", function(args)
+			if vim.g["disable_autoformat"] then
+				vim.g["disable_autoformat"] = false
+			else
+				vim.g["disable_autoformat"] = true
+			end
+		end, { desc = "conform - toggle format on save", bang = false })
+
 		local map = require("config.custom_api").map
 
+		map("n", "<M-f>", "ConformToggle", "conform - toggle format on save", false)
 		map("n", "<leader>ce", "ConformEnable", "Format on save: Enabled (global)", true)
 		map("n", "<leader>cE", "ConformEnable!", "Format on save: Enabled (buffer)", true)
 		map("n", "<leader>cd", "ConformDisable", "Format on save: Disabled (global)", true)
