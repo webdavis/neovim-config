@@ -87,7 +87,7 @@ return {
     vim.keymap.set('n', '<C-g>l', builtin.git_commits, { desc = 'git - search commits' })
     vim.keymap.set('n', '<C-g>L', builtin.git_bcommits, { desc = 'git - search buffer commits' })
     vim.keymap.set('n', '<C-g>f', builtin.git_files, { desc = 'git - search files' })
-    vim.keymap.set('n', '<C-g>s', builtin.git_status, { desc = 'git - search status' })
+    vim.keymap.set('n', '<C-g>S', builtin.git_status, { desc = 'git - search status' })
     vim.keymap.set('n', '<C-g>n', builtin.git_stash, { desc = 'git - search stashes' })
 
     --------------
