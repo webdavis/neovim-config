@@ -1,8 +1,8 @@
 return {
-  'nvim-treesitter/nvim-treesitter-textobjects',
+  "nvim-treesitter/nvim-treesitter-textobjects",
   lazy = true,
   config = function()
-    require('nvim-treesitter.configs').setup({
+    require("nvim-treesitter.configs").setup({
       textobjects = {
         select = {
           enable = true,
@@ -12,28 +12,40 @@ return {
 
           keymaps = {
             -- You can use the capture groups defined in textobjects.scm
-            ['a='] = { query = '@assignment.outer', desc = 'Select outer part of an assignment' },
-            ['i='] = { query = '@assignment.inner', desc = 'Select inner part of an assignment' },
-            ['l='] = { query = '@assignment.lhs', desc = 'Select left hand side of an assignment' },
-            ['r='] = { query = '@assignment.rhs', desc = 'Select right hand side of an assignment' },
+            ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment" },
+            ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment" },
+            ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
+            ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
 
-            ['aa'] = { query = '@parameter.outer', desc = 'Select outer part of a parameter/argument' },
-            ['ia'] = { query = '@parameter.inner', desc = 'Select inner part of a parameter/argument' },
+            ["aa"] = {
+              query = "@parameter.outer",
+              desc = "Select outer part of a parameter/argument",
+            },
+            ["ia"] = {
+              query = "@parameter.inner",
+              desc = "Select inner part of a parameter/argument",
+            },
 
-            ['ak'] = { query = '@conditional.outer', desc = 'Select outer part of a conditional' },
-            ['ik'] = { query = '@conditional.inner', desc = 'Select inner part of a conditional' },
+            ["ak"] = { query = "@conditional.outer", desc = "Select outer part of a conditional" },
+            ["ik"] = { query = "@conditional.inner", desc = "Select inner part of a conditional" },
 
-            ['ao'] = { query = '@loop.outer', desc = 'Select outer part of a loop' },
-            ['io'] = { query = '@loop.inner', desc = 'Select inner part of a loop' },
+            ["ao"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
+            ["io"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
 
-            ['af'] = { query = '@call.outer', desc = 'Select outer part of a function call' },
-            ['if'] = { query = '@call.inner', desc = 'Select inner part of a function call' },
+            ["af"] = { query = "@call.outer", desc = "Select outer part of a function call" },
+            ["if"] = { query = "@call.inner", desc = "Select inner part of a function call" },
 
-            ['am'] = { query = '@function.outer', desc = 'Select outer part of a method/function definition' },
-            ['im'] = { query = '@function.inner', desc = 'Select inner part of a method/function definition' },
+            ["am"] = {
+              query = "@function.outer",
+              desc = "Select outer part of a method/function definition",
+            },
+            ["im"] = {
+              query = "@function.inner",
+              desc = "Select inner part of a method/function definition",
+            },
 
-            ['ac'] = { query = '@class.outer', desc = 'Select outer part of a class' },
-            ['ic'] = { query = '@class.inner', desc = 'Select inner part of a class' },
+            ["ac"] = { query = "@class.outer", desc = "Select outer part of a class" },
+            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class" },
           },
         },
         swap = {
@@ -51,41 +63,53 @@ return {
           enable = true,
           set_jumps = true, -- Enable to add jumps to the jumplist.
           goto_next_start = {
-            [']f'] = { query = '@call.outer', desc = 'Next function call start' },
-            [']m'] = { query = '@function.outer', desc = 'Next method/function def start' },
-            [']c'] = { query = '@class.outer', desc = 'Next class start' },
-            [']k'] = { query = '@conditional.outer', desc = 'Next conditional start' },
-            [']l'] = { query = '@loop.outer', desc = 'Next loop start' },
-            [']u'] = { query = '@scopename.outer', query_group = 'locals', desc = 'Next scope start' },
-            [']z'] = { query = '@fold', query_group = 'folds', desc = 'Next fold start' },
+            ["]f"] = { query = "@call.outer", desc = "Next function call start" },
+            ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
+            ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            ["]k"] = { query = "@conditional.outer", desc = "Next conditional start" },
+            ["]l"] = { query = "@loop.outer", desc = "Next loop start" },
+            ["]u"] = {
+              query = "@scopename.outer",
+              query_group = "locals",
+              desc = "Next scope start",
+            },
+            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
           },
           goto_next_end = {
-            [']F'] = { query = '@call.outer', desc = 'Next function call end' },
-            [']M'] = { query = '@function.outer', desc = 'Next method/function def end' },
-            [']C'] = { query = '@class.outer', desc = 'Next class end' },
-            [']K'] = { query = '@conditional.outer', desc = 'Next conditional end' },
-            [']L'] = { query = '@loop.outer', desc = 'Next loop end' },
-            [']U'] = { query = '@scopename.outer', query_group = 'locals', desc = 'Next scope end' },
-            [']Z'] = { query = '@fold', query_group = 'folds', desc = 'Next fold end' },
+            ["]F"] = { query = "@call.outer", desc = "Next function call end" },
+            ["]M"] = { query = "@function.outer", desc = "Next method/function def end" },
+            ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            ["]K"] = { query = "@conditional.outer", desc = "Next conditional end" },
+            ["]L"] = { query = "@loop.outer", desc = "Next loop end" },
+            ["]U"] = { query = "@scopename.outer", query_group = "locals", desc = "Next scope end" },
+            ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
           },
           goto_previous_start = {
-            ['[f'] = { query = '@call.outer', desc = 'Prev function call start' },
-            ['[m'] = { query = '@function.outer', desc = 'Prev method/function def start' },
-            ['[c'] = { query = '@class.outer', desc = 'Prev class start' },
-            ['[k'] = { query = '@conditional.outer', desc = 'Prev conditional start' },
-            ['[l'] = { query = '@loop.outer', desc = 'Prev loop start' },
-            ['[u'] = { query = '@scopename.outer', query_group = 'locals', desc = 'Prev scope start' },
-            ['[z'] = { query = '@fold', query_group = 'folds', desc = 'Prev fold start' },
+            ["[f"] = { query = "@call.outer", desc = "Prev function call start" },
+            ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
+            ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+            ["[k"] = { query = "@conditional.outer", desc = "Prev conditional start" },
+            ["[l"] = { query = "@loop.outer", desc = "Prev loop start" },
+            ["[u"] = {
+              query = "@scopename.outer",
+              query_group = "locals",
+              desc = "Prev scope start",
+            },
+            ["[z"] = { query = "@fold", query_group = "folds", desc = "Prev fold start" },
           },
           goto_previous_end = {
-            ['[F'] = { query = '@call.outer', desc = 'Prev function call end' },
-            ['[M'] = { query = '@function.outer', desc = 'Prev method/function def end' },
-            ['[C'] = { query = '@class.outer', desc = 'Prev class end' },
-            ['[K'] = { query = '@conditional.outer', desc = 'Prev conditional end' },
-            ['[L'] = { query = '@loop.outer', desc = 'Prev loop end' },
-            ['[U'] = { query = '@scopename.outer', query_group = 'locals', desc = 'Prev scope end' },
-            ['[Z'] = { query = '@fold', query_group = 'folds', desc = 'Prev fold end' },
-            ['[G'] = { query = '@comment.outer', query_group = 'comments', desc = 'Prev comment end' },
+            ["[F"] = { query = "@call.outer", desc = "Prev function call end" },
+            ["[M"] = { query = "@function.outer", desc = "Prev method/function def end" },
+            ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+            ["[K"] = { query = "@conditional.outer", desc = "Prev conditional end" },
+            ["[L"] = { query = "@loop.outer", desc = "Prev loop end" },
+            ["[U"] = { query = "@scopename.outer", query_group = "locals", desc = "Prev scope end" },
+            ["[Z"] = { query = "@fold", query_group = "folds", desc = "Prev fold end" },
+            ["[G"] = {
+              query = "@comment.outer",
+              query_group = "comments",
+              desc = "Prev comment end",
+            },
           },
         },
       },
