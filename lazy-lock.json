@@ -56,6 +56,7 @@
   "overseer.nvim": { "branch": "master", "commit": "4855aefcf335bbac71eea9c6a888958fb1ed1e1a" },
   "plenary.nvim": { "branch": "master", "commit": "4f71c0c4a196ceb656c824a70792f3df3ce6bb6d" },
   "popup.nvim": { "branch": "master", "commit": "b7404d35d5d3548a82149238289fa71f7f6de4ac" },
+  "quick-scope": { "branch": "master", "commit": "256d81e391a22eeb53791ff62ce65f870418fa71" },
   "rest.nvim": { "branch": "main", "commit": "c27a0bcb84ab5534d89065d638119ed2dbbae189" },
   "rose-pine": { "branch": "main", "commit": "f977eeba34b030b37f93ece2fbd792477606203b" },
   "targets.vim": { "branch": "master", "commit": "642d3a4ce306264b05ea3219920b13ea80931767" },
