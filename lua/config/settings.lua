@@ -1,7 +1,9 @@
 local set_option = require("config.custom_api").set_option
 
 -- Display the colorcolumn at 1 greater than the buffers textwidth. FIXME
-vim.o.colorcolumn = tostring(vim.bo.textwidth + 1)
+local textwidth = 95
+set_option("textwidth", { o = textwidth, bo = textwidth })
+vim.opt.colorcolumn = tostring(textwidth)
 
 -- Shows where the pattern matches, as it has been typed so far.
 vim.o.incsearch = true
@@ -122,7 +124,6 @@ set_option("number", { o = true, wo = true })
 set_option("relativenumber", { o = true, wo = true })
 set_option("shiftwidth", { o = 4, bo = 4 })
 set_option("softtabstop", { o = 4, bo = 4 })
-set_option("textwidth", { o = 95, bo = 95 })
 set_option("signcolumn", { o = "yes", wo = "yes" }) -- Always display the signcolumn.
 
 --------------------
@@ -133,5 +134,5 @@ vim.api.nvim_command("syntax enable")
 vim.opt.termguicolors = true -- Enable 24-bit colour.
 
 if vim.fn.has("nvim-0.10") == 1 then
-	vim.opt.smoothscroll = true
+  vim.opt.smoothscroll = true
 end
