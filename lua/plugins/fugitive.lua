@@ -51,17 +51,16 @@ return {
 				-- Removes the newline character at the end of 'git branch --show-current'.
 				current_branch = current_branch:gsub("\n", "")
 
-				local confirm_push
 				vim.ui.input(
 					{ prompt = "Are you sure you want to push to the branch, " .. current_branch .. " ? y/n: " },
 					function(input)
-						confirm_push = input
+						local confirm_push = input:lower()
+            if confirm_push == "y" or confirm_push == "yes" then
+              vim.cmd("Git push -u origin " .. current_branch)
+            end
 					end
 				)
 
-				if confirm_push:lower() ~= "y|yes" then
-					vim.cmd("Git push -u origin " .. current_branch)
-				end
 			else
 				print("Error: no current 'git' branch detected")
 			end

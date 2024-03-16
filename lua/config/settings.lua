@@ -27,7 +27,7 @@ vim.o.scrolloff = 1
 
 -- Window split behavior.
 vim.o.splitright = true
-vim.o.splitbelow = false
+vim.o.splitbelow = true
 
 -- "inclusive" means that the last character of the selection is included in an operation.
 -- Include the last character of Visual/Select mode selections. It is only used in Visual and Select mode.

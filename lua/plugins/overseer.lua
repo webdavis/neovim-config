@@ -1,12 +1,14 @@
 return {
-  'stevearc/overseer.nvim',
+  "stevearc/overseer.nvim",
   opts = {},
   config = function()
-    require("overseer").setup({
+    local overseer = require("overseer")
+    overseer.setup({
       -- Default task strategy
       strategy = "terminal",
+      open_on_start = true,
       -- Template modules to load
-      templates = { "builtin" },
+      templates = { "builtin", "user.run_script" },
       -- When true, tries to detect a green color from your colorscheme to use for success highlight
       auto_detect_success_color = true,
       -- Patch nvim-dap to support preLaunchTask and postDebugTask
@@ -29,7 +31,7 @@ return {
         -- String that separates tasks
         separator = "────────────────────────────────────────",
         -- Default direction. Can be "left", "right", or "bottom"
-        direction = "right",
+        direction = "left",
         -- Set keymap to false to remove default behavior
         -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
         bindings = {
@@ -207,19 +209,68 @@ return {
       },
     })
 
-    local opts = { remap = false, silent = true }
+    vim.api.nvim_create_user_command("OverseerRestartLast", function()
+      local tasks = overseer.list_tasks({ recent_first = true })
+      if vim.tbl_isempty(tasks) then
+        vim.notify("No tasks found", vim.log.levels.WARN)
+      else
+        overseer.run_action(tasks[1], "restart")
+      end
+    end, {})
+
+    vim.api.nvim_create_user_command("OverseerWatchRun", function()
+      overseer.run_template({ name = "run script" }, function(task)
+        if task then
+          task:add_component({ "restart_on_save", paths = { vim.fn.expand("%:p") } })
+          local main_win = vim.api.nvim_get_current_win()
+          overseer.run_action(task, "open vsplit")
+          vim.api.nvim_set_current_win(main_win)
+        else
+          vim.notify("WatchRun not supported for filetype " .. vim.bo.filetype, vim.log.levels.ERROR)
+        end
+      end)
+    end, {})
+
     local toggle_runner = function(cmd)
-      if vim.bo.buftype == 'terminal' then
-        vim.cmd('close')
+      if vim.bo.buftype == "terminal" then
+        vim.cmd("close")
       else
         vim.cmd(cmd)
       end
     end
 
-    vim.keymap.set('n', '<leader>or', '<cmd>OverseerRun<cr>', { remap = false, silent = true, desc = 'overseer - run' })
-    vim.keymap.set('n', '<leader>ob', '<cmd>OverseerBuild<cr>', { remap = false, silent = true, desc = 'overseer - build' })
-    vim.keymap.set('n', '<leader>ot', '<cmd>OverseerToggle<cr>', { remap = false, silent = true, desc = 'overseer - toggle' })
-    vim.keymap.set('n', '<M-i>', function() toggle_runner('OverseerQuickAction open vsplit') end, opts)
-    vim.keymap.set('n', '<M-o>', function() toggle_runner('OverseerQuickAction open float') end, opts)
-  end
+    vim.keymap.set("n", "<leader>or", "<cmd>OverseerRun<cr>", { remap = false, silent = true, desc = "overseer - run" })
+    vim.keymap.set("n", "<leader>ob", "<cmd>OverseerBuild<cr>", { remap = false, silent = true, desc = "overseer - build" })
+    vim.keymap.set("n", "<M-o>", "<cmd>OverseerToggle<cr>", { remap = false, silent = true, desc = "overseer - toggle" })
+    vim.keymap.set(
+      "n",
+      "<leader>ol",
+      "<cmd>OverseerRestartLast<cr>",
+      { remap = false, silent = true, desc = "overseer - restart last task" }
+    )
+    vim.keymap.set(
+      "n",
+      "<leader>ow",
+      "<cmd>OverseerQuickAction watch<cr>",
+      { remap = false, silent = true, desc = "overseer - watch" }
+    )
+
+    vim.keymap.set("n", "<leader>oe", function()
+      vim.cmd("OverseerRun")
+      vim.cmd("OverseerOpen!")
+    end, { remap = false, silent = true, desc = "overseer - run and open list" })
+
+    vim.keymap.set("n", "<M-'>", function()
+      toggle_runner("OverseerQuickAction open vsplit")
+    end, { desc = "overseer - open task in vsplit" })
+    vim.keymap.set("n", "<M-;>", function()
+      toggle_runner("OverseerQuickAction open hsplit")
+    end, { desc = "overseer - open task in hsplit" })
+    vim.keymap.set("n", "<M-9>", function()
+      toggle_runner("OverseerQuickAction open float")
+    end, { desc = "overseer - open task in floating window" })
+    vim.keymap.set("n", "<M-r>", function()
+      toggle_runner("OverseerWatchRun")
+    end, { desc = "overseer - watch run" })
+  end,
 }

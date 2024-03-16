@@ -1,15 +1,49 @@
 return {
-  'folke/trouble.nvim',
+  "folke/trouble.nvim",
   config = function()
-    require('trouble').setup({
+    local trouble = require("trouble")
+
+    trouble.setup({
       icons = false,
+      auto_preview = false,
     })
 
-    vim.keymap.set('n', '<leader>tt', function() require('trouble').toggle() end, { noremap = true, silent = true, desc = 'trouble - list buffer diagnostics' })
-    vim.keymap.set('n', '<leader>tw', '<cmd>TroubleToggle workspace_diagnostics<cr>', { noremap = true, silent = true, desc = 'trouble - list workspace diagnostics' })
-    vim.keymap.set('n', '<leader>tr', '<cmd>Trouble lsp_references<cr>', { noremap = true, silent = true, desc = 'trouble - list LSP references for <cword>' })
+    -- vim.api.nvim_create_autocmd("User", {
+    --   pattern = { "XcodebuildBuildFinished", "XcodebuildTestsFinished" },
+    --   callback = function(event)
+    --     if event.data.cancelled then
+    --       return
+    --     end
+    --
+    --     if event.data.success then
+    --       trouble.close()
+    --     elseif not event.data.failedCount or event.data.failedCount > 0 then
+    --       if next(vim.fn.getqflist()) then
+    --         trouble.open({ focus = false })
+    --       else
+    --         trouble.close()
+    --       end
+    --
+    --       trouble.refresh()
+    --     end
+    --   end,
+    -- })
 
-    vim.keymap.set('n', '[r', function() require('trouble').next({ skip_groups = true, jump = true }); end, { desc = 'trouble - jump to previous' })
-    vim.keymap.set('n', ']r', function() require('trouble').previous({ skip_groups = true, jump = true }); end, { desc = 'trouble - jump to next' })
-  end
+    local map = require("config.custom_api").map
+
+    map("n", "<M-t>", function()
+      trouble.toggle()
+    end, "trouble - list buffer diagnostics")
+
+    map("n", "<M-w>", "TroubleToggle workspace_diagnostics", "trouble - list workspace diagnostics")
+    map("n", "<leader>tr", "Trouble lsp_references", "trouble - list LSP references for <cword>")
+
+    map("n", "[r", function()
+      trouble.next({ skip_groups = true, jump = true })
+    end, "trouble - jump to previous")
+
+    map("n", "]r", function()
+      trouble.previous({ skip_groups = true, jump = true })
+    end, "trouble - jump to next")
+  end,
 }
