@@ -1,5 +1,8 @@
 local set_option = require("config.custom_api").set_option
 
+-- Turn on directory-specific Neovim settings.
+vim.opt.exrc = true
+
 -- Display the colorcolumn at 1 greater than the buffers textwidth. FIXME
 local textwidth = 95
 set_option("textwidth", { o = textwidth, bo = textwidth })
