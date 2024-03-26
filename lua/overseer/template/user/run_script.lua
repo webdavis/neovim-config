@@ -3,6 +3,9 @@ return {
   builder = function()
     local file = vim.fn.expand("%:p")
     local cmd
+    if vim.bo.filetype == "lua" then
+      cmd = { "lua", file }
+    end
     if vim.bo.filetype == "go" then
       cmd = { "go", "run", file }
     end
@@ -13,7 +16,7 @@ return {
       cmd = { "bash", file }
     end
     if vim.bo.filetype == "swift" then
-      cmd = "set -eo pipefail; swift test | xcpretty"
+      cmd = "set -eo pipefail; swift build"
     end
     return {
       cmd = cmd,
@@ -25,6 +28,6 @@ return {
     }
   end,
   condition = {
-    filetype = { "sh", "python", "go", "swift" },
+    filetype = { "lua", "sh", "python", "go", "swift" },
   },
 }
