@@ -58,5 +58,7 @@ return {
     map("n", "[w", function()
       todo_comments.jump_prev({ keywords = todo_keywords })
     end, "Jump to previous todo comment")
+
+    vim.keymap.set("n", "<leader>fc", "<cmd>TodoTelescope<cr>", { desc = "find - todo comments" })
   end,
 }

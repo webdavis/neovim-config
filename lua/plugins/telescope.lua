@@ -59,7 +59,7 @@ return {
     local builtin = require("telescope.builtin")
     vim.keymap.set("n", "<leader>fM", builtin.man_pages, { desc = "find - man pages" })
     vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "find - buffers" })
-    vim.keymap.set("n", "<leader>fc", builtin.colorscheme, { desc = "find - colorschemes" })
+    vim.keymap.set("n", "<leader>fC", builtin.colorscheme, { desc = "find - colorschemes" })
     vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "find - diagnostics" })
     vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "find - files" })
     vim.keymap.set("n", "<leader>f/", builtin.current_buffer_fuzzy_find, { desc = "find - text in current buffer" })
