@@ -12,6 +12,17 @@ return {
           alt = {},
         },
       },
+      search = {
+        command = "rg",
+        args = {
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--no-ignore-vcs",
+        },
+      },
     })
 
     local map = require("config.custom_api").map
