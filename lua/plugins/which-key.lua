@@ -16,7 +16,7 @@ return {
       ["<leader>"] = {
         ["0"] = { name = "quit" },
         c = { name = "code action/format(conform)/lint" },
-        d = { name = "diagnostics" },
+        d = { name = "diagnostics/docker" },
         f = {
           name = "find",
           s = { name = "symbols" },
