@@ -1,15 +1,17 @@
 local M = {}
 
-M.set_option = function(option, context_dict)
-  for k, v in pairs(context_dict) do
-    if k == "o" then
-      vim.api.nvim_set_option(option, v)
+-- For an in-depth investigation about what this does, see
+-- https://chat.openai.com/share/da304881-b98e-4133-bc6b-5995da37f3ef
+M.set_option = function(option, context_dictionary)
+  for key, value in pairs(context_dictionary) do
+    if key == "o" then
+      vim.api.nvim_set_option(option, value)
     end
-    if k == "bo" then
-      vim.api.nvim_buf_set_option(vim.fn.bufnr(), option, v)
+    if key == "bo" then
+      vim.api.nvim_buf_set_option(vim.fn.bufnr(), option, value)
     end
-    if k == "wo" then
-      vim.api.nvim_win_set_option(0, option, v)
+    if key == "wo" then
+      vim.api.nvim_win_set_option(0, option, value)
     end
   end
 end
