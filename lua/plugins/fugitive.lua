@@ -86,11 +86,11 @@ return {
 
 		vim.keymap.set("n", "<C-g>ww", function()
 			vim.cmd.Git("whatchanged")
-		end, { noremap = true, silent = false, desc = "whatchanged - all commits (workspace)" })
+		end, { noremap = true, silent = false, desc = "whatchanged - workspace commits" })
 
 		vim.keymap.set("n", "<C-g>wb", function()
 			vim.cmd.Git("whatchanged -- %")
-		end, { noremap = true, silent = false, desc = "whatchanged - all commits (buffer)" })
+		end, { noremap = true, silent = false, desc = "whatchanged - buffer commits" })
 
 		vim.keymap.set(
 			"n",
