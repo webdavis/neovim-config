@@ -44,12 +44,12 @@ map("n", "<C-Left>", "vertical resize -2", "decrease window width")
 map("n", "<C-Right>", "vertical resize +2", "increase window width")
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-map("n", "n", "'Nn'[v:searchforward]", "next search result")
-map("x", "n", "'Nn'[v:searchforward]", "next search result")
-map("o", "n", "'Nn'[v:searchforward]", "next search result")
-map("n", "N", "'nN'[v:searchforward]", "prev search result")
-map("x", "N", "'nN'[v:searchforward]", "prev search result")
-map("o", "N", "'nN'[v:searchforward]", "prev search result")
+vim.keymap.set({ "n" }, "n", "'Nn'[v:searchforward]", { noremap = true, expr = true, desc = "next search result" })
+vim.keymap.set({ "x" }, "n", "'Nn'[v:searchforward]", { noremap = true, expr = true, desc = "next search result" })
+vim.keymap.set({ "o" }, "n", "'Nn'[v:searchforward]", { noremap = true, expr = true, desc = "next search result" })
+vim.keymap.set({ "n" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "prev search result" })
+vim.keymap.set({ "x" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "prev search result" })
+vim.keymap.set({ "o" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "prev search result" })
 
 -- Make the current file executable.
 map("n", "<leader>X", "!chmod +x %", "make current file executable", true)
