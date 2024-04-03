@@ -7,7 +7,7 @@ vim.g.maplocalleader = " "
 local map = require("config.custom_api").map
 
 -- Faster file manipulation.
-map("n", "<C-s>", "write", "quickly save file", true)
+map("n", "<C-s>", "write", "file written")
 map("n", "<C-q>", "quit", "quickly quit the file")
 map("n", "<leader><C-s>", "wall", "write - all files")
 map("n", "<leader>e", "new", "new file")
@@ -52,13 +52,13 @@ vim.keymap.set({ "x" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = t
 vim.keymap.set({ "o" }, "N", "'nN'[v:searchforward]", { noremap = true, expr = true, desc = "prev search result" })
 
 -- Make the current file executable.
-map("n", "<leader>X", "!chmod +x %", "make current file executable", true)
+map("n", "<leader>X", "!chmod +x %", "make current file executable")
 
 -- Replace word under cursor text with last yanked text.
-map("n", "<leader>p", [[viw"_dP]], "replace <cword> with yanked text")
+vim.keymap.set({ "n" }, "<leader>p", [[viw"_dP]], { desc = "replace <cword> with yanked text" })
 
 -- Yank to end of line without line-ending character.
-map("n", "Y", '"+yg_', "Yank to EOL (without line-ending)")
+vim.keymap.set({ "n" }, "Y", [["+yg_]], { desc = "Yank to EOL (without line-ending)" })
 
 -- Toggle quickfix list.
 local toggle_qf = function()
