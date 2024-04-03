@@ -209,7 +209,7 @@ return {
     })
 
     lspconfig.bashls.setup({
-      filetypes = { "sh" },
+      filetypes = { "sh", "bash" },
       -- Launch the bashls server explicitly with :LspStart
       autostart = false,
     })
