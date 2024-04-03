@@ -3,34 +3,6 @@ return {
   config = function()
     local lint = require("lint")
 
-    -- swiftlint
-    local pattern = "[^:]+:(%d+):(%d+): (%w+): (.+)"
-    local groups = { "lnum", "col", "severity", "message" }
-    local defaults = { ["source"] = "swiftlint" }
-    local severity_map = {
-      ["error"] = vim.diagnostic.severity.ERROR,
-      ["warning"] = vim.diagnostic.severity.WARN,
-    }
-
-    local find_config = require("config.custom_api").find_config
-
-    lint.linters.swiftlint = {
-      cmd = "swiftlint",
-      stdin = false,
-      args = {
-        "lint",
-        "--force-exclude",
-        "--use-alternative-excluding",
-        "--config",
-        function()
-          return find_config(".swiftlint.yml")
-        end,
-      },
-      stream = "stdout",
-      ignore_exitcode = true,
-      parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
-    }
-
     lint.linters_by_ft = {
       swift = { "swiftlint" },
       ansible = { "ansible_lint" },
