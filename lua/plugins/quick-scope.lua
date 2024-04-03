@@ -7,10 +7,11 @@ return {
 
     map("n", "<M-q>", function()
       vim.cmd("QuickScopeToggle")
+      local notify = require("notify")
       if vim.g.qs_enable == 1 then
-        vim.notify("quick-scope - Enabled", vim.log.levels.INFO)
+        notify("quick-scope - Enabled", vim.log.levels.INFO)
       else
-        vim.notify("quick-scope - Disabled", vim.log.levels.WARN)
+        notify("quick-scope - Disabled", vim.log.levels.WARN)
       end
     end, "quickscope - toggle", false)
 

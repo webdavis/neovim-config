@@ -209,10 +209,11 @@ return {
       },
     })
 
+    local notify = require("notify")
     vim.api.nvim_create_user_command("OverseerRestartLast", function()
       local tasks = overseer.list_tasks({ recent_first = true })
       if vim.tbl_isempty(tasks) then
-        vim.notify("No tasks found", vim.log.levels.WARN)
+        notify("No tasks found", vim.log.levels.WARN)
       else
         overseer.run_action(tasks[1], "restart")
       end
@@ -226,7 +227,7 @@ return {
           overseer.run_action(task, "open hsplit")
           vim.api.nvim_set_current_win(main_win)
         else
-          vim.notify("WatchRun not supported for filetype " .. vim.bo.filetype, vim.log.levels.ERROR)
+          notify("WatchRun not supported for filetype " .. vim.bo.filetype, vim.log.levels.ERROR)
         end
       end)
     end, {})
