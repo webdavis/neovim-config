@@ -13,6 +13,7 @@ return {
     "nvim-telescope/telescope-media-files.nvim",
     "jvgrootveld/telescope-zoxide",
     "ahmedkhalf/project.nvim",
+    "tsakirist/telescope-lazy.nvim",
     {
       "nvim-telescope/telescope-fzf-native.nvim",
       build = "make",
@@ -30,6 +31,7 @@ return {
     require("telescope").load_extension("project")
     require("telescope").load_extension("media_files")
     require("telescope").load_extension("zoxide")
+    require("telescope").load_extension("lazy")
 
     require("telescope").setup({
       defaults = {
@@ -71,7 +73,7 @@ return {
     vim.keymap.set("n", "<leader>fn", "<cmd>Telescope notify<cr>", { desc = "find - notifications" })
     vim.keymap.set("n", "<leader>fo", builtin.oldfiles, { desc = "find - recent files" })
     vim.keymap.set("n", "<leader>fr", builtin.command_history, { desc = "find - vim command history" })
-    vim.keymap.set("n", "<leader>fq", builtin.quickfix, { desc = "find- - show quickfix list" })
+    vim.keymap.set("n", "<leader>fq", builtin.quickfix, { desc = "find - show quickfix list" })
 
     ---------------------
     -- Extension mappings
@@ -79,6 +81,7 @@ return {
     vim.keymap.set("n", "<leader>fy", ":Telescope http list<CR>", { desc = "find - http codes" })
     vim.keymap.set("n", "<leader>fp", ":Telescope project<cr>", { desc = "find - projects" })
     vim.keymap.set("n", "<leader>fz", require("telescope").extensions.zoxide.list, { desc = "find - zoxide directories" })
+    vim.keymap.set("n", "<leader>fl", "<cmd>Telescope lazy<cr>", { desc = "find - Lazy.nvim plugins" })
 
     ------------------------
     -- file-browser mappings
