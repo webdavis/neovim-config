@@ -1,0 +1,5 @@
+# Ignore Finder metadata files.
+.DS_Store
+
+# Ignore vim swap files.
+*.sw*
