@@ -210,6 +210,7 @@ return {
     })
 
     local notify = require("notify")
+
     vim.api.nvim_create_user_command("OverseerRestartLast", function()
       local tasks = overseer.list_tasks({ recent_first = true })
       if vim.tbl_isempty(tasks) then
