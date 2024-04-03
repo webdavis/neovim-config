@@ -5,6 +5,7 @@ return {
   { "nanotee/zoxide.vim" },
   { "webdavis/vim-rsi" },
   { "tpope/vim-unimpaired" },
+  { "tpope/vim-scriptease" },
   { "tpope/vim-repeat" },
   { "tpope/vim-eunuch" },
   { "tpope/vim-sleuth" },
