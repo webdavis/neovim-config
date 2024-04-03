@@ -14,7 +14,10 @@ return {
     },
     config = function()
       require("neodev").setup({
-        library = { plugins = { "neotest" }, types = true },
+        library = {
+          plugins = { "neotest" },
+          types = true,
+        },
       })
       local neotest = require("neotest")
       neotest.setup({
@@ -28,25 +31,25 @@ return {
             min_init = "./scripts/minimal_init.lua",
           }),
           require("neotest-zig"),
-          -- require("neotest-bash"),
+          require("neotest-bash"),
         },
       })
 
-      vim.keymap.set("n", "<leader>tc", function()
+      vim.keymap.set("n", "<leader>tn", function()
         neotest.run.run()
       end, { desc = "neotest - run nearest test" })
 
       vim.keymap.set("n", "<leader>tf", function()
         neotest.run.run(vim.fn.expand("%"))
-      end, { desc = "neotest - run all tests in file" })
+      end, { desc = "neotest - run test file" })
 
       vim.keymap.set("n", "<leader>t;", function()
         neotest.run.run(vim.fn.getcwd())
-      end, { desc = "neotest - run all tests in workspace" })
+      end, { desc = "neotest - run test suite" })
 
       vim.keymap.set("n", "<leader>tl", function()
         neotest.run.run_last()
-      end, { desc = "neotest - run most recent test" })
+      end, { desc = "neotest - run last test" })
 
       vim.keymap.set("n", "<leader>th", function()
         neotest.run.stop()
@@ -66,15 +69,15 @@ return {
 
       vim.keymap.set("n", "<leader>tw", function()
         neotest.watch.toggle(vim.fn.expand("%"))
-      end, { desc = "neotest - watch current file (run on save)" })
+      end, { desc = "neotest - watch file (run on save)" })
 
       vim.keymap.set("n", "]t", function()
         neotest.jump.next()
-      end, { desc = "neotest - jump to next test" })
+      end, { desc = "neotest - goto next test" })
 
       vim.keymap.set("n", "[t", function()
         neotest.jump.next()
-      end, { desc = "neotest - jump to previous test" })
+      end, { desc = "neotest - goto previous test" })
     end,
   },
 }
