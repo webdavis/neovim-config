@@ -1,0 +1,92 @@
+return {
+  "folke/which-key.nvim",
+  event = "VeryLazy",
+  opts_extend = { "spec" },
+  opts = {
+    preset = "helix",
+    defaults = {},
+    spec = {
+      {
+        mode = { "n", "v" },
+        { "<C-g>", group = "git-1" },
+        { "<C-g>b", group = "branch／blame" },
+        { "<C-g>c", group = "commit" },
+        { "<C-g>d", group = "diff" },
+        { "<C-g>f", group = "fetch／pull" },
+        { "<C-g>l", group = "log" },
+        { "<C-g>o", group = "browse" },
+        { "<C-g>p", group = "push" },
+        { "<C-g>S", group = "stash" },
+        { "<C-g>s", group = "status" },
+        { "<C-g>w", group = "whatchanged" },
+        { "<leader>/", group = "grep" },
+        { "<leader>0", group = "quit" },
+        { "<leader>a", group = "aerial" },
+        { "<leader>b", group = "buffer" },
+        { "<leader>c", group = "format／lint／code-action" },
+        { "<leader>cz", group = "freeze" },
+        { "<leader>d", group = "debug" },
+        { "<leader>dp", group = "profiler" },
+        { "<leader>e", group = "file exploration" },
+        { "<leader>f", group = "find" },
+        { "<leader>g", group = "git-2" },
+        { "<leader>gh", group = "GitHub (Octo)" },
+        { "<leader>gr", group = "LSP" },
+        { "<leader>h", group = "harpoon" },
+        { "<leader>j", group = "treejs" },
+        { "<leader>L", group = "lazyvim" },
+        { "<leader>l", group = "lsp" },
+        { "<leader>m", group = "markdown" },
+        { "<leader>n", group = "notifications／messages" },
+        { "<leader>o", group = "overseer" },
+        { "<leader>r", group = "rename／find-and-replace" },
+        { "<leader>R", group = "rest (kulala)" },
+        { "<leader>s", group = "search" },
+        { "<leader>u", group = "toggle" },
+        { "<leader>U", group = "urlview" },
+        { "<leader>x", group = "diagnostics／quickfix" },
+        { "<leader>y", group = "yank" },
+        { "[", group = "prev" },
+        { "]", group = "next" },
+        { "gc", group = "comments" },
+        { "gx", desc = "Open with system app" },
+        { "z", group = "fold／spelling" },
+        {
+          "<leader>b",
+          group = "buffer",
+          expand = function()
+            return require("which-key.extras").expand.buf()
+          end,
+        },
+        {
+          "<leader>w",
+          group = "windows",
+          proxy = "<c-w>",
+          expand = function()
+            return require("which-key.extras").expand.win()
+          end,
+        },
+      },
+    },
+  },
+  keys = {
+    {
+      "<leader>?",
+      function()
+        require("which-key").show({ global = false })
+      end,
+      desc = "Buffer Local Keymaps (which-key)",
+    },
+    {
+      "<c-w><space>",
+      function()
+        require("which-key").show({ keys = "<c-w>", loop = true })
+      end,
+      desc = "Window Hydra Mode (which-key)",
+    },
+  },
+  config = function(_, opts)
+    local which_key = require("which-key")
+    which_key.setup(opts)
+  end,
+}
