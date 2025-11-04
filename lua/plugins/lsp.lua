@@ -269,9 +269,14 @@ return {
           }),
           diagnostics.ansiblelint,
           -- diagnostics.codespell,
-          diagnostics.dotenv_linter,
+          diagnostics.dotenv_linter.with({
+            -- disabled_filetypes = { "sh", "bash" },
+          }),
           diagnostics.hadolint, -- Filetypes: Dockerfile.
 
+          formatting.shfmt.with({
+            args = { "-i", "2", "-ci", "-s" },
+          }),
           formatting.mdformat,
           formatting.nixfmt, -- Filetypes: .nix config files, specifically.
           formatting.nix_flake_fmt.with({ -- Filetypes: flake.nix files, specifically.
