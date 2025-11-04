@@ -1,5 +1,7 @@
 return {
-  "tummetott/unimpaired.nvim",
+  "tpope/vim-unimpaired",
+  dependencies = {
+    "tpope/vim-repeat",
+  },
   event = "VeryLazy",
-  opts = {},
 }
