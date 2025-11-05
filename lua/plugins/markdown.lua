@@ -63,13 +63,10 @@ return {
           local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- 1-based row
           local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-          -- 1. Find the start of the task.
+          -- 1. Start row is always the current line (checkbox line)
           local start_row = row
-          while start_row > 1 and lines[start_row - 1]:match("^%s") do
-            start_row = start_row - 1
-          end
 
-          -- 2. Find the end of the task.
+          -- 2. End row expands downward while lines are indented
           local end_row = row
           while end_row < #lines and lines[end_row + 1]:match("^%s") do
             end_row = end_row + 1
