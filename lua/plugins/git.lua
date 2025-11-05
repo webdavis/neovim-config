@@ -482,29 +482,29 @@ return {
         mode = "n",
         lhs = "<C-g>SS",
         rhs = "Git stash --include-untracked",
-        desc = "Fugitive (stash): push [default] (everything except ignored files)",
+        desc = "Stash (push): tracked + untracked (default)",
       })
       map({
         mode = "n",
         lhs = "<C-g>Se",
         rhs = "Git stash --all",
-        desc = "Fugitive (stash): push everything (tracked + untracked + ignored)",
+        desc = "Stash (push): tracked + untracked + ignored",
       })
       map({
         mode = "n",
         lhs = "<C-g>Sw",
         rhs = "Git stash --keep-index",
-        desc = "Fugitive (stash): push working area only (keep staged changes)",
+        desc = "Stash (push): working (keep staged changes)",
       })
       map({
         mode = "n",
         lhs = "<C-g>SW",
         rhs = "Git stash --keep-index --include-untracked",
-        desc = "Fugitive (stash): push working area + untracked (keep staged changes)",
+        desc = "Stash (push): working + untracked (keep staged changes)",
       })
 
       -- Stash pop:
-      map({ mode = "n", lhs = "<C-g>SP", rhs = "Git stash pop", desc = "Fugitive (stash): pop most recent stash" })
+      map({ mode = "n", lhs = "<C-g>SP", rhs = "Git stash pop", desc = "Stash (pop): most recent (default)" })
       map({
         mode = "n",
         lhs = "<C-g>Sp",
@@ -514,11 +514,11 @@ return {
             vim.cmd("Git stash pop " .. index)
           end
         end,
-        desc = "Fugitive (stash): pop stash by index <#>",
+        desc = "Stash (pop): by index <#>",
       })
 
       -- Stash apply:
-      map({ mode = "n", lhs = "<C-g>SA", rhs = "Git stash apply", desc = "Fugitive (stash): apply most recent stash" })
+      map({ mode = "n", lhs = "<C-g>SA", rhs = "Git stash apply", desc = "Stash (apply): most recent (default)" })
       map({
         mode = "n",
         lhs = "<C-g>Sa",
@@ -528,7 +528,7 @@ return {
             vim.cmd("Git stash apply " .. index)
           end
         end,
-        desc = "Fugitive (stash): apply by index <#>",
+        desc = "Stash (apply): by index <#>",
       })
 
       -- Commit:
