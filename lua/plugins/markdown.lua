@@ -18,7 +18,13 @@ return {
       local markview_global_toggle = snacks.toggle({
         name = "Markview (global)",
         get = function()
-          return markview.actions.__is_enabled()
+          local state = require("markview.state")
+          local attached = state.get_attached_buffers()
+          if #attached == 0 then
+            return state.get_buffer_state(-1, true).enable
+          else
+            return state.get_buffer_state(attached[1], false).enable
+          end
         end,
         set = function(state)
           if state then
@@ -35,7 +41,7 @@ return {
         name = "Markview (buffer)",
         get = function()
           local bufnr = vim.api.nvim_get_current_buf()
-          local buf_state = require("markview").state.buffer_states[bufnr]
+          local buf_state = require("markview.state").vars.buffer_states[bufnr]
           return buf_state and buf_state.enable == true
         end,
         set = function(state)
