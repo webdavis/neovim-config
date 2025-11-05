@@ -247,10 +247,7 @@ return {
     "nvimtools/none-ls.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      {
-        "webdavis/none-ls-extras.nvim",
-        branch = "feat/formatting/ansiblelint_fix",
-      },
+      "nvimtools/none-ls-extras.nvim",
       "davidmh/cspell.nvim",
     },
     config = function()
