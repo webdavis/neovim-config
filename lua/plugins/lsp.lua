@@ -297,8 +297,9 @@ return {
           code_actions.gitsigns,
           code_actions.refactoring, -- Filetypes: go, javascript, lua, python, typescript.
 
-          require("none-ls.formatting.ansiblelint"), -- Requires: none-ls-extras.nvim
-          require("none-ls.diagnostics.eslint"), -- Requires: none-ls-extras.nvim
+          -- The following require none-ls-extras.nvim:
+          require("none-ls.formatting.ansiblelint"),
+          require("none-ls.diagnostics.eslint"),
         },
       })
     end,
