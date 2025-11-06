@@ -504,10 +504,10 @@ return {
       })
 
       -- Stash pop:
-      map({ mode = "n", lhs = "<C-g>SP", rhs = "Git stash pop", desc = "Stash (pop): most recent (default)" })
+      map({ mode = "n", lhs = "<C-g>Sp", rhs = "Git stash pop", desc = "Stash (pop): most recent (default)" })
       map({
         mode = "n",
-        lhs = "<C-g>Sp",
+        lhs = "<C-g>SP",
         rhs = function()
           local index = trim(vim.fn.input("Stash index to pop: "))
           if index ~= "" then
@@ -518,10 +518,10 @@ return {
       })
 
       -- Stash apply:
-      map({ mode = "n", lhs = "<C-g>SA", rhs = "Git stash apply", desc = "Stash (apply): most recent (default)" })
+      map({ mode = "n", lhs = "<C-g>Sa", rhs = "Git stash apply", desc = "Stash (apply): most recent (default)" })
       map({
         mode = "n",
-        lhs = "<C-g>Sa",
+        lhs = "<C-g>SA",
         rhs = function()
           local index = trim(vim.fn.input("Stash index to pop: "))
           if index ~= "" then
