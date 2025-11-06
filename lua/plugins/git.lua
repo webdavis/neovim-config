@@ -484,18 +484,21 @@ return {
         rhs = "Git stash --include-untracked",
         desc = "Stash (push): tracked + untracked (default)",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>Se",
         rhs = "Git stash --all",
         desc = "Stash (push): tracked + untracked + ignored",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>Sw",
         rhs = "Git stash --keep-index",
         desc = "Stash (push): working (keep staged changes)",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>SW",
@@ -505,6 +508,7 @@ return {
 
       -- Stash pop:
       map({ mode = "n", lhs = "<C-g>Sp", rhs = "Git stash pop", desc = "Stash (pop): most recent (default)" })
+
       map({
         mode = "n",
         lhs = "<C-g>SP",
@@ -519,6 +523,7 @@ return {
 
       -- Stash apply:
       map({ mode = "n", lhs = "<C-g>Sa", rhs = "Git stash apply", desc = "Stash (apply): most recent (default)" })
+
       map({
         mode = "n",
         lhs = "<C-g>SA",
@@ -532,22 +537,14 @@ return {
       })
 
       -- Commit:
+      -- stylua: ignore start
       map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit", desc = "Fugitive: commit" })
       map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only the current file)" })
       map({ mode = "n", lhs = "<C-g>cv", rhs = "Git commit --verbose", desc = "Fugitive: commit -v" })
       map({ mode = "n", lhs = "<C-g>ca", rhs = "Git commit --amend", desc = "Fugitive: commit --amend" })
-      map({
-        mode = "n",
-        lhs = "<C-g>cA",
-        rhs = "Git commit --amend --verbose",
-        desc = "Fugitive: commit --amend --verbose",
-      })
-      map({
-        mode = "n",
-        lhs = "<C-g>cn",
-        rhs = "Git commit --amend --no-edit",
-        desc = "Fugitive: commit --amend --no-edit",
-      })
+      map({ mode = "n", lhs = "<C-g>cA", rhs = "Git commit --amend --verbose", desc = "Fugitive: commit --amend --verbose" })
+      map({ mode = "n", lhs = "<C-g>cn", rhs = "Git commit --amend --no-edit", desc = "Fugitive: commit --amend --no-edit" })
+      -- stylua: ignore end
 
       -- An interactive command to amend the author/email of the latest commit:
       map({
@@ -582,13 +579,16 @@ return {
 
       -- Log:
       map({ mode = "n", lhs = "<C-g>ll", rhs = "Git log --oneline", desc = "Fugitive: log --oneline" })
+
       map({
         mode = "n",
         lhs = "<C-g>lc",
         rhs = "Git log --oneline -- %",
         desc = "Fugitive: log --oneline (current file only)",
       })
+
       map({ mode = "n", lhs = "<C-g>lL", rhs = "Git log", desc = "Fugitive: log (full)" })
+
       map({
         mode = "n",
         lhs = "<C-g>lp",
@@ -603,18 +603,21 @@ return {
         rhs = "Git diff --cached -U0",
         desc = "Fugitive (diff): staged changes - no surrounding context, (+/-) only",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>dS",
         rhs = "Git diff --cached -U0 -- %",
         desc = "Fugitive (diff): staged changes (current file) - no surrounding context, (+/-) only",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>dF",
         rhs = "Git diff --cached -W --function-context",
         desc = "Fugitive (diff): with function context",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>dw",
@@ -623,6 +626,7 @@ return {
         end,
         desc = "Git (Overseer): diff --color-words",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>dm",
@@ -676,12 +680,14 @@ return {
         rhs = "Git whatchanged --i-still-use-this",
         desc = "Fugitive: whatchanged (workspace)",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>wb",
         rhs = "Git whatchanged --i-still-use-this -- %",
         desc = "Fugitive: whatchanged (buffer)",
       })
+
       map({
         mode = "n",
         lhs = "<C-g>wc",
@@ -692,6 +698,7 @@ return {
       -- Browse:
       map({ mode = "n", lhs = "<C-g>of", rhs = "GBrowse", desc = "Fugitive: browse (file)" })
       map({ mode = "n", lhs = "<C-g>ol", rhs = ".GBrowse", desc = "Fugitive: browse (line in file)" })
+
       map({
         mode = "n",
         lhs = "<C-g>ob",
