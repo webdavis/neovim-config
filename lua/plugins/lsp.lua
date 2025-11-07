@@ -272,7 +272,7 @@ return {
           diagnostics.hadolint, -- Filetypes: Dockerfile.
 
           formatting.shfmt.with({
-            args = { "-i", "2", "-ci", "-s" },
+            extra_args = { "-i", "2", "-ci", "-s" },
           }),
           formatting.mdformat,
           formatting.nixfmt, -- Filetypes: .nix config files, specifically.
