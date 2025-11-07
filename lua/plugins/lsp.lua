@@ -284,7 +284,9 @@ return {
           formatting.prettierd.with({
             disabled_filetypes = { "markdown", "yaml.ansible" },
           }),
-          formatting.rubocop, -- Filetypes: Ruby (supports linting & formatting).
+          formatting.rubocop.with({ -- Filetypes: Ruby (supports linting & formatting).
+            extra_args = { "--display-time", "--extra-details", "--autocorrect", "--fail-level autocorrect" },
+          }),
           formatting.stylua,
           formatting.swiftformat,
           formatting.swiftlint,
