@@ -274,7 +274,9 @@ return {
           formatting.shfmt.with({
             extra_args = { "-i", "2", "-ci", "-s" },
           }),
-          formatting.mdformat,
+          formatting.mdformat.with({
+            extra_args = { "--number", "--wrap", "105" },
+          }),
           formatting.nixfmt, -- Filetypes: .nix config files, specifically.
           formatting.nix_flake_fmt.with({ -- Filetypes: flake.nix files, specifically.
             filetypes = { "nix" },
