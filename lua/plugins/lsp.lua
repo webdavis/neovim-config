@@ -267,7 +267,7 @@ return {
           diagnostics.ansiblelint,
           -- diagnostics.codespell,
           diagnostics.dotenv_linter.with({
-            -- disabled_filetypes = { "sh", "bash" },
+            disabled_filetypes = { "sh", "bash" },
           }),
           diagnostics.hadolint, -- Filetypes: Dockerfile.
 
