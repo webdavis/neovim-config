@@ -701,7 +701,7 @@ return {
 
       map({
         mode = "n",
-        lhs = "<C-g>ob",
+        lhs = { "<C-g>ob", "<C-g>oo" },
         rhs = function()
           vim.fn.system({ "gh", "browse" })
         end,
