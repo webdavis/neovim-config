@@ -1,3 +1,5 @@
+-- Ref: https://github.com/stevearc/overseer.nvim/blob/master/doc/tutorials.md#run-a-file-on-save
+
 -- stylua: ignore start
 local cmd_map = {
   go = function(file) return { "go", "run", file } end,
