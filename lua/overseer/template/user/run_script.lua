@@ -42,7 +42,7 @@ return {
       components = default_components,
     }
   end,
-  condition = function()
-    return { filetype = vim.tbl_keys(cmd_map) }
-  end,
+  condition = {
+    filetype = vim.tbl_keys(cmd_map),
+  },
 }
