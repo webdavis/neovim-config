@@ -168,6 +168,7 @@ return {
       { "<leader>fR", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Snacks: recent files (cwd)" },
 
       -- Grep:
+      { "<leader>g.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>/g", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>/e", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
       { "<leader>/c", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
