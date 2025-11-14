@@ -174,7 +174,6 @@ return {
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
-      -- { "<leader>g.", function() Snacks.lazygit() end, desc = "Lazygit (Snacks)" },
       { "<leader>/g", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse", mode = { "n", "v" } },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Snacks (Git): branches" },
