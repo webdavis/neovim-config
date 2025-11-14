@@ -168,13 +168,13 @@ return {
       { "<leader>fR", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Snacks: recent files (cwd)" },
 
       -- Grep:
-      { "<leader>/G", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
+      { "<leader>/g", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
+      { "<leader>/e", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
       { "<leader>/c", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
       { "<leader>/w", function() Snacks.picker.grep_word() end, desc = "Grep: <cword> / visual selection", mode = { "n", "x" } },
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
-      { "<leader>/g", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse", mode = { "n", "v" } },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Snacks (Git): branches" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Snacks (Git): diff hunks" },
