@@ -301,8 +301,6 @@ return {
             :map("<leader>uc")
           Snacks.toggle.diagnostics():map("<leader>ud")
           Snacks.toggle.dim():map("<leader>uD")
-          -- LazyVim.format.snacks_toggle():map("<leader>uf")
-          -- LazyVim.format.snacks_toggle(true):map("<leader>uF")
           Snacks.toggle.indent():map("<leader>ug")
 
           Snacks.toggle({
