@@ -1,5 +1,6 @@
 return {
   "stevearc/overseer.nvim",
+  version = "1.6.0", -- (per Overseer warning about upcoming breaking changes)
   opts = {},
   config = function()
     local overseer = require("overseer")
