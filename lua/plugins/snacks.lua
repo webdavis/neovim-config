@@ -169,9 +169,9 @@ return {
 
       -- Grep:
       { "<leader>/G", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
-      { "<leader>/b", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
+      { "<leader>/c", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
       { "<leader>/w", function() Snacks.picker.grep_word() end, desc = "Grep: <cword> / visual selection", mode = { "n", "x" } },
-      { "<leader>/B", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
+      { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
       -- { "<leader>g.", function() Snacks.lazygit() end, desc = "Lazygit (Snacks)" },
