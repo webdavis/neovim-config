@@ -227,7 +227,7 @@ return {
       { "<c-/>", function() Snacks.terminal() end, desc = "Snacks: toggle terminal" },
       { "<c-_>", function() Snacks.terminal() end, desc = "Snacks: which_key_ignore" },
       { "<leader>bd", function() Snacks.bufdelete() end, desc = "Snacks: delete buffer" },
-      { "<leader>rf", function() Snacks.rename.rename_file() end, desc = "Snacks (Rename): rename file" },
+      { "<leader>rf", function() Snacks.rename.rename_file() end, desc = "Snacks (Rename): file" },
 
       -- stylua: ignore end
       {
