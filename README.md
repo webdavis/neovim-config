@@ -15,6 +15,7 @@ The following files run the show:
 - **[plugins/](./lua/plugins)** – Individual plugin configurations.
 
 > [!NOTE]
+>
 > Most `plugin-specific-keymaps` are defined within their respective plugin files.
 
 ## Profiling Neovim Startup Time
