@@ -13,7 +13,7 @@ local get_cwd_basename = function()
 end
 
 local function trim(s)
-  return (s or ""):gsub("^%s*(.-)%s*$", "%1"):gsub("\n", "")
+  return (s or ""):gsub("^%s*(.-)%s*$", "%1")
 end
 
 -- Lowercase + trim input
