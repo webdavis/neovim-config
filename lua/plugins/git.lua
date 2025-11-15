@@ -87,7 +87,7 @@ local git_project = function()
   return repo_name
 end
 
-local git_current_branch = function()
+local function git_current_branch()
   local cwd = get_cwd_basename()
 
   local handle = io.popen("git branch --show-current")
@@ -111,7 +111,7 @@ local git_current_branch = function()
   return branch
 end
 
-local git_last_commit = function()
+local function git_last_commit()
   -- Safety checks:
   local project = git_project()
   if not project then
@@ -767,7 +767,7 @@ return {
     "f-person/git-blame.nvim",
     config = function()
       map({ mode = "n", lhs = "<C-g>bt", rhs = "GitBlameToggle", desc = "Git Blame: toggle virtual text" })
-      map({ mode = "n", lhs = "<C-g>bc", rhs = "GitBlameCopySHA", desc = "Git Blame: copy commit SHA" })
+      map({ mode = "n", lhs = "<C-g>by", rhs = "GitBlameCopySHA", desc = "Git Blame: copy commit SHA" })
       map({ mode = "n", lhs = "<C-g>bo", rhs = "GitBlameOpenCommitURL", desc = "Git Blame: open commit URL" })
       map({ mode = "n", lhs = "<C-g>bO", rhs = "GitBlameCopyCommitURL", desc = "Git Blame: copy commit URL" })
     end,
