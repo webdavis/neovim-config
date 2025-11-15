@@ -4,15 +4,16 @@ This is my Neovim config, powered by [lazy.nvim](https://github.com/folke/lazy.n
 
 ## Navigating this Repo
 
-The following files run the show:
+The following modules/files run the show:
 
-- **[init](./init.lua)** - Main entry point.
-- **[lazy setup](./lua/config/lazy.lua)** - Sets up and manages all plugins using `lazy.nvim`.
-- **[options](./lua/config/options.lua)** – Global Neovim options.
-- **[autocmds](./lua/config/autocmds.lua)** – Auto commands for filetypes, events, etc.
-- **[keymaps](./lua/config/keymaps.lua)** – Global keyboard shortcuts (note: some plugin-specific
-  mappings are put here for convenience)
-- **[plugins/](./lua/plugins)** – Individual plugin configurations.
+| Module／File                                  | Description                                                                                  |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **[init](./init.lua)**                       | Main entry point.                                                                            |
+| **[lazy.nvim setup](./lua/config/lazy.lua)** | Initializes `lazy.nvim` plugin manager and loads all plugins from `lua/plugins/`             |
+| **[options](./lua/config/options.lua)**      | Global／default Neovim options.                                                               |
+| **[autocmds](./lua/config/autocmds.lua)**    | Auto commands for filetypes, events, etc.                                                    |
+| **[keymaps](./lua/config/keymaps.lua)**      | Global keyboard shortcuts (note: some plugin-specific mappings are put here for convenience) |
+| **[plugins/](./lua/plugins)**                | Individual plugin configurations.                                                            |
 
 > [!NOTE]
 >
