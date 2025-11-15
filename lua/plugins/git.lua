@@ -115,16 +115,16 @@ local function git_last_commit()
   -- Safety checks:
   local project = git_project()
   if not project then
-    return nil
+    return nil, nil, nil
   end
 
   local branch = git_current_branch()
   if not branch then
-    return nil
+    return nil, nil, nil
   end
 
-  local handle = io.popen("git rev-parse HEAD")
-  if not handle then
+  local rev_parse_handle = io.popen("git rev-parse HEAD")
+  if not rev_parse_handle then
     vim.notify(
       "Terminating: unable to find the latest commit. This may occur if no commits have been made to *"
         .. project
@@ -132,18 +132,29 @@ local function git_last_commit()
       log_warning,
       notify_fugitive_title
     )
-    return nil
+    return nil, nil, nil
   end
 
-  local last_commit = trim(handle:read("*a"))
-  handle:close()
+  local commit_hash = trim(rev_parse_handle:read("*a"))
+  rev_parse_handle:close()
 
-  if last_commit == "" then
+  if commit_hash == "" then
     vim.notify("Error: Unable to detect last git commit on " .. branch, log_error, notify_fugitive_title)
-    return nil
+    return nil, nil, nil
   end
 
-  return last_commit
+  local log_handle = io.popen("git log -1 --pretty=%B")
+  if not log_handle then
+    return commit_hash, nil, nil
+  end
+
+  local commit_message = trim(log_handle:read("*a") or "")
+  log_handle:close()
+  local commit_summary, commit_body = commit_message:match("([^\n]*)\n?(.*)")
+  commit_summary = (commit_summary ~= "" and trim(commit_summary)) or nil
+  commit_body = (commit_body ~= "" and trim(commit_body)) or nil
+
+  return commit_hash, commit_summary, commit_body
 end
 
 local git_overseer = function(cmds)
