@@ -4,7 +4,7 @@ This is my Neovim config, powered by [lazy.nvim](https://github.com/folke/lazy.n
 
 ## Navigating this Repo
 
-The following modules/files run the show:
+The following modules／files run the show:
 
 | Module／File                                  | Description                                                                                  |
 | -------------------------------------------- | -------------------------------------------------------------------------------------------- |
@@ -17,12 +17,27 @@ The following modules/files run the show:
 
 > [!NOTE]
 >
-> Most `plugin-specific-keymaps` are defined within their respective plugin files.
+> Most `plugin-specific-keymaps` are defined in their respective plugin files.
 
 ## Profiling Neovim Startup Time
 
-To profile startup time, set the `PROFILE` environment variable before launching Neovim:
+This config can measure how long it takes to start up, helping you identify slow plugins and
+configurations. To enable profiling, set the `PROFILE` environment variable before launching Neovim:
+
+#### Linux／macOS
 
 ```bash
 PROFILE=1 nvim
 ```
+
+#### Windows PowerShell
+
+```powershell
+$env:PROFILE=1; nvim
+```
+
+> [!Tip]
+>
+> After launching with profiling enabled, Neovim will generate timing information for each loaded plugin
+> and configuration file. You can evaluate this output to optimize startup performance. (The profiler is
+> set up in [`init.lua`](./init.lua) via `snacks.profiler.startup`.)
