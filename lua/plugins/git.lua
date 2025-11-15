@@ -123,7 +123,7 @@ local function git_last_commit()
     return nil, nil, nil
   end
 
-  local rev_parse_handle = io.popen("git rev-parse HEAD")
+  local rev_parse_handle = io.popen("git rev-parse --short HEAD")
   if not rev_parse_handle then
     vim.notify(
       "Terminating: unable to find the latest commit. This may occur if no commits have been made to *"
@@ -403,6 +403,7 @@ return {
       "tpope/vim-rhubarb",
       "junegunn/gv.vim",
       "stevearc/overseer.nvim",
+      "folke/snacks.nvim",
     },
     config = function()
       -- Init／Create:
@@ -546,8 +547,54 @@ return {
         desc = "Stash (apply): by index <#>",
       })
 
-      -- Commit:
       -- stylua: ignore start
+
+      -- Branch / Checkout:
+      map({ mode = "n", lhs = "<C-g>bc", rhs = ":<C-u>Git checkout -o ", desc = "Fugitive (checkout): create new <branch>" })
+      map({ mode = "n", lhs = "<C-g>b-", rhs = "Git checkout -", desc = "Fugitive (checkout): switch to previous branch" })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>bb",
+        rhs = function()
+          local branch = git_current_branch()
+          if not branch then return end
+          vim.notify("Current Git Branch: *" .. branch .. "*", log_info, notify_fugitive_title)
+        end,
+        desc = "Git (branch): show current",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>bB",
+        rhs = function()
+          local branch = git_current_branch()
+          if not branch then return end
+          local commit_hash, commit_summary, commit_body = git_last_commit()
+
+          local sections = {
+            { "**Current Git Branch:**", branch },
+            { "**Latest Git Commit:**", commit_hash },
+            { nil, commit_summary },
+            { nil, commit_body },
+          }
+
+          local lines = {}
+          for _, s in ipairs(sections) do
+            local label, text = s[1], s[2]
+            if text and text:match("%S") then
+              table.insert(lines, label and string.format("%s `%s`", label, text) or text)
+            end
+          end
+
+          local message = table.concat(lines, "\n\n")
+
+          require("snacks").notifier(message, "info", { timeout = 10000 })
+        end,
+        desc = "Git (branch): show current with latest commit",
+      })
+
+      -- Commit:
       map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit", desc = "Fugitive: commit" })
       map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only the current file)" })
       map({ mode = "n", lhs = "<C-g>cv", rhs = "Git commit --verbose", desc = "Fugitive: commit -v" })
