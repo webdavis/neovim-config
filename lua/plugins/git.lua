@@ -353,7 +353,7 @@ return {
 
           map({
             mode = "n",
-            lhs = "<C-g>bs",
+            lhs = "<leader>gB",
             rhs = function()
               gitsigns.blame_line({ full = true })
             end,

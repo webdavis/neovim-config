@@ -176,7 +176,7 @@ return {
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
-      { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse (opens file on GitHub)", mode = { "n", "v" } },
+      { "<leader>go", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse (opens file on GitHub)", mode = { "n", "v" } },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Snacks (Git): branches" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Snacks (Git): diff hunks" },
       { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Snacks (Git): log - current file" },
