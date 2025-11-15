@@ -10,7 +10,8 @@ The following files run the show:
 - **[lazy setup](./lua/config/lazy.lua)** - Sets up and manages all plugins using `lazy.nvim`.
 - **[options](./lua/config/options.lua)** – Global Neovim options.
 - **[autocmds](./lua/config/autocmds.lua)** – Auto commands for filetypes, events, etc.
-- **[keymaps](./lua/config/keymaps.lua)** – Global and some plugin-specific key mappings.
+- **[keymaps](./lua/config/keymaps.lua)** – Global keyboard shortcuts (note: some plugin-specific
+  mappings are put here for convenience)
 - **[plugins/](./lua/plugins)** – Individual plugin configurations.
 
 > [!NOTE]
