@@ -363,7 +363,7 @@ return {
 
           map({
             mode = "n",
-            lhs = "<C-g>C",
+            lhs = "<leader>gc",
             rhs = function()
               gitsigns.show_commit()
             end,
