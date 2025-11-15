@@ -550,7 +550,7 @@ return {
       -- stylua: ignore start
 
       -- Branch / Checkout:
-      map({ mode = "n", lhs = "<C-g>bc", rhs = ":<C-u>Git checkout -o ", desc = "Fugitive (checkout): create new <branch>" })
+      map({ mode = "n", lhs = "<C-g>bc", rhs = ":<C-u>Git checkout -b ", desc = "Fugitive (checkout): create new <branch>" })
       map({ mode = "n", lhs = "<C-g>b-", rhs = "Git checkout -", desc = "Fugitive (checkout): switch to previous branch" })
 
       map({
