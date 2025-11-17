@@ -761,7 +761,8 @@ return {
       })
 
       -- Log:
-      map({ mode = "n", lhs = "<C-g>ll", rhs = "Git log --oneline", desc = "Fugitive: log --oneline" })
+      map({ mode = "n", lhs = "<C-g>lo", rhs = "Git log --oneline", desc = "Fugitive: log --oneline" })
+      map({ mode = "n", lhs = "<C-g>ll", rhs = "Git log", desc = "Fugitive: log" })
 
       map({
         mode = "n",
@@ -769,8 +770,6 @@ return {
         rhs = "Git log --oneline -- %",
         desc = "Fugitive: log --oneline (current file only)",
       })
-
-      map({ mode = "n", lhs = "<C-g>lL", rhs = "Git log", desc = "Fugitive: log (full)" })
 
       map({
         mode = "n",
