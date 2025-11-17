@@ -16,6 +16,7 @@ return {
         { "<C-g>l", group = "log" },
         { "<C-g>o", group = "browse" },
         { "<C-g>p", group = "push" },
+        { "<C-g>r", group = "remote" },
         { "<C-g>S", group = "stash" },
         { "<C-g>s", group = "status" },
         { "<C-g>w", group = "whatchanged" },

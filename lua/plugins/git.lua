@@ -22,171 +22,278 @@ local sanitize_input = function(s)
 end
 
 local notify_fugitive_title = { title = "Fugitive" }
+local notify_git_title = { title = "git" }
 
-local git_user = function()
-  local handle = io.popen("git config user.name 2>/dev/null")
-  if not handle then
-    return nil
+local function run_shell_command(command, error_notification)
+  local command_string
+  if type(command) == "table" then
+    command_string = table.concat(command, " ")
+  elseif type(command) == "string" then
+    command_string = command
+  else
+    error("run_shell_command: command must be a string or table")
   end
 
-  local user = trim(handle:read("*a"))
-  handle:close()
+  local output = vim.fn.system(command_string)
+  local exit_code = vim.v.shell_error
 
-  if user == "" then
-    vim.notify("Git Warning: could not identify git user", log_warning, notify_fugitive_title)
-    return nil
+  local notify_title = { title = "run_shell_command" }
+
+  if exit_code ~= 0 and error_notification then
+    if type(error_notification) == "function" then
+      error_notification()
+    elseif type(error_notification) == "string" then
+      vim.notify(error_notification, log_error, notify_title)
+    elseif type(error_notification) == "boolean" then
+      vim.notify("Error: " .. output, log_error, notify_title)
+      error_notification()
+    end
   end
 
-  return user
+  return exit_code, trim(output)
 end
 
-local git_initialized = function()
-  local handle = io.popen("git rev-parse --is-inside-work-tree 2>/dev/null")
-  if not handle then
-    return false
+local function github_username()
+  local exit, username = run_shell_command("git config --get github.username")
+
+  if exit ~= 0 then
+    exit, username = run_shell_command("git config --get github.username")
   end
 
-  local output = trim(handle:read("*a"))
-  handle:close()
-
-  return output == "true"
-end
-
-local git_project = function()
-  local cwd = get_cwd_basename()
-
-  local handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
-  if not handle then
+  if exit ~= 0 then
     vim.notify(
-      "Git Warning: current directory (*" .. cwd .. "*) is not in a Git project.\nTry 'git init' to start a project",
-      log_warning,
-      notify_fugitive_title
-    )
-    return nil
-  end
-
-  local git_root = trim(handle:read("*a"))
-  handle:close()
-
-  if git_root == "" then
-    vim.notify("Git Error: unable to detect the Git project root.", log_error, notify_fugitive_title)
-    return nil
-  end
-
-  -- Extract project name from the Git root folder.
-  local repo_name = vim.fn.fnamemodify(git_root, ":t")
-  if repo_name == "" then
-    vim.notify(
-      "Git Error: unable to determine Git project name from path: *" .. git_root .. "*",
+      'Error [`git_user`]: Unable to read git `user.name`. Run *git config --global user.name "Your Name"* to set it.',
       log_error,
       notify_fugitive_title
     )
     return nil
   end
 
-  return repo_name
+  return username
 end
 
-local function git_current_branch()
-  local cwd = get_cwd_basename()
+local function git_initialized(opts)
+  opts = opts or {}
+  local code, _ = run_shell_command("git rev-parse --git-dir")
 
-  local handle = io.popen("git branch --show-current")
-  if not handle then
-    vim.notify(
-      "Terminating: currently in the *" .. cwd .. "* directory, which is not tracked by Git.",
-      log_warning,
-      notify_fugitive_title
-    )
+  if code ~= 0 then
+    if not opts.quiet then
+      vim.notify(
+        "Error [`git_initialized`]: Project hasn't been initialized. Run `git init` to start tracking.",
+        log_error,
+        notify_fugitive_title
+      )
+    end
+    return false
+  end
+
+  return true
+end
+
+local function git_project_name(opts)
+  opts = opts or {}
+
+  local code, project = run_shell_command("git rev-parse --show-toplevel", function()
+    local cwd = get_cwd_basename()
+    local buffer_path = vim.api.nvim_buf_get_name(0)
+
+    local lines = {
+      { "Warning [`git_project`]: Unable to detect Git project root." },
+      { "Run `git rev-parse --is-inside-work-tree` to ensure you're in a git repo." },
+      { "Current directory: *" .. cwd .. "*" },
+      { "Current file: *" .. buffer_path .. "*" },
+    }
+
+    local message = table.concat(lines, "\n\n")
+
+    vim.notify(message, log_warning, notify_fugitive_title)
+  end)
+
+  if code ~= 0 then
     return nil
   end
 
-  local branch = trim(handle:read("*a"))
-  handle:close()
+  if not opts.full_path or opts.full_path == false then
+    project = vim.fn.fnamemodify(project, ":t")
+  end
+
+  return project
+end
+
+local function git_branch()
+  local _, branch = run_shell_command("git branch")
 
   if branch == "" then
-    vim.notify("Error: unable to detect current git branch", log_error, notify_fugitive_title)
+    local cwd = get_cwd_basename()
+    local message = {
+      { "Warning [`git_branch`]: project has been initialized, but unable to detect current `git branch`." },
+      { "\nThis could be one of two things:" },
+      { "1. You are in a new project that has no commits." },
+      { "2. You are in a special *detached HEAD* state" },
+      { "Current working directory: `" .. cwd .. "`" },
+    }
+    vim.notify(table.concat(message, "\n"), log_warning, notify_fugitive_title)
     return nil
   end
 
-  return branch
+  local _, current_branch = run_shell_command("git branch --show-current", true)
+
+  return current_branch
 end
 
-local function git_last_commit()
-  -- Safety checks:
-  local project = git_project()
-  if not project then
+local function normalize_message(message)
+  message = trim(message)
+  return (message ~= "" and message) or nil
+end
+
+local function git_latest_commit(project)
+  local hash_exit, hash = run_shell_command("git rev-parse --short HEAD", function()
+    local message = {
+      "Warning [`git_latest_commit`]: Unable to find latest commit.",
+      "This may occur if no commits have been made to *" .. project .. "* yet.",
+    }
+    vim.notify(table.concat(message, "\n\n"), log_warning, notify_fugitive_title)
+  end)
+
+  if hash_exit ~= 0 then
     return nil, nil, nil
   end
 
-  local branch = git_current_branch()
-  if not branch then
-    return nil, nil, nil
-  end
-
-  local rev_parse_handle = io.popen("git rev-parse --short HEAD")
-  if not rev_parse_handle then
+  local message_exit, message = run_shell_command("git log -1 --pretty=%B", function()
     vim.notify(
-      "Terminating: unable to find the latest commit. This may occur if no commits have been made to *"
-        .. project
-        .. "* yet.",
+      "Warning [`git_laest_commit`]: commit `" .. hash .. "` has no message.",
       log_warning,
       notify_fugitive_title
     )
-    return nil, nil, nil
+  end)
+
+  if message_exit ~= 0 then
+    return hash, nil, nil
   end
 
-  local commit_hash = trim(rev_parse_handle:read("*a"))
-  rev_parse_handle:close()
+  local summary, body = message:match("([^\n]*)\n?(.*)")
 
-  if commit_hash == "" then
-    vim.notify("Error: Unable to detect last git commit on " .. branch, log_error, notify_fugitive_title)
-    return nil, nil, nil
-  end
-
-  local log_handle = io.popen("git log -1 --pretty=%B")
-  if not log_handle then
-    return commit_hash, nil, nil
-  end
-
-  local commit_message = trim(log_handle:read("*a") or "")
-  log_handle:close()
-  local commit_summary, commit_body = commit_message:match("([^\n]*)\n?(.*)")
-  commit_summary = (commit_summary ~= "" and trim(commit_summary)) or nil
-  commit_body = (commit_body ~= "" and trim(commit_body)) or nil
-
-  return commit_hash, commit_summary, commit_body
+  return hash, normalize_message(summary), normalize_message(body)
 end
 
-local git_overseer = function(cmds)
-  -- Safety checks:
-  if not git_project() then
-    return nil
-  end
-  if not git_current_branch() then
+local function github_url(remote, user, repo_name)
+  local code, url = run_shell_command("git config --get remote." .. remote .. ".url", function()
+    local lines = {
+      "Warning [`github_url`]: Couldn't find URL for `" .. remote .. "` remote!",
+      "To set the remote URL for '"
+        .. remote
+        .. "', run: `Git remote set-url "
+        .. remote
+        .. " git@github.com/"
+        .. user
+        .. "/"
+        .. repo_name
+        .. ".git`",
+    }
+    local message = table.concat(lines, "\n\n")
+    vim.notify(message, log_warning, notify_fugitive_title)
+  end)
+
+  if code ~= 0 then
     return nil
   end
 
-  -- If cmds is a single string, convert to table
-  if type(cmds) == "string" then
-    cmds = { cmds }
+  return url
+end
+
+local function copy_to_system_clipboard(data)
+  vim.fn.setreg("+", data)
+end
+
+local function convert_remote_protocol(url, from_prefix, to_prefix)
+  local user_repo = url:match("^" .. from_prefix .. "(.+)")
+
+  if user_repo then
+    return to_prefix .. user_repo
+  elseif url:match("^" .. to_prefix) then
+    return url
+  end
+
+  return nil
+end
+
+local function to_https_protocol(url)
+  return convert_remote_protocol(url, "git@github.com:", "https://github.com/")
+end
+
+local function to_ssh_protocol(url)
+  return convert_remote_protocol(url, "https://github.com/", "git@github.com:")
+end
+
+local function copy_URL_to_clipboard(remote, protocol)
+  if not git_initialized() then
+    return
+  end
+
+  local url = github_url(remote, github_username(), git_project_name())
+
+  if not url then
+    vim.notify("Warning: Nothing copied to clipboard!", log_warning, notify_git_title)
+    return
+  end
+
+  local converted_URL
+  if protocol == "https" then
+    converted_URL = to_https_protocol(url)
+  else
+    converted_URL = to_ssh_protocol(url)
+  end
+
+  local final_URL = converted_URL or url
+  copy_to_system_clipboard(final_URL)
+
+  local message = converted_URL
+      and "Copied *" .. remote .. "* " .. protocol:upper() .. " URL to clipboard: `" .. final_URL .. "`"
+    or table.concat({
+      "Warning: Couldn't convert '" .. remote .. "' remote to " .. protocol:upper() .. ": unrecognized protocol!",
+      "Copied original URL to clipboard instead: `" .. final_URL .. "`",
+    }, "\n")
+
+  vim.notify(message, log_info, notify_git_title)
+end
+
+local function copy_url_mapping_helper(lhs, remote, protocol)
+  local mapping_table = {
+    mode = "n",
+    lhs = lhs,
+    rhs = function()
+      if git_initialized() then
+        copy_URL_to_clipboard(remote, protocol)
+      end
+    end,
+    desc = "Git (remote): copy " .. protocol:upper() .. " URL (" .. remote .. ")",
+  }
+
+  return mapping_table
+end
+
+local overseer_runner = function(commands)
+  -- If cmds is a single string, convert to table.
+  if type(commands) == "string" then
+    commands = { commands }
   end
 
   -- Build orchestrator subtasks:
   local tasks = {}
-  for _, cmd in ipairs(cmds) do
-    if type(cmd) == "string" then
-      -- simple shell command
-      table.insert(tasks, cmd)
-    elseif type(cmd) == "table" then
-      -- assume table has { cmd, ...options }
-      table.insert(tasks, cmd)
+  for _, c in ipairs(commands) do
+    if type(c) == "string" then
+      -- Simple shell command.
+      table.insert(tasks, c)
+    elseif type(c) == "table" then
+      -- Assume table has { c, ...options }.
+      table.insert(tasks, c)
     end
   end
 
   -- Create the orchestrator task:
   require("overseer")
     .new_task({
-      name = "Git Orchestrator: " .. table.concat(
+      name = "Command Orchestrator: " .. table.concat(
         vim.tbl_map(function(c)
           return type(c) == "string" and c or table.concat(c, " ")
         end, tasks),
@@ -413,64 +520,63 @@ return {
         rhs = function()
           local notify_github_title = { title = "GitHub" }
 
-          local project = git_project()
-          if project then
-            vim.notify(
-              "Git: project creation cancelled. Project *" .. project .. "* already exists.",
-              log_warning,
-              notify_github_title
-            )
-            return nil
-          end
+          local is_initialized = git_initialized({ quiet = true })
 
-          local user = git_user()
+          local user = github_username()
           if not user then
             return
           end
+
+          -- if is_initialized then
+          --   vim.notify(
+          --     "Git: project creation cancelled. Project *" .. project .. "* already exists.",
+          --     log_warning,
+          --     notify_github_title
+          --   )
+          --   return nil
+          -- end
 
           local directory = get_cwd_basename()
 
           local github_project_prompt = "What's the name of your GitHub project (default: " .. directory .. ")? "
           vim.ui.input({ prompt = github_project_prompt }, function(project_name_input)
-            local project_name = trim(project_name_input)
-            if project_name == "" then
-              project_name = directory
+            local project = trim(project_name_input)
+            if project == "" then
+              project = directory
             end
 
-            local confirmation_prompt = "Create project '" .. project_name .. "' on GitHub? [y]es／[n]o／[q]uit: "
+            local confirmation_prompt = "Create project '" .. project .. "' on GitHub? [y]es／[n]o／[q]uit: "
             vim.ui.input({ prompt = confirmation_prompt }, function(answer)
               local confirm_creation = trim(answer):lower()
               local yes_values = { y = true, ye = true, yes = true, yep = true, ok = true }
 
               if not yes_values[confirm_creation] then
-                vim.notify("Project creation aborted for repo *" .. project_name .. "*", log_info, notify_github_title)
+                vim.notify("Project creation aborted for project **" .. project .. "**", log_info, notify_github_title)
                 return
               end
 
-              local git_init_needed = not git_initialized()
+              local gh_exit, _ = run_shell_command("gh repo view '" .. project .. "'")
 
-              local handle_gh = io.popen("gh repo view '" .. project_name .. "' 2>/dev/null")
-              local gh_exists = handle_gh and trim(handle_gh:read("*a")) ~= ""
-              if handle_gh then
-                handle_gh:close()
-              end
-
-              if gh_exists then
-                vim.notify("GitHub repo *" .. project_name .. "* already exists.", log_info, notify_github_title)
+              if gh_exit == 0 then
+                local message = {
+                  "Git: project creation cancelled. GitHub project **" .. project .. "** already exists.",
+                  "Run `gh repo clone " .. user .. "/" .. project .. "` to download it",
+                }
+                vim.notify(table.concat(message, "\n\n"), log_info, notify_github_title)
                 return
               end
 
               local commands = {}
-              if git_init_needed then
+              if not is_initialized then
                 table.insert(commands, "git init")
               end
-              table.insert(commands, 'gh repo create --public "' .. project_name .. '"')
+              table.insert(commands, 'gh repo create --public "' .. project .. '"')
 
-              git_overseer(commands)
+              overseer_runner(commands)
             end)
           end)
         end,
-        desc = "Git (Overseer): init & create repo on GitHub",
+        desc = "Git (Overseer): initialize & create GitHub repo",
       })
 
       -- Status:
@@ -547,18 +653,27 @@ return {
         desc = "Stash (apply): by index <#>",
       })
 
+      -- Remote:
+      map(copy_url_mapping_helper("<C-g>rh", "origin", "https"))
+      map(copy_url_mapping_helper("<C-g>rH", "upstream", "https"))
+      map(copy_url_mapping_helper("<C-g>rs", "origin", "ssh"))
+      map(copy_url_mapping_helper("<C-g>rS", "upstream", "ssh"))
+
       -- stylua: ignore start
 
       -- Branch / Checkout:
       map({ mode = "n", lhs = "<C-g>bc", rhs = ":<C-u>Git checkout -b ", desc = "Fugitive (checkout): create new <branch>" })
       map({ mode = "n", lhs = "<C-g>b-", rhs = "Git checkout -", desc = "Fugitive (checkout): switch to previous branch" })
 
+      -- stylua: ignore end
       map({
         mode = "n",
         lhs = "<C-g>bb",
         rhs = function()
-          local branch = git_current_branch()
-          if not branch then return end
+          local branch = git_branch()
+          if not branch then
+            return
+          end
           vim.notify("Current Git Branch: *" .. branch .. "*", log_info, notify_fugitive_title)
         end,
         desc = "Git (branch): show current",
@@ -568,15 +683,19 @@ return {
         mode = "n",
         lhs = "<C-g>bB",
         rhs = function()
-          local branch = git_current_branch()
-          if not branch then return end
-          local commit_hash, commit_summary, commit_body = git_last_commit()
+          local branch = git_branch()
+          if not branch then
+            return
+          end
+
+          local hash, summary, body = git_latest_commit()
 
           local sections = {
             { "**Current Git Branch:**", branch },
-            { "**Latest Git Commit:**", commit_hash },
-            { nil, commit_summary },
-            { nil, commit_body },
+            { "**Latest Git Commit:**", hash },
+            { "**--- Commit Message ---**", nil },
+            { nil, summary },
+            { nil, body },
           }
 
           local lines = {}
@@ -584,6 +703,8 @@ return {
             local label, text = s[1], s[2]
             if text and text:match("%S") then
               table.insert(lines, label and string.format("%s `%s`", label, text) or text)
+            elseif label then
+              table.insert(lines, label)
             end
           end
 
@@ -591,9 +712,10 @@ return {
 
           require("snacks").notifier(message, "info", { timeout = 10000 })
         end,
-        desc = "Git (branch): show current with latest commit",
+        desc = "Git (branch): show current w/ latest commit",
       })
 
+      -- stylua: ignore start
       -- Commit:
       map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit", desc = "Fugitive: commit" })
       map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only the current file)" })
@@ -608,21 +730,25 @@ return {
         mode = "n",
         lhs = "<C-g>c.",
         rhs = function()
-          local last_commit = git_last_commit()
-          if not last_commit then
+          local hash, _, _ = git_latest_commit()
+          if not hash then
             return nil
           end
 
-          vim.ui.input({ prompt = "Author for last commit (" .. last_commit .. "): " }, function(author)
+          local function message_helper(subject)
+            return "No " .. subject .. " entered - author update cancelled for commit `" .. hash .. "`"
+          end
+
+          vim.ui.input({ prompt = "Author for latest commit (" .. hash .. "): " }, function(author)
             if not author or author:match("^%s*$") then
-              vim.notify("Cancelled: no author entered", log_warning, notify_fugitive_title)
+              vim.notify(message_helper("author"), log_warning, notify_fugitive_title)
               return
             end
             author = trim(author)
 
             vim.ui.input({ prompt = "Email for " .. author .. ": " }, function(email)
               if not email or email:match("^%s*$") then
-                vim.notify("Cancelled: no email entered", log_warning, notify_fugitive_title)
+                vim.notify(message_helper("email"), log_warning, notify_fugitive_title)
                 return
               end
 
@@ -679,7 +805,11 @@ return {
         mode = "n",
         lhs = "<C-g>dw",
         rhs = function()
-          git_overseer({ "git diff --color-words" })
+          local hash, _, _ = git_latest_commit()
+          if not hash then
+            return
+          end
+          overseer_runner({ "git diff --color-words" })
         end,
         desc = "Git (Overseer): diff --color-words",
       })
@@ -688,7 +818,11 @@ return {
         mode = "n",
         lhs = "<C-g>dm",
         rhs = function()
-          git_overseer({ "git diff --color-moved" })
+          local hash, _, _ = git_latest_commit()
+          if not hash then
+            return
+          end
+          overseer_runner({ "git diff --color-moved" })
         end,
         desc = "Git (Overseer): diff --color-moved",
       })
@@ -710,7 +844,7 @@ return {
         mode = "n",
         lhs = "<C-g>pu",
         rhs = function()
-          local branch = git_current_branch()
+          local branch = git_branch()
           if not branch then
             return
           end
@@ -786,26 +920,22 @@ return {
         local bufname = vim.api.nvim_buf_get_name(0)
 
         -- Check that current file is in a git repository:
-        vim.fn.system("git rev-parse --is-inside-work-tree")
-        if vim.v.shell_error ~= 0 then
-          vim.notify(
-            "No git repository found for current file: `" .. bufname .. "`",
-            vim.log.levels.WARN,
-            { title = "Git Messenger" }
-          )
+        if not git_initialized() then
           return
         end
 
-        local repo = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or "unknown_repo"
+        local exit_code, _ = run_shell_command(
+          "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname),
+          function()
+            vim.notify(
+              "File `" .. bufname .. "` is not tracked by *" .. git_project_name() .. "*",
+              vim.log.levels.WARN,
+              { title = "Git Messenger" }
+            )
+          end
+        )
 
-        -- Check that current file is tracked by git:
-        vim.fn.system("git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname))
-        if vim.v.shell_error ~= 0 then
-          vim.notify(
-            "File `" .. bufname .. "` is not tracked by *" .. repo .. "*",
-            vim.log.levels.WARN,
-            { title = "Git Messenger" }
-          )
+        if exit_code ~= 0 then
           return
         end
 
