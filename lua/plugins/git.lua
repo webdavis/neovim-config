@@ -272,41 +272,29 @@ local function copy_url_mapping_helper(lhs, remote, protocol)
   return mapping_table
 end
 
-local overseer_runner = function(commands)
-  -- If cmds is a single string, convert to table.
-  if type(commands) == "string" then
-    commands = { commands }
+local function overseer_runner(cmds, operator)
+  operator = operator or ";"
+
+  if type(cmds) == "string" then
+    cmds = { cmds }
+  elseif type(cmds) ~= "table" then
+    error("'commands' parameter must be a string or a table")
   end
 
-  -- Build orchestrator subtasks:
-  local tasks = {}
-  for _, c in ipairs(commands) do
-    if type(c) == "string" then
-      -- Simple shell command.
-      table.insert(tasks, c)
-    elseif type(c) == "table" then
-      -- Assume table has { c, ...options }.
-      table.insert(tasks, c)
+  for i, c in ipairs(cmds) do
+    if type(c) ~= "string" then
+      error("Invalid command type at index " .. i .. ": " .. type(c))
     end
   end
+
+  local cmd_str = table.concat(cmds, " " .. operator .. " ")
 
   -- Create the orchestrator task:
   require("overseer")
     .new_task({
-      name = "Command Orchestrator: " .. table.concat(
-        vim.tbl_map(function(c)
-          return type(c) == "string" and c or table.concat(c, " ")
-        end, tasks),
-        " | "
-      ),
-      strategy = {
-        "orchestrator",
-        tasks = tasks,
-      },
-      components = {
-        { "on_complete_notify", statuses = { "SUCCESS" } },
-        "default",
-      },
+      name = "**Command Orchestrator:** `" .. cmd_str .. "`",
+      cmd = cmd_str,
+      components = { { "on_complete_notify", statuses = { "SUCCESS" } }, "default" },
     })
     :start()
 end
@@ -566,13 +554,13 @@ return {
                 return
               end
 
-              local commands = {}
+              local cmds = {}
               if not is_initialized then
-                table.insert(commands, "git init")
+                table.insert(cmds, "git init")
               end
-              table.insert(commands, 'gh repo create --public "' .. project .. '"')
+              table.insert(cmds, 'gh repo create --public "' .. project .. '"')
 
-              overseer_runner(commands)
+              overseer_runner(cmds)
             end)
           end)
         end,
