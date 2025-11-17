@@ -82,7 +82,7 @@ end
 ---```
 ---@param opts config.custom_api.map The options table containing the mapping configuration.
 ---@return nil
-M.map = function(opts)
+function M.map(opts)
   local mode = opts.mode
   local lhs_list = opts.lhs
   local rhs = opts.rhs
