@@ -1,5 +1,7 @@
 # Webdavis Neovim Config
 
+[![Lint](https://github.com/webdavis/neovim-config/actions/workflows/lint.yml/badge.svg)](https://github.com/webdavis/neovim-config/actions/workflows/lint.yml)
+
 This is my Neovim config, powered by [lazy.nvim](https://github.com/folke/lazy.nvim).
 
 ## Navigating this Repo
