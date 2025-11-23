@@ -25,8 +25,6 @@ return {
 
       various_textobjs.setup(opts)
 
-      local map = require("config.custom_api").map
-
       map({
         mode = "n",
         lhs = "gx",

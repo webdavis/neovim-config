@@ -1,20 +1,14 @@
 -- ╭─────────────╮
--- │   Imports   │
+-- │   Modules   │
 -- ╰─────────────╯
-local custom_api = require("config.custom_api")
+local git = require("custom_api.git")
+local github = require("custom_api.github")
+local util = require("custom_api.util")
 
-local map = custom_api.map
-local git_initialized = custom_api.git_initialized
-local copy_URL_to_clipboard = custom_api.copy_URL_to_clipboard
-local github_username = custom_api.github_username
-local git_branch = custom_api.git_branch
-local git_latest_commit = custom_api.git_latest_commit
-local git_project_name = custom_api.git_project_name
-local get_cwd_basename = custom_api.get_cwd_basename
-local run_shell_command = custom_api.run_shell_command
-local trim = custom_api.trim
-local sanitize_input = custom_api.sanitize_input
-local overseer_runner = custom_api.overseer_runner
+local run_shell_command = util.run_shell_command
+local trim = util.trim
+local sanitize_input = util.sanitize_input
+local overseer_runner = util.overseer_runner
 
 -- ╭─────────────╮
 -- │   Helpers   │
@@ -28,8 +22,27 @@ local function copy_url_mapping_helper(lhs, remote, protocol)
     mode = "n",
     lhs = lhs,
     rhs = function()
-      if git_initialized() then
-        copy_URL_to_clipboard(remote, protocol)
+      if git.initialized() then
+        local url = git.url({
+          remote = remote,
+          account_name = github.account(),
+          repo_name = git.project_name(),
+        })
+
+        if not url then
+          vim.notify("Warning: Nothing copied to clipboard!", log_warning, { title = "git" })
+          return
+        end
+
+        local message = git.copy_URL_to_clipboard({
+          url = url,
+          remote = remote,
+          protocol = protocol,
+        })
+
+        if message then
+          vim.notify(message, log_info, { title = "git" })
+        end
       end
     end,
     desc = "Git (remote): copy " .. protocol:upper() .. " URL (" .. remote .. ")",
@@ -250,14 +263,14 @@ return {
         rhs = function()
           local notify_github_title = { title = "GitHub" }
 
-          local is_initialized = git_initialized({ quiet = true })
+          local is_initialized = git.initialized({ quiet = true })
 
-          local user = github_username()
+          local user = github.username()
           if not user then
             return
           end
 
-          local directory = get_cwd_basename()
+          local directory = util.get_cwd_basename()
 
           local github_project_prompt = "What's the name of your GitHub project (default: " .. directory .. ")? "
           vim.ui.input({ prompt = github_project_prompt }, function(project_name_input)
@@ -391,7 +404,7 @@ return {
         mode = "n",
         lhs = "<C-g>bb",
         rhs = function()
-          local branch = git_branch()
+          local branch = git.branch()
           if not branch then
             return
           end
@@ -404,12 +417,12 @@ return {
         mode = "n",
         lhs = "<C-g>bB",
         rhs = function()
-          local branch = git_branch()
+          local branch = git.branch()
           if not branch then
             return
           end
 
-          local hash, summary, body = git_latest_commit()
+          local hash, summary, body = git.latest_commit()
 
           local sections = {
             { "**Current Git Branch:**", branch },
@@ -451,7 +464,7 @@ return {
         mode = "n",
         lhs = "<C-g>c.",
         rhs = function()
-          local hash, _, _ = git_latest_commit()
+          local hash, _, _ = git.latest_commit()
           if not hash then
             return nil
           end
@@ -525,7 +538,7 @@ return {
         mode = "n",
         lhs = "<C-g>dw",
         rhs = function()
-          local hash, _, _ = git_latest_commit()
+          local hash, _, _ = git.latest_commit()
           if not hash then
             return
           end
@@ -538,7 +551,7 @@ return {
         mode = "n",
         lhs = "<C-g>dm",
         rhs = function()
-          local hash, _, _ = git_latest_commit()
+          local hash, _, _ = git.latest_commit()
           if not hash then
             return
           end
@@ -564,7 +577,7 @@ return {
         mode = "n",
         lhs = "<C-g>pu",
         rhs = function()
-          local branch = git_branch()
+          local branch = git.branch()
           if not branch then
             return
           end
@@ -640,7 +653,7 @@ return {
         local bufname = vim.api.nvim_buf_get_name(0)
 
         -- Check that current file is in a git repository:
-        if not git_initialized() then
+        if not git.initialized() then
           return
         end
 
@@ -648,8 +661,8 @@ return {
           "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname),
           function()
             vim.notify(
-              "File `" .. bufname .. "` is not tracked by *" .. git_project_name() .. "*",
-              vim.log.levels.WARN,
+              "File `" .. bufname .. "` is not tracked by *" .. git.project_name() .. "*",
+              log_warning,
               { title = "Git Messenger" }
             )
           end

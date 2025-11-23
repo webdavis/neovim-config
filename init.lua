@@ -18,8 +18,12 @@ if vim.env.PROFILE then
   })
 end
 
+-- Global Helpers
+local api = require("custom_api")
+_G.map = api.util.map
+
+-- Import Config
 require("config.options")
-require("config.custom_api")
 require("config.keymaps")
 require("config.autocmds")
 require("config.lazy")

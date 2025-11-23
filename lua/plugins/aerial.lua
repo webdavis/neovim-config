@@ -6,8 +6,6 @@ return {
     "folke/snacks.nvim",
   },
   config = function()
-    local map = require("config.custom_api").map
-
     local opts = {
       layout = {
         min_width = 20,

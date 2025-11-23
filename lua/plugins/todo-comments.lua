@@ -99,8 +99,6 @@ return {
       },
     })
 
-    -- local map = require("config.custom_api").map
-    --
     -- map({
     --   mode = "n",
     --   lhs = "]k",

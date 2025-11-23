@@ -12,7 +12,6 @@ return {
     config = function()
       local oil = require("oil")
 
-      local map = require("config.custom_api").map
       map({ mode = "n", lhs = { "-", "<leader>ef" }, rhs = "Oil", desc = "Oil: open parent directory" })
 
       -- Declare a global function to retrieve the current directory

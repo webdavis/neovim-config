@@ -3,8 +3,6 @@ return {
   config = function()
     require("urlview").setup({})
 
-    local map = require("config.custom_api").map
-
     map({
       mode = "n",
       lhs = { "<leader>UU", "<leader>Uo" },

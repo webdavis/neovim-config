@@ -1,5 +1,3 @@
-local map = require("config.custom_api").map
-
 return {
   {
     "OXY2DEV/markview.nvim",

@@ -1,5 +1,3 @@
-local map = require("config.custom_api").map
-
 return {
   {
     "neovim/nvim-lspconfig",

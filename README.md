@@ -14,6 +14,7 @@ The following modules／files run the show:
 | **[autocmds](./lua/config/autocmds.lua)**    | Auto commands for filetypes, events, etc.                                                    |
 | **[keymaps](./lua/config/keymaps.lua)**      | Global keyboard shortcuts (note: some plugin-specific mappings are put here for convenience) |
 | **[plugins/](./lua/plugins)**                | Individual plugin configurations.                                                            |
+| **[custom_api/](./lua/custom_api/)**         | My custom Neovim API functions (mostly `git` and `gh` CLI wrappers)                          |
 
 > [!NOTE]
 >

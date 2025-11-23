@@ -9,8 +9,6 @@ return {
       max_join_length = 500,
     })
 
-    local map = require("config.custom_api").map
-
     -- stylua: ignore start
     map({ mode = "n", lhs = "<leader>jt", rhs = function() treesj.toggle({ split = { recursive = true } }) end, desc = "TreeSJ: toggle (recursive)" })
     map({ mode = "n", lhs = "<leader>jT", rhs = function() treesj.toggle() end, desc = "TreeSJ: toggle" })

@@ -1,8 +1,4 @@
--- ╭─────────────╮
--- │   Keymaps   │
--- ╰─────────────╯
-
-local map = require("config.custom_api").map
+-- Keymaps
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 -- ┃    Faster File Manipulation    ┃
@@ -158,7 +154,6 @@ map({
 -- ┏━━━━━━━━━━━━━━━┓
 -- ┃    Toggles    ┃
 -- ┗━━━━━━━━━━━━━━━┛
-
 map({
   mode = "n",
   lhs = "<leader>ui",
@@ -179,7 +174,6 @@ map({
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 -- ┃    Clipboard Mappings    ┃
 -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
 map({
   mode = "n",
   lhs = "Y",
@@ -316,7 +310,3 @@ map({
   end,
   desc = "Yank inside nearest '' to clipboard",
 })
-
--- ┏━━━━━━━━━━━━━━━━┓
--- ┃    Disabled    ┃
--- ┗━━━━━━━━━━━━━━━━┛
