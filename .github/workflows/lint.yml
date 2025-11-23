@@ -1,0 +1,24 @@
+name: Lint
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-format-lua:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: brew install stylua luacheck
+
+      - name: Check Lua formatting
+        run: |
+          stylua --check init.lua
+          stylua --check lua/
+
+      - name: Lint Lua files with Luacheck
+        run: luacheck init.lua lua/

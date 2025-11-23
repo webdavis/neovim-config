@@ -14,7 +14,7 @@ local log_warning = vim.log.levels.WARN
 -- │  API │
 -- ╰──────╯
 local function account(opts)
-  opts = opts or {}
+  _ = opts or {}
 
   local exit, username = run_shell_command("git config --get github.username")
 

@@ -1,5 +1,23 @@
 local M = {}
 
+---Collects multiple return values or arguments into a table.
+---
+---The returned table contains all values and a `.n` field indicating
+---the number of elements, making it compatible with LuaJIT / Lua 5.1
+---environments that lack `table.pack`.
+---
+---Example:
+---```lua
+---local t = pack(1, 2, 3)
+---print(t[1], t[2], t[3], t.n)  --> 1  2  3  3
+---```
+---
+---@vararg any Values to pack into a table.
+---@return table A table containing all arguments with a `.n` field.
+local function pack(...)
+  return { n = select("#", ...), ... }
+end
+
 ---Wraps a function to automatically log notifications with its module and function name.
 ---The wrapped function will:
 ---  1. Catch runtime errors (`error()`) and notify via `vim.notify`.
@@ -20,7 +38,7 @@ function M.wrap(module_name, fn, opts)
 
     -- Safely call the function will all arguments.
     local ok, results = pcall(function()
-      return table.pack(fn(call_opts))
+      return pack(fn(call_opts))
     end)
 
     local func_name = debug.getinfo(fn, "n").name or "anonymous"
@@ -51,7 +69,7 @@ function M.wrap(module_name, fn, opts)
       return nil
     end
 
-    return table.unpack(results, 1, results.n)
+    return unpack(results, 1, results.n)
   end
 end
 
