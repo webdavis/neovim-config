@@ -718,8 +718,22 @@ return {
       },
       config = function()
         require("octo").setup({
-          -- picker = "snacks",
-          -- default_merge_method = "commit",
+          suppress_missing_scope = {
+            projects_v2 = true,
+          },
+          default_merge_method = "merge",
+          picker = "snacks",
+          enable_builtin = true,
+          picker_config = {
+            use_emojis = false, -- Only used by "fzf-lua" picker for now.
+            mappings = { -- mappings for the pickers
+              open_in_browser = { lhs = "<C-b>", desc = "Octo: open issue in browser" },
+              copy_url = { lhs = "<C-y>", desc = "Octo: copy url to system clipboard" },
+              copy_sha = { lhs = "<C-e>", desc = "Octo: copy commit SHA to system clipboard" },
+              checkout_pr = { lhs = "<C-o>", desc = "Octo: checkout pull request" },
+              merge_pr = { lhs = "<C-r>", desc = "Octo: merge pull request" },
+            },
+          },
         })
 
         map({ mode = "n", lhs = "<leader>ghg", rhs = "Octo gist list", desc = "GitHub (Octo): list gists" })
