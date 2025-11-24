@@ -358,7 +358,7 @@ return {
 
     map({
       mode = "n",
-      lhs = "<leader>o%",
+      lhs = { "<leader>o%", "<M-8>" },
       rhs = function()
         toggle_runner("OverseerQuickAction open vsplit")
       end,
@@ -367,7 +367,7 @@ return {
 
     map({
       mode = "n",
-      lhs = "<leader>o'",
+      lhs = { "<leader>o'", "<M-7>" },
       rhs = function()
         toggle_runner("OverseerQuickAction open hsplit")
       end,
