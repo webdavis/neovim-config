@@ -736,13 +736,15 @@ return {
           },
         })
 
-        map({ mode = "n", lhs = "<leader>ghg", rhs = "Octo gist list", desc = "GitHub (Octo): list gists" })
-        map({ mode = "n", lhs = "<leader>ghi", rhs = "Octo issue list", desc = "GitHub (Octo): list issues" })
-        map({ mode = "n", lhs = "<leader>ghm", rhs = "Octo pr merge", desc = "GitHub (Octo): merge pull request" })
-        map({ mode = "n", lhs = "<leader>ghn", rhs = "Octo notification", desc = "GitHub (Octo): notifications" })
-        map({ mode = "n", lhs = "<leader>ghp", rhs = "Octo pr list", desc = "GitHub (Octo): list pull requests" })
-        map({ mode = "n", lhs = "<leader>ghr", rhs = "Octo repo list", desc = "GitHub (Octo): list repos" })
-        map({ mode = "n", lhs = "<leader>ghw", rhs = "Octo run list", desc = "GitHub (Octo): list workflow runs" })
+        map({ mode = "n", lhs = "<leader>ghg", rhs = "Octo gist list", desc = "Octo: list gists" })
+        map({ mode = "n", lhs = "<leader>ghi", rhs = "Octo issue list", desc = "Octo: list issues" })
+        map({ mode = "n", lhs = "<leader>ghI", rhs = "Octo issue create", desc = "Octo: create issue" })
+        map({ mode = "n", lhs = "<leader>ghm", rhs = "Octo pr merge", desc = "Octo: merge pull request" })
+        map({ mode = "n", lhs = "<leader>ghn", rhs = "Octo notification", desc = "Octo: notifications" })
+        map({ mode = "n", lhs = "<leader>ghp", rhs = "Octo pr list", desc = "Octo: list pull requests" })
+        map({ mode = "n", lhs = "<leader>ghr", rhs = "Octo repo list", desc = "Octo: list repos" })
+        map({ mode = "n", lhs = "<leader>ghw", rhs = "Octo run list", desc = "Octo: list workflow runs" })
+
         local opts = {
           prefix = "<localleader>",
           buffer = 0, -- Target the current buffer
