@@ -32,9 +32,48 @@ local function account(opts)
   return username
 end
 
+local function repo(opts)
+  opts = opts or {}
+  local name = opts.name or false
+  local owner = opts.owner or false
+
+  if not (name or owner) then
+    name = true
+    owner = true
+  end
+
+  local json_field, jq_filter
+  if name and owner then
+    json_field = "nameWithOwner"
+    jq_filter = ".nameWithOwner"
+  elseif name then
+    json_field = "name"
+    jq_filter = ".name"
+  elseif owner then
+    json_field = "owner"
+    jq_filter = ".owner.login"
+  end
+
+  local exit, result = run_shell_command({
+    command = string.format("gh repo view --json %s --jq '%s'", json_field, jq_filter),
+  })
+
+  if exit ~= 0 or not result or result == "" then
+    return nil,
+      string.format(
+        "Failed to get GitHub repository info for '%s'.\n"
+          .. "Make sure you're logged in with `gh auth login` and the repo exists.",
+        json_field
+      )
+  end
+
+  return result
+end
+
 -- ╭─────────────────────╮
 -- │  Wrapped Functions  │
 -- ╰─────────────────────╯
 M.account = wrap(module_name, account, { log_level = log_warning })
+M.repo = wrap(module_name, repo, { log_level = log_warning })
 
 return M
