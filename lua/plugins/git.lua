@@ -729,6 +729,28 @@ return {
         map({ mode = "n", lhs = "<leader>ghp", rhs = "Octo pr list", desc = "GitHub (Octo): list pull requests" })
         map({ mode = "n", lhs = "<leader>ghr", rhs = "Octo repo list", desc = "GitHub (Octo): list repos" })
         map({ mode = "n", lhs = "<leader>ghw", rhs = "Octo run list", desc = "GitHub (Octo): list workflow runs" })
+        local opts = {
+          prefix = "<localleader>",
+          buffer = 0, -- Target the current buffer
+          mode = "n", -- Normal mode
+        }
+
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = "octo",
+          callback = function()
+            local wk = require("which-key")
+            wk.add({
+              { "<localleader>a", group = "Assignee" },
+              { "<localleader>c", group = "Comment" },
+              { "<localleader>i", group = "Issue" },
+              { "<localleader>g", group = "Navigate" },
+              { "<localleader>l", group = "Label" },
+              { "<localleader>p", group = "PR" },
+              { "<localleader>r", group = "React" },
+              { "<localleader>v", group = "Review" },
+            }, opts)
+          end,
+        })
       end,
     },
   },
