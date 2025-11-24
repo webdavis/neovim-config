@@ -24,8 +24,9 @@ local function account(opts)
 
   if exit ~= 0 then
     return nil,
-      "Unable to read git *github.username*.\n"
-        .. 'Run `git config --global github.username "github_account"` to set it.'
+      "Unable to read git *github.username* and not logged into GitHub CLI.\n"
+        .. 'Run `git config --global github.username "github_account"` to set it.\n\n'
+        .. "Additionally, run `gh auth login` to login to GitHub"
   end
 
   return username
