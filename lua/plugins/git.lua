@@ -458,6 +458,22 @@ return {
       map({ mode = "n", lhs = "<C-g>cn", rhs = "Git commit --amend --no-edit", desc = "Fugitive: commit --amend --no-edit" })
       -- stylua: ignore end
 
+      map({
+        mode = "n",
+        lhs = "<C-g>cp",
+        rhs = function()
+          local repo = github.repo({ name = true })
+          local _, summary, body = git.latest_commit({ project_name = repo })
+          if not summary then
+            return
+          end
+
+          vim.fn.setreg('"', summary .. "\n\n" .. (body or ""))
+          vim.cmd("normal! ]p")
+        end,
+        desc = "Fugitive: read latest commit into buffer",
+      })
+
       -- An interactive command to amend the author/email of the latest commit:
       map({
         mode = "n",
