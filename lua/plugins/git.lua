@@ -641,7 +641,7 @@ return {
         mode = "n",
         lhs = { "<C-g>ob", "<C-g>oo" },
         rhs = function()
-          vim.fn.system({ "gh", "browse" })
+          run_shell_command({ cmd = "gh browse" })
         end,
         desc = "GitHub CLI: browse (repo)",
       })
