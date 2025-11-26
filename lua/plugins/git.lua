@@ -306,7 +306,7 @@ return {
               end
               table.insert(cmds, 'gh repo create --public "' .. project .. '"')
 
-              overseer_runner(cmds)
+              overseer_runner({ cmds = cmds })
             end)
           end)
         end,
@@ -560,7 +560,7 @@ return {
           if not hash then
             return
           end
-          overseer_runner({ "git diff --color-words" })
+          overseer_runner({ cmds = "git diff --color-words" })
         end,
         desc = "Git (Overseer): diff --color-words",
       })
@@ -574,7 +574,7 @@ return {
           if not hash then
             return
           end
-          overseer_runner({ "git diff --color-moved" })
+          overseer_runner({ cmds = "git diff --color-moved" })
         end,
         desc = "Git (Overseer): diff --color-moved",
       })
