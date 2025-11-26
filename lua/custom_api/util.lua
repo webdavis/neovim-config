@@ -148,7 +148,7 @@ function M.map(opts)
 end
 
 local function run_shell_command(opts)
-  opts = opts or error("run_shell_command: missing `command` argument. Provide a table with a `command` field.")
+  opts = opts or error("Missing `command` argument. Provide a table with a `command` field.")
   local cmd = opts.cmd
   local notify_error = opts.notify_error
 
@@ -158,7 +158,7 @@ local function run_shell_command(opts)
   elseif type(cmd) == "string" then
     command_string = cmd
   else
-    error(("run_shell_command: invalid `command` type: %s. Must be a string or table."):format(type(command)))
+    error(("Invalid `command` type: %s. Must be a string or table."):format(type(cmd)))
   end
 
   local output = vim.fn.system(command_string)
