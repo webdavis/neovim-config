@@ -16,6 +16,7 @@ local overseer_runner = util.overseer_runner
 local log_info = vim.log.levels.INFO
 local log_warning = vim.log.levels.WARN
 local notify_fugitive_title = { title = "Fugitive" }
+local notify_github_title = { title = "GitHub" }
 
 local function copy_url_mapping_helper(lhs, remote, protocol)
   local mapping_table = {
@@ -261,8 +262,6 @@ return {
         mode = "n",
         lhs = "<C-g>i",
         rhs = function()
-          local notify_github_title = { title = "GitHub" }
-
           local is_initialized = git.initialized({ quiet = true })
 
           local user = github.username()
@@ -645,6 +644,37 @@ return {
         end,
         desc = "GitHub CLI: open repo Homepage (Code tab)",
       })
+
+      local function open_github_page_mapping(key, suffix, page_desc)
+        if not page_desc then
+          page_desc = string.gsub(" " .. suffix, "%W%l", string.upper):sub(2)
+        end
+
+        local mapping_table = {
+          mode = "n",
+          lhs = "<C-g>o" .. key,
+          rhs = function()
+            if not git.initialized() then
+              return
+            end
+
+            local url = "https://github.com/" .. github.repo({ owner = true }) .. "/" .. suffix
+            run_shell_command({ cmd = "open " .. url })
+          end,
+          desc = "GitHub CLI: open " .. page_desc .. " page",
+        }
+
+        return mapping_table
+      end
+
+      map(open_github_page_mapping("i", "issues"))
+      map(open_github_page_mapping("p", "pulls", "Pull Requests"))
+      map(open_github_page_mapping("a", "actions"))
+      map(open_github_page_mapping("P", "projects"))
+      map(open_github_page_mapping("w", "wiki"))
+      map(open_github_page_mapping("S", "security"))
+      map(open_github_page_mapping("I", "pulse", "Insights"))
+      map(open_github_page_mapping("s", "settings"))
     end,
   },
   {
