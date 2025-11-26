@@ -16,10 +16,10 @@ local log_warning = vim.log.levels.WARN
 local function account(opts)
   _ = opts or {}
 
-  local exit, username = run_shell_command({ command = "git config --get github.username" })
+  local exit, username = run_shell_command({ cmd = "git config --get github.username" })
 
   if exit ~= 0 then
-    exit, username = run_shell_command({ command = "gh api user --jq .login" })
+    exit, username = run_shell_command({ cmd = "gh api user --jq .login" })
   end
 
   if exit ~= 0 then
@@ -50,7 +50,7 @@ local function repo(opts)
   end
 
   local exit, result = run_shell_command({
-    command = string.format("gh repo view --json %s --jq '%s'", json_field, jq_filter),
+    cmd = string.format("gh repo view --json %s --jq '%s'", json_field, jq_filter),
   })
 
   if exit ~= 0 or not result or result == "" then

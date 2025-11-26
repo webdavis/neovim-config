@@ -38,7 +38,7 @@ end
 -- ╰──────╯
 local function initialized(opts)
   local _ = opts
-  local code, _ = run_shell_command({ command = "git rev-parse --git-dir" })
+  local code, _ = run_shell_command({ cmd = "git rev-parse --git-dir" })
 
   if code ~= 0 then
     return nil, "Project hasn't been initialized. Run `git init` to start tracking."
@@ -50,7 +50,7 @@ end
 local function top_level(opts)
   local _ = opts
 
-  local code, top_level_dir = run_shell_command({ command = "git rev-parse --show-toplevel" }, function()
+  local code, top_level_dir = run_shell_command({ cmd = "git rev-parse --show-toplevel" }, function()
     local cwd = get_cwd_basename()
     local buffer_path = vim.api.nvim_buf_get_name(0)
 
@@ -78,7 +78,7 @@ end
 local function branch(opts)
   local _ = opts
 
-  local _, branches = run_shell_command({ command = "git branch" })
+  local _, branches = run_shell_command({ cmd = "git branch" })
 
   if branches == "" then
     local cwd = get_cwd_basename()
@@ -92,7 +92,7 @@ local function branch(opts)
     return nil, table.concat(message, "\n")
   end
 
-  local _, current_branch = run_shell_command({ command = "git branch --show-current" }, true)
+  local _, current_branch = run_shell_command({ cmd = "git branch --show-current" }, true)
 
   return current_branch
 end
@@ -105,7 +105,7 @@ local function latest_commit(opts)
     error("Missing required argument `project`")
   end
 
-  local hash_exit, hash = run_shell_command({ command = "git rev-parse --short HEAD" })
+  local hash_exit, hash = run_shell_command({ cmd = "git rev-parse --short HEAD" })
   if hash_exit ~= 0 then
     return nil,
       nil,
@@ -116,7 +116,7 @@ local function latest_commit(opts)
       )
   end
 
-  local message_exit, message = run_shell_command({ command = "git log -1 --pretty=%B" })
+  local message_exit, message = run_shell_command({ cmd = "git log -1 --pretty=%B" })
   if message_exit ~= 0 then
     return hash, nil, nil, string.format("Commit `%s` has no message.", hash)
   end
@@ -144,8 +144,8 @@ local function url(opts)
     error("Missing required argument `repo_name`")
   end
 
-  local command = { command = string.format("git config --get remote.%s.url", remote) }
-  local code, remote_url = run_shell_command(command)
+  local cmd = { cmd = string.format("git config --get remote.%s.url", remote) }
+  local code, remote_url = run_shell_command(cmd)
 
   if code ~= 0 then
     local lines = {

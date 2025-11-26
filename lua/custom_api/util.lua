@@ -149,14 +149,14 @@ end
 
 local function run_shell_command(opts)
   opts = opts or error("run_shell_command: missing `command` argument. Provide a table with a `command` field.")
-  local command = opts.command
+  local cmd = opts.cmd
   local notify_error = opts.notify_error
 
   local command_string
-  if type(command) == "table" then
-    command_string = table.concat(command, " ")
-  elseif type(command) == "string" then
-    command_string = command
+  if type(cmd) == "table" then
+    command_string = table.concat(cmd, " ")
+  elseif type(cmd) == "string" then
+    command_string = cmd
   else
     error(("run_shell_command: invalid `command` type: %s. Must be a string or table."):format(type(command)))
   end
