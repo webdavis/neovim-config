@@ -175,9 +175,7 @@ end
 
 function M.overseer_runner(opts)
   opts = opts or {}
-
   local cmds = opts.cmds
-
   local operator = opts.operator or ";"
 
   if type(cmds) == "string" then
