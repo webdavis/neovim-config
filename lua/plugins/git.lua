@@ -421,7 +421,8 @@ return {
             return
           end
 
-          local hash, summary, body = git.latest_commit()
+          local repo = github.repo({ name = true })
+          local hash, summary, body = git.latest_commit({ project_name = repo })
 
           local sections = {
             { "**Current Git Branch:**", branch },
@@ -479,7 +480,8 @@ return {
         mode = "n",
         lhs = "<C-g>c.",
         rhs = function()
-          local hash, _, _ = git.latest_commit()
+          local project = git.project_name({ name = true })
+          local hash, _, _ = git.latest_commit({ project_name = project })
           if not hash then
             return nil
           end
@@ -553,7 +555,8 @@ return {
         mode = "n",
         lhs = "<C-g>dw",
         rhs = function()
-          local hash, _, _ = git.latest_commit()
+          local repo = github.repo({ name = true })
+          local hash, _, _ = git.latest_commit({ project_name = repo })
           if not hash then
             return
           end
@@ -566,7 +569,8 @@ return {
         mode = "n",
         lhs = "<C-g>dm",
         rhs = function()
-          local hash, _, _ = git.latest_commit()
+          local repo = github.repo({ name = true })
+          local hash, _, _ = git.latest_commit({ project_name = repo })
           if not hash then
             return
           end
