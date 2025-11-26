@@ -643,7 +643,7 @@ return {
         rhs = function()
           run_shell_command({ cmd = "gh browse" })
         end,
-        desc = "GitHub CLI: browse (repo)",
+        desc = "GitHub CLI: open repo Homepage (Code tab)",
       })
     end,
   },
