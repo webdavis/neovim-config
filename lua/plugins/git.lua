@@ -288,7 +288,7 @@ return {
                 return
               end
 
-              local gh_exit, _ = run_shell_command("gh repo view '" .. project .. "'")
+              local gh_exit, _ = run_shell_command({ cmd = "gh repo view '" .. project .. "'" })
 
               if gh_exit == 0 then
                 local message = {
@@ -696,23 +696,18 @@ return {
       local function git_messenger()
         local bufname = vim.api.nvim_buf_get_name(0)
 
-        -- Check that current file is in a git repository:
         if not git.initialized() then
           return
         end
 
-        local exit_code, _ = run_shell_command(
-          "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname),
-          function()
-            vim.notify(
-              "File `" .. bufname .. "` is not tracked by *" .. github.repo() .. "*",
-              log_warning,
-              { title = "Git Messenger" }
-            )
-          end
-        )
+        local exit_code, _ = run_shell_command({ cmd = "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname) })
 
         if exit_code ~= 0 then
+          vim.notify(
+            "File `" .. bufname .. "` is not tracked by *" .. github.repo() .. "*",
+            log_warning,
+            { title = "Git Messenger" }
+          )
           return
         end
 
