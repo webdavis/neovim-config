@@ -47,10 +47,10 @@ local function initialized(opts)
   return true
 end
 
-local function project_name(opts)
+local function top_level(opts)
   local _ = opts
 
-  local code, project = run_shell_command({ command = "git rev-parse --show-toplevel" }, function()
+  local code, top_level_dir = run_shell_command({ command = "git rev-parse --show-toplevel" }, function()
     local cwd = get_cwd_basename()
     local buffer_path = vim.api.nvim_buf_get_name(0)
 
@@ -69,10 +69,10 @@ local function project_name(opts)
   end
 
   if not opts.full_path or opts.full_path == false then
-    project = vim.fn.fnamemodify(project, ":t")
+    top_level_dir = vim.fn.fnamemodify(top_level_dir, ":t")
   end
 
-  return project
+  return top_level_dir
 end
 
 local function branch(opts)
@@ -99,9 +99,9 @@ end
 
 local function latest_commit(opts)
   opts = opts or {}
-  local project = opts.project_name
+  local repo_name = opts.repo_name
 
-  if not project then
+  if not repo_name then
     error("Missing required argument `project`")
   end
 
@@ -112,7 +112,7 @@ local function latest_commit(opts)
       nil,
       string.format(
         "Unable to find latest commit.\n\nThis may occur if no commits have been made to *%s* yet.",
-        project
+        repo_name
       )
   end
 
@@ -205,7 +205,7 @@ end
 -- │  Wrapped Functions  │
 -- ╰─────────────────────╯
 M.initialized = wrap(module_name, initialized, { log_level = log_warning })
-M.project_name = wrap(module_name, project_name, { log_level = log_warning })
+M.top_level = wrap(module_name, top_level, { log_level = log_warning })
 M.branch = wrap(module_name, branch, { log_level = log_warning })
 M.latest_commit = wrap(module_name, latest_commit, { log_level = log_warning })
 M.copy_URL_to_clipboard = wrap(module_name, copy_URL_to_clipboard, { log_level = log_warning })

@@ -34,13 +34,8 @@ end
 
 local function repo(opts)
   opts = opts or {}
-  local name = opts.name or false
+  local name = opts.name or true
   local owner = opts.owner or false
-
-  if not (name or owner) then
-    name = true
-    owner = true
-  end
 
   local json_field, jq_filter
   if name and owner then

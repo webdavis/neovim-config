@@ -26,7 +26,7 @@ local function copy_url_mapping_helper(lhs, remote, protocol)
         local url = git.url({
           remote = remote,
           account_name = github.account(),
-          repo_name = git.project_name(),
+          repo_name = github.repo(),
         })
 
         if not url then
@@ -421,8 +421,7 @@ return {
             return
           end
 
-          local repo = github.repo({ name = true })
-          local hash, summary, body = git.latest_commit({ project_name = repo })
+          local hash, summary, body = git.latest_commit({ repo_name = github.repo() })
 
           local sections = {
             { "**Current Git Branch:**", branch },
@@ -463,8 +462,7 @@ return {
         mode = "n",
         lhs = "<C-g>cp",
         rhs = function()
-          local repo = github.repo({ name = true })
-          local _, summary, body = git.latest_commit({ project_name = repo })
+          local _, summary, body = git.latest_commit({ repo_name = github.repo() })
           if not summary then
             return
           end
@@ -480,8 +478,7 @@ return {
         mode = "n",
         lhs = "<C-g>c.",
         rhs = function()
-          local project = git.project_name({ name = true })
-          local hash, _, _ = git.latest_commit({ project_name = project })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
           if not hash then
             return nil
           end
@@ -555,8 +552,7 @@ return {
         mode = "n",
         lhs = "<C-g>dw",
         rhs = function()
-          local repo = github.repo({ name = true })
-          local hash, _, _ = git.latest_commit({ project_name = repo })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
           if not hash then
             return
           end
@@ -569,8 +565,7 @@ return {
         mode = "n",
         lhs = "<C-g>dm",
         rhs = function()
-          local repo = github.repo({ name = true })
-          local hash, _, _ = git.latest_commit({ project_name = repo })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
           if not hash then
             return
           end
@@ -680,7 +675,7 @@ return {
           "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname),
           function()
             vim.notify(
-              "File `" .. bufname .. "` is not tracked by *" .. git.project_name() .. "*",
+              "File `" .. bufname .. "` is not tracked by *" .. github.repo() .. "*",
               log_warning,
               { title = "Git Messenger" }
             )
