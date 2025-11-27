@@ -32,11 +32,13 @@ end
 -- ╭──────╮
 -- │  API │
 -- ╰──────╯
+
+---Remove surrounding whitespace from `s`.
 function M.trim(s)
   return (s or ""):gsub("^%s*(.-)%s*$", "%1")
 end
 
--- Lowercase + trim input
+---Remove surrounding whitespace and convert `s` to lowercase.
 function M.sanitize_input(s)
   return M.trim(s):lower()
 end
