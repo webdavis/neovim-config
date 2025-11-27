@@ -2,8 +2,9 @@ local M = {}
 
 local module_name = "custom_api.git"
 
-local util = require("custom_api.helpers")
-local wrap = util.wrap
+local helpers = require("custom_api.helpers")
+local wrap = helpers.wrap
+local util = require("custom_api.util")
 local get_cwd_basename = util.get_cwd_basename
 
 local run_shell_command = require("custom_api.util").run_shell_command
