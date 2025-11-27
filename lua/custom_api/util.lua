@@ -3,13 +3,13 @@
 ---`map` supports multiple keys, automatic silent handling, and merging user-provided options.
 local M = {}
 
+local helpers = require("custom_api.helpers")
+
 local module_name = "custom_api.util"
 
-local wrap = require("custom_api.helpers").wrap
-
--- ╭──────────╮
--- │  Helpers │
--- ╰──────────╯
+-- ╭───────────────────╮
+-- │  Helper Functions │
+-- ╰───────────────────╯
 
 ---Determines whether a mapping should be silent based on its right-hand side (rhs).
 ---Mappings that execute Vim commands (starting with `:`) are considered *not silent*.
@@ -205,6 +205,6 @@ end
 -- ╭─────────────────────╮
 -- │  Wrapped Functions  │
 -- ╰─────────────────────╯
-M.run_shell_command = wrap(module_name, run_shell_command)
+M.run_shell_command = helpers.wrap(module_name, run_shell_command)
 
 return M

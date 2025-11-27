@@ -3,11 +3,7 @@ local M = {}
 local module_name = "custom_api.git"
 
 local helpers = require("custom_api.helpers")
-local wrap = helpers.wrap
 local util = require("custom_api.util")
-local get_cwd_basename = util.get_cwd_basename
-
-local run_shell_command = require("custom_api.util").run_shell_command
 
 -- ╭──────────╮
 -- │  Helpers │
@@ -39,7 +35,7 @@ end
 -- ╰──────╯
 local function initialized(opts)
   local _ = opts
-  local code, _ = run_shell_command({ cmd = "git rev-parse --git-dir" })
+  local code, _ = util.run_shell_command({ cmd = "git rev-parse --git-dir" })
 
   if code ~= 0 then
     return nil, "Project hasn't been initialized. Run `git init` to start tracking."
@@ -51,8 +47,8 @@ end
 local function top_level(opts)
   local _ = opts
 
-  local code, top_level_dir = run_shell_command({ cmd = "git rev-parse --show-toplevel" }, function()
-    local cwd = get_cwd_basename()
+  local code, top_level_dir = util.run_shell_command({ cmd = "git rev-parse --show-toplevel" }, function()
+    local cwd = util.get_cwd_basename()
     local buffer_path = vim.api.nvim_buf_get_name(0)
 
     local lines = {
@@ -79,10 +75,10 @@ end
 local function branch(opts)
   local _ = opts
 
-  local _, branches = run_shell_command({ cmd = "git branch" })
+  local _, branches = util.run_shell_command({ cmd = branch_cmd })
 
   if branches == "" then
-    local cwd = get_cwd_basename()
+    local cwd = util.get_cwd_basename()
     local message = {
       { "Project has been initialized, but unable to detect current git branch." },
       { "\nThis could mean one of two things:" },
@@ -93,7 +89,10 @@ local function branch(opts)
     return nil, table.concat(message, "\n")
   end
 
-  local _, current_branch = run_shell_command({ cmd = "git branch --show-current" }, true)
+  local _, current_branch = util.run_shell_command({
+    cmd = "git branch --show-current",
+    notify_error = true,
+  })
 
   return current_branch
 end
@@ -106,7 +105,7 @@ local function latest_commit(opts)
     error("Missing required argument `project`")
   end
 
-  local hash_exit, hash = run_shell_command({ cmd = "git rev-parse --short HEAD" })
+  local hash_exit, hash = util.run_shell_command({ cmd = "git rev-parse --short HEAD" })
   if hash_exit ~= 0 then
     return nil,
       nil,
@@ -117,16 +116,14 @@ local function latest_commit(opts)
       )
   end
 
-  local message_exit, message = run_shell_command({ cmd = "git log -1 --pretty=%B" })
+  local message_exit, message = util.run_shell_command({ cmd = "git log -1 --pretty=%B" })
   if message_exit ~= 0 then
     return hash, nil, nil, string.format("Commit `%s` has no message.", hash)
   end
 
   local summary, body = message:match("([^\n]*)\n?(.*)")
 
-  local normalize = require("custom_api.util").normalize
-
-  return hash, normalize(summary), normalize(body)
+  return hash, util.normalize(summary), util.normalize(body)
 end
 
 local function url(opts)
@@ -146,7 +143,7 @@ local function url(opts)
   end
 
   local cmd = { cmd = string.format("git config --get remote.%s.url", remote) }
-  local code, remote_url = run_shell_command(cmd)
+  local code, remote_url = util.run_shell_command(cmd)
 
   if code ~= 0 then
     local lines = {
@@ -189,7 +186,7 @@ local function copy_URL_to_clipboard(opts)
 
   local final_URL = converted_URL or remote_url
 
-  require("custom_api.util").copy_to_system_clipboard(final_URL)
+  util.copy_to_system_clipboard(final_URL)
 
   if not converted_URL then
     return nil,
@@ -205,11 +202,11 @@ end
 -- ╭─────────────────────╮
 -- │  Wrapped Functions  │
 -- ╰─────────────────────╯
-M.initialized = wrap(module_name, initialized, { log_level = log_warning })
-M.top_level = wrap(module_name, top_level, { log_level = log_warning })
-M.branch = wrap(module_name, branch, { log_level = log_warning })
-M.latest_commit = wrap(module_name, latest_commit, { log_level = log_warning })
-M.copy_URL_to_clipboard = wrap(module_name, copy_URL_to_clipboard, { log_level = log_warning })
-M.url = wrap(module_name, url, { log_level = log_warning })
+M.initialized = helpers.wrap(module_name, initialized, { log_level = log_warning })
+M.top_level = helpers.wrap(module_name, top_level, { log_level = log_warning })
+M.branch = helpers.wrap(module_name, branch, { log_level = log_warning })
+M.latest_commit = helpers.wrap(module_name, latest_commit, { log_level = log_warning })
+M.copy_URL_to_clipboard = helpers.wrap(module_name, copy_URL_to_clipboard, { log_level = log_warning })
+M.url = helpers.wrap(module_name, url, { log_level = log_warning })
 
 return M

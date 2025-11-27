@@ -2,8 +2,8 @@ local M = {}
 
 local module_name = "custom_api.github"
 
-local wrap = require("custom_api.helpers").wrap
-local run_shell_command = require("custom_api.util").run_shell_command
+local helpers = require("custom_api.helpers")
+local util = require("custom_api.util")
 
 -- ╭──────────╮
 -- │  Helpers │
@@ -16,10 +16,10 @@ local log_warning = vim.log.levels.WARN
 local function account(opts)
   _ = opts or {}
 
-  local exit, username = run_shell_command({ cmd = "git config --get github.username" })
+  local exit, username = util.run_shell_command({ cmd = "git config --get github.username" })
 
   if exit ~= 0 then
-    exit, username = run_shell_command({ cmd = "gh api user --jq .login" })
+    exit, username = util.run_shell_command({ cmd = "gh api user --jq .login" })
   end
 
   if exit ~= 0 then
@@ -49,7 +49,7 @@ local function repo(opts)
     jq_filter = ".owner.login"
   end
 
-  local exit, result = run_shell_command({
+  local exit, result = util.run_shell_command({
     cmd = string.format("gh repo view --json %s --jq '%s'", json_field, jq_filter),
   })
 
@@ -68,7 +68,7 @@ end
 -- ╭─────────────────────╮
 -- │  Wrapped Functions  │
 -- ╰─────────────────────╯
-M.account = wrap(module_name, account, { log_level = log_warning })
-M.repo = wrap(module_name, repo, { log_level = log_warning })
+M.account = helpers.wrap(module_name, account, { log_level = log_warning })
+M.repo = helpers.wrap(module_name, repo, { log_level = log_warning })
 
 return M
