@@ -72,29 +72,143 @@ local function top_level(opts)
   return top_level_dir
 end
 
-local function branch(opts)
-  local _ = opts
+local function normalize_branch(branch)
+  return util.trim(branch:gsub("^[*+]%s+", ""))
+end
 
-  local _, branches = util.run_shell_command({ cmd = branch_cmd })
+local function is_current_branch(line)
+  return line:match("^%*") == "*"
+end
 
-  if branches == "" then
-    local cwd = util.get_cwd_basename()
+local function fetch_branches()
+  local exit_code, branches_output = util.run_shell_command({ cmd = "git branch -vv" })
+
+  if exit_code ~= 0 then
     local message = {
-      { "Project has been initialized, but unable to detect current git branch." },
-      { "\nThis could mean one of two things:" },
-      { "\t1. You are in a new project that has no commits." },
-      { "\t2. You are in a special *detached HEAD* state" },
-      { "Current working directory: `" .. cwd .. "`" },
+      { 'Project may not be initialized or is in a detache "HEAD" state.' },
+      { "Current working directory: `" .. util.get_cwd_basename() .. "`" },
     }
     return nil, table.concat(message, "\n")
   end
 
-  local _, current_branch = util.run_shell_command({
+  local _, current_name = util.run_shell_command({
     cmd = "git branch --show-current",
     notify_error = true,
   })
 
-  return current_branch
+  return branches_output, current_name
+end
+
+local function extract_upstream(tokens)
+  -- Upstream branch specification always starts at index 3, if it exists at all.
+  local i = 3
+
+  if not tokens[i] or tokens[i]:sub(1, 1) ~= "[" then
+    return nil, i
+  end
+
+  local parts = {}
+
+  while tokens[i] do
+    if tokens[i]:sub(-1) == "]" then
+      table.insert(parts, tokens[i])
+      i = i + 1
+      break
+    end
+    table.insert(parts, tokens[i])
+    i = i + 1
+  end
+
+  local upstream = table.concat(parts, " ")
+
+  return upstream, i + 1
+end
+
+local function parse_branch_line(line)
+  local normalized_line = normalize_branch(line)
+
+  local tokens = {}
+  for token in normalized_line:gmatch("%S+") do
+    table.insert(tokens, token)
+  end
+
+  local name = tokens[1]
+  local hash = tokens[2]
+
+  local upstream, message_start_index = extract_upstream(tokens)
+  message_start_index = message_start_index or 3
+
+  local message = ""
+  for i = message_start_index, #tokens do
+    message = message .. tokens[i] .. (i < #tokens and " " or "")
+  end
+  message = message == "" and nil or message
+
+  local indicator = line:sub(1, 1)
+  local status
+  if indicator == "*" then
+    status = "active"
+  elseif indicator == "+" then
+    status = "previous"
+  else
+    status = "inactive"
+  end
+
+  return {
+    status = status,
+    name = name,
+    hash = hash,
+    upstream = upstream,
+    message = message,
+  }
+end
+
+local function empty_repo_branch(name)
+  return { name = name, hash = nil, upstream = nil, message = nil }
+end
+
+local function with_branch_list_helper(opts)
+  opts = opts or {}
+  local current_only = opts.current
+
+  local branches_output, current_name_or_err_msg = fetch_branches()
+  if not branches_output then
+    return nil, current_name_or_err_msg
+  end
+
+  -- Handle empty repo or detached HEAD.
+  if branches_output == "" and current_name_or_err_msg ~= "" then
+    local branch = empty_repo_branch(current_name_or_err_msg)
+    return current_only and branch or { branch }
+  end
+
+  local branch_list = {}
+
+  for line in branches_output:gmatch("[^\r\n]+") do
+    local is_current = is_current_branch(line)
+
+    local branch = parse_branch_line(line)
+
+    if current_only and is_current then
+      return branch
+    elseif not current_only then
+      if is_current then
+        table.insert(branch_list, 1, branch)
+      else
+        table.insert(branch_list, branch)
+      end
+    end
+  end
+
+  return branch_list
+end
+
+local function all_branches()
+  return with_branch_list_helper()
+end
+
+local function current_branch()
+  return with_branch_list_helper({ current = true })
 end
 
 local function latest_commit(opts)
@@ -204,7 +318,8 @@ end
 -- ╰─────────────────────╯
 M.initialized = helpers.wrap(module_name, initialized, { log_level = log_warning })
 M.top_level = helpers.wrap(module_name, top_level, { log_level = log_warning })
-M.branch = helpers.wrap(module_name, branch, { log_level = log_warning })
+M.current_branch = helpers.wrap(module_name, current_branch, { log_level = log_warning })
+M.all_branches = helpers.wrap(module_name, all_branches, { log_level = log_warning })
 M.latest_commit = helpers.wrap(module_name, latest_commit, { log_level = log_warning })
 M.copy_URL_to_clipboard = helpers.wrap(module_name, copy_URL_to_clipboard, { log_level = log_warning })
 M.url = helpers.wrap(module_name, url, { log_level = log_warning })

@@ -14,7 +14,9 @@ local overseer_runner = util.overseer_runner
 -- │   Helpers   │
 -- ╰─────────────╯
 local log_info = vim.log.levels.INFO
+local log_trace = vim.log.levels.TRACE
 local log_warning = vim.log.levels.WARN
+local log_error = vim.log.levels.INFO
 local notify_fugitive_title = { title = "Fugitive" }
 local notify_github_title = { title = "GitHub" }
 
@@ -394,7 +396,52 @@ return {
 
       -- stylua: ignore start
       -- Branch / Checkout:
-      map({ mode = "n", lhs = "<C-g>bc", rhs = ":<C-u>Git checkout -b ", desc = "Fugitive (checkout): create new <branch>" })
+      map({
+        mode = "n",
+        lhs = "<C-g>bc",
+        rhs = function()
+          local repo = github.repo()
+          if not repo then
+            return
+          end
+
+          local branch = git.current_branch()
+
+          local prompt
+          if branch.name and branch.hash then
+            prompt = ("%s: checkout new branch from '%s' (commit: %s): "):format(
+              repo,
+              branch.name,
+              branch.hash
+            )
+          elseif branch.name then
+            prompt = ("%s: checkout new branch from '%s': "):format(
+              repo,
+              branch.name
+            )
+          else
+            prompt = ("%s: checkout new branch (no commit detected): "):format(repo)
+          end
+
+          vim.ui.input({ prompt = prompt }, function(new_branch)
+            if not new_branch or new_branch:match("^%s*$") then
+              local cancel_message = string.format(
+                "Branch checkout cancelled in repo `%s`: no branch entered.",
+                repo
+              )
+              vim.notify(cancel_message, log_warning, notify_fugitive_title)
+              return
+            end
+            new_branch = trim(new_branch)
+
+            local cmd = "Git checkout -b " .. new_branch
+            vim.cmd(cmd)
+          end)
+
+        end,
+        desc = "Fugitive (checkout): create new <branch>",
+      })
+
       map({ mode = "n", lhs = "<C-g>b-", rhs = "Git checkout -", desc = "Fugitive (checkout): switch to previous branch" })
       -- stylua: ignore end
 
@@ -402,49 +449,133 @@ return {
         mode = "n",
         lhs = "<C-g>bb",
         rhs = function()
-          local branch = git.branch()
+          local branch = git.current_branch().name
           if not branch then
             return
           end
-          vim.notify("Current Git Branch: *" .. branch .. "*", log_info, notify_fugitive_title)
+          vim.notify("**Current Branch:** `" .. branch .. "`", log_info, { title = "Active Git Branch" })
         end,
         desc = "Git (branch): show current",
       })
 
+      local function format_section(label, text, metatext)
+        if text and text:match("%S") then
+          if metatext and metatext:match("%S") then
+            return label and string.format("*%s* [%s] (%s)", label, text, metatext) or text
+          else
+            return label and string.format("*%s* [%s]", label, text) or text
+          end
+        elseif label then
+          return label
+        end
+      end
+
+      local function build_sections(branch, commit_hash, summary, body)
+        local sections = {}
+
+        if summary then
+          table.insert(sections, { "\n" .. summary })
+          if body then
+            table.insert(sections, { "\n" .. body })
+          end
+          table.insert(sections, { "\n---------------------------------------" })
+        end
+
+        table.insert(sections, { "Branch:", "**" .. branch.name .. "**" })
+
+        if commit_hash then
+          table.insert(sections, { "Commit:", commit_hash, "copied to clipboard" })
+          util.copy_to_system_clipboard(commit_hash)
+        end
+
+        if branch.upstream then
+          table.insert(sections, { "Upstream:", branch.upstream })
+        end
+
+        return sections
+      end
+
+      local function sections_to_message(sections)
+        local lines = {}
+        for _, s in ipairs(sections) do
+          local line = format_section(s[1], s[2], s[3])
+          if line then
+            table.insert(lines, line)
+          end
+        end
+        return table.concat(lines, "\n")
+      end
+
+      local function show_git_branch()
+        local branch = git.current_branch()
+        if not branch then
+          return
+        end
+
+        local hash, summary, body = git.latest_commit({ repo_name = github.repo() })
+        local sections = build_sections(branch, hash, summary, body)
+        local message = sections_to_message(sections)
+
+        vim.notify(message, vim.log.levels.INFO, { title = "Active Git Branch", timeout = 0 })
+      end
+
       map({
         mode = "n",
         lhs = "<C-g>bB",
-        rhs = function()
-          local branch = git.branch()
-          if not branch then
-            return
+        rhs = show_git_branch,
+        desc = "Git (branch): show current + commit (copy hash to +)",
+      })
+
+      local function format_branch(branch)
+        local lines = { ("*Branch:* `%s`"):format(branch.name) }
+
+        if branch.hash then
+          table.insert(lines, "*Hash:* " .. branch.hash)
+        end
+
+        if branch.upstream then
+          table.insert(lines, "*Upstream:* " .. branch.upstream)
+        end
+
+        if branch.message then
+          table.insert(lines, "*Message:* " .. branch.message)
+        end
+
+        return table.concat(lines, "\n")
+      end
+
+      local function show_all_branches()
+        local all_branches = git.all_branches()
+        if not all_branches or #all_branches == 0 then
+          return
+        end
+
+        local nonactive_branches = {}
+
+        for i, branch in ipairs(all_branches) do
+          local formatted = format_branch(branch)
+
+          if i == 1 then
+            vim.notify(formatted, log_info, { title = "Active Git Branch", timeout = 0 })
+          else
+            table.insert(nonactive_branches, formatted)
           end
+        end
 
-          local hash, summary, body = git.latest_commit({ repo_name = github.repo() })
+        if #nonactive_branches > 0 then
+          vim.notify(
+            table.concat(nonactive_branches, "\n\n"),
+            log_trace,
+            { title = "Inactive Git Branch(es)", timeout = 0 }
+          )
+        end
+      end
 
-          local sections = {
-            { "**Current Git Branch:**", branch },
-            { "**Latest Git Commit:**", hash },
-            { "**--- Commit Message ---**", nil },
-            { nil, summary },
-            { nil, body },
-          }
-
-          local lines = {}
-          for _, s in ipairs(sections) do
-            local label, text = s[1], s[2]
-            if text and text:match("%S") then
-              table.insert(lines, label and string.format("%s `%s`", label, text) or text)
-            elseif label then
-              table.insert(lines, label)
-            end
-          end
-
-          local message = table.concat(lines, "\n\n")
-
-          require("snacks").notifier(message, "info", { timeout = 10000 })
-        end,
-        desc = "Git (branch): show current w/ latest commit",
+      map({
+        mode = "n",
+        lhs = "<C-g>ba",
+        rhs = show_all_branches,
+        desc = "Git (branch): show all branches",
       })
 
       -- stylua: ignore start
@@ -521,8 +652,39 @@ return {
       map({
         mode = "n",
         lhs = "<C-g>lp",
-        rhs = "Git log --pretty=oneline -n 20 --graph --abbrev-commit",
-        desc = "Fugitive: pretty log (20 latest commits)",
+        rhs = function()
+          local branch = git.current_branch().name
+          local default_commits = 20
+          vim.ui.input(
+            { prompt = ("(Branch: %s) Number of commits [default %d, q to quit]: "):format(branch, default_commits) },
+            function(input)
+              local sanitized = sanitize_input(input or "")
+
+              if sanitized:lower() == "q" then
+                vim.notify(("Cancelled Git log for branch `%s`"):format(branch), log_info, notify_fugitive_title)
+                return
+              end
+
+              if sanitized == "" then
+                sanitized = tostring(default_commits)
+              end
+
+              local number_commits = tonumber(sanitized)
+              if not number_commits or number_commits <= 0 then
+                vim.notify(("Invalid number entered: `%s`"):format(sanitized), log_error, notify_fugitive_title)
+                return
+              end
+
+              vim.notify(
+                ("Showing the **%s** most recent commits on branch `%s`"):format(sanitized, branch),
+                log_info,
+                notify_fugitive_title
+              )
+              vim.cmd(("Git log --pretty=oneline -n %d --graph --abbrev-commit"):format(number_commits))
+            end
+          )
+        end,
+        desc = "Fugitive: pretty log (enter number of commits)",
       })
 
       -- Diff:
@@ -590,7 +752,7 @@ return {
         mode = "n",
         lhs = "<C-g>pu",
         rhs = function()
-          local branch = git.branch()
+          local branch = git.current_branch().name
           if not branch then
             return
           end
