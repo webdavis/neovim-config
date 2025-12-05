@@ -31,6 +31,7 @@ return {
         { "<leader>e", group = "file exploration" },
         { "<leader>f", group = "find" },
         { "<leader>g", group = "git-2" },
+        { "<leader>G", group = "gh" },
         { "<leader>gh", group = "GitHub (Octo)" },
         { "<leader>h", group = "harpoon" },
         { "<leader>j", group = "treejs" },
