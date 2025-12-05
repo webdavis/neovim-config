@@ -18,7 +18,8 @@ return {
     -- LSP
     -- stylua: ignore start
     { "<leader>lx", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "Trouble (LSP): definitions／references／etc" },
-    { "<leader>lX", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Trouble (LSP): symbols" },
+    { "<leader>lX", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Trouble (LSP): symbols (don't focus)" },
+    { "<leader>lS", "<cmd>Trouble symbols toggle focus=true<cr>", desc = "Trouble (LSP): symbols (and focus)" },
     -- stylua: ignore end
     {
       "[q",
