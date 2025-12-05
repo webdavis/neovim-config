@@ -706,7 +706,7 @@ return {
         mode = "n",
         lhs = "<C-g>ds",
         rhs = "Git diff --cached -U0",
-        desc = "Fugitive (diff): staged changes - no surrounding context, (+/-) only",
+        desc = "Git (diff): staged changes (no ctx) (all files)",
       })
 
       map({
@@ -740,7 +740,7 @@ return {
           end
           overseer_runner({ cmds = "git diff --color-words" })
         end,
-        desc = "Git (Overseer): diff --color-words",
+        desc = "Git (Overseer): highlight changed words",
       })
 
       map({
@@ -753,7 +753,7 @@ return {
           end
           overseer_runner({ cmds = "git diff --color-moved" })
         end,
-        desc = "Git (Overseer): diff --color-moved",
+        desc = "Git (Overseer): highlight moved lines",
       })
 
       -- Fetch/Pull:
