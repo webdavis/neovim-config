@@ -91,7 +91,7 @@ return {
       notifier = {
         enabled = true,
         timeout = 3000,
-        width = { min = 40, max = 0.6 },
+        width = { min = 40, max = 0.9 },
         style = "compact",
       },
       picker = {
@@ -142,6 +142,9 @@ return {
         notification = {
           -- Wrap text in vim.notify messages. Note: doesn't affect Snacks.picker.notifications()
           wo = { wrap = true },
+        },
+        input = {
+          width = 100,
         },
       },
     },
