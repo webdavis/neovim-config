@@ -757,9 +757,9 @@ return {
       })
 
       -- Fetch/Pull:
-      map({ mode = "n", lhs = "<C-g>ff", rhs = "Git fetch", desc = "Fugitive: fetch" })
-      map({ mode = "n", lhs = "<C-g>fp", rhs = "Git pull", desc = "Fugitive: pull" })
-      map({ mode = "n", lhs = "<C-g>fr", rhs = "Git pull --rebase", desc = "Fugitive: pull --rebase" })
+      map({ mode = "n", lhs = "<C-g>Ff", rhs = "Git fetch", desc = "Fugitive: fetch" })
+      map({ mode = "n", lhs = "<C-g>Fp", rhs = "Git pull", desc = "Fugitive: pull" })
+      map({ mode = "n", lhs = "<C-g>Fr", rhs = "Git pull --rebase", desc = "Fugitive: pull --rebase" })
 
       -- Push:
       map({ mode = "n", lhs = "<C-g>pp", rhs = "Git push", desc = "Fugitive: push" })

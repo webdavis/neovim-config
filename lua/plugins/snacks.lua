@@ -194,6 +194,7 @@ return {
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
+      { "<C-g>f", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt)" },
       { "<leader>go", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse (opens file on GitHub)", mode = { "n", "v" } },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Snacks (Git): branches" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Snacks (Git): diff hunks" },

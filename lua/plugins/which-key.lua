@@ -12,7 +12,7 @@ return {
         { "<C-g>b", group = "branch／blame" },
         { "<C-g>c", group = "commit" },
         { "<C-g>d", group = "diff" },
-        { "<C-g>f", group = "fetch／pull" },
+        { "<C-g>F", group = "fetch／pull" },
         { "<C-g>l", group = "log" },
         { "<C-g>o", group = "browse" },
         { "<C-g>p", group = "push" },
