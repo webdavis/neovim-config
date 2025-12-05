@@ -690,6 +690,20 @@ return {
       -- Diff:
       map({
         mode = "n",
+        lhs = "<C-g>dd",
+        rhs = "Gvdiffsplit!",
+        desc = "Fugitive (diff): file vs staged/commit (vertical)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>dD",
+        rhs = "Ghdiffsplit!",
+        desc = "Fugitive (diff): file vs staged/commit (horizontal)",
+      })
+
+      map({
+        mode = "n",
         lhs = "<C-g>ds",
         rhs = "Git diff --cached -U0",
         desc = "Fugitive (diff): staged changes - no surrounding context, (+/-) only",
@@ -699,14 +713,21 @@ return {
         mode = "n",
         lhs = "<C-g>dS",
         rhs = "Git diff --cached -U0 -- %",
-        desc = "Fugitive (diff): staged changes (current file) - no surrounding context, (+/-) only",
+        desc = "Git (diff): staged changes (no ctx) (current file)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>df",
+        rhs = "vertical Git diff -W --function-context",
+        desc = "Fugitive (diff): commit (with function context)",
       })
 
       map({
         mode = "n",
         lhs = "<C-g>dF",
-        rhs = "Git diff --cached -W --function-context",
-        desc = "Fugitive (diff): with function context",
+        rhs = "vertical Git diff --cached -W --function-context",
+        desc = "Fugitive (diff): staged (with function context)",
       })
 
       map({
