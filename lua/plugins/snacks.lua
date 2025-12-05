@@ -97,10 +97,24 @@ return {
       picker = {
         enabled = true,
         layout = {
-          preview = true,
           preset = "default",
         },
         sources = {
+          git_branches = {
+            layout = {
+              preview = false,
+            },
+          },
+          git_log = {
+            layout = {
+              preview = false,
+            },
+          },
+          git_log_file = {
+            layout = {
+              preview = false,
+            },
+          },
           -- Wrap text in  Snacks.picker.notifications() previews.
           -- Without this it's almost impossible to read notifications using Snacks.
           -- Ref: https://www.reddit.com/r/neovim/comments/1mvlp86/lazyvim_snacks_picker_how_to_turn_on_preview/
