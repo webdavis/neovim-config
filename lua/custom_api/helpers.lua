@@ -52,7 +52,7 @@ function M.wrap(module_name, fn, opts)
       return nil
     end
 
-    -- Find first string result
+    -- Find first string result:
     local message
     for i = 2, results.n do
       if type(results[i]) == "string" then
