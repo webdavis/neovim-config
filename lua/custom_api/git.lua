@@ -240,6 +240,30 @@ local function latest_commit(opts)
   return hash, util.normalize(summary), util.normalize(body)
 end
 
+local function default_branch(opts)
+  local repo = opts.repo
+
+  -- Check for common default branch names locally.
+  local main_ok, _ = util.run_shell_command({ cmd = "git show-ref --verify --quiet refs/remotes/origin/main" })
+  if main_ok == 0 then
+    return "main"
+  end
+  local master_ok, _ = util.run_shell_command({ cmd = "git show-ref --verify --quiet refs/remotes/origin/master" })
+  if master_ok == 0 then
+    return "master"
+  end
+
+  if repo then
+    -- Fallback to GitHub API:
+    local _, default_branch_name = util.run_shell_command({
+      cmd = string.format("curl -s https://api.github.com/repos/%s/%s | jq -r .default_branch", repo),
+    })
+    return default_branch_name and util.trim(default_branch_name)
+  else
+    return nil, "Error: Could not detect default remote branch"
+  end
+end
+
 local function url(opts)
   opts = opts or {}
   local remote = opts.remote
@@ -320,6 +344,7 @@ M.initialized = helpers.wrap(module_name, initialized, { log_level = log_warning
 M.top_level = helpers.wrap(module_name, top_level, { log_level = log_warning })
 M.current_branch = helpers.wrap(module_name, current_branch, { log_level = log_warning })
 M.all_branches = helpers.wrap(module_name, all_branches, { log_level = log_warning })
+M.default_branch = helpers.wrap(module_name, default_branch)
 M.latest_commit = helpers.wrap(module_name, latest_commit, { log_level = log_warning })
 M.copy_URL_to_clipboard = helpers.wrap(module_name, copy_URL_to_clipboard, { log_level = log_warning })
 M.url = helpers.wrap(module_name, url, { log_level = log_warning })

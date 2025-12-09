@@ -29,7 +29,7 @@ local function copy_url_mapping_helper(lhs, remote, protocol)
         local url = git.url({
           remote = remote,
           account_name = github.account(),
-          repo_name = github.repo(),
+          repo_name = github.repo().name,
         })
 
         if not url then
@@ -400,7 +400,7 @@ return {
         mode = "n",
         lhs = "<C-g>bc",
         rhs = function()
-          local repo = github.repo()
+          local repo = github.repo().name
           if not repo then
             return
           end
@@ -512,7 +512,7 @@ return {
           return
         end
 
-        local hash, summary, body = git.latest_commit({ repo_name = github.repo() })
+        local hash, summary, body = git.latest_commit({ repo_name = github.repo().name })
         local sections = build_sections(branch, hash, summary, body)
         local message = sections_to_message(sections)
 
@@ -592,7 +592,7 @@ return {
         mode = "n",
         lhs = "<C-g>cp",
         rhs = function()
-          local _, summary, body = git.latest_commit({ repo_name = github.repo() })
+          local _, summary, body = git.latest_commit({ repo_name = github.repo().name })
           if not summary then
             return
           end
@@ -608,7 +608,7 @@ return {
         mode = "n",
         lhs = "<C-g>c.",
         rhs = function()
-          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
             return nil
           end
@@ -734,7 +734,7 @@ return {
         mode = "n",
         lhs = "<C-g>dw",
         rhs = function()
-          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
             return
           end
@@ -747,7 +747,7 @@ return {
         mode = "n",
         lhs = "<C-g>dm",
         rhs = function()
-          local hash, _, _ = git.latest_commit({ repo_name = github.repo() })
+          local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
             return
           end
@@ -819,45 +819,118 @@ return {
       map({ mode = "n", lhs = "<C-g>of", rhs = "GBrowse", desc = "Fugitive: browse (file)" })
       map({ mode = "n", lhs = "<C-g>ol", rhs = ".GBrowse", desc = "Fugitive: browse (line in file)" })
 
-      map({
-        mode = "n",
-        lhs = { "<C-g>ob", "<C-g>oo" },
-        rhs = function()
-          run_shell_command({ cmd = "gh browse" })
-        end,
-        desc = "GitHub CLI: open repo Homepage (Code tab)",
-      })
+      local function get_default_browser()
+        -- Detect default browser on macOS
+        local detect_default_browser_cmd = table.concat({
+          "python3 -c '",
+          "import plistlib, os; ",
+          'pl=plistlib.load(open(os.path.expanduser("~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist"),"rb")); ',
+          'print(next(item["LSHandlerRoleAll"] for item in pl["LSHandlers"] if item.get("LSHandlerURLScheme")=="http"))\'',
+          " | xargs -I{} osascript -e 'name of application id \"{}\"'",
+        }, "")
 
-      local function open_github_page_mapping(key, suffix, page_desc)
+        local ok, default_browser = util.run_shell_command({ cmd = detect_default_browser_cmd })
+
+        if not ok or not default_browser then
+          default_browser = "your default browser"
+        else
+          default_browser = util.trim(default_browser)
+        end
+
+        return default_browser
+      end
+
+      local function build_remote_repo_info(url_suffix, use_current_branch)
+        if not git.initialized() then
+          return
+        end
+
+        local repo = github.repo().nameWithOwner
+        local branch_name = use_current_branch and git.current_branch().name or git.default_branch(repo)
+
+        local url = "https://github.com/" .. repo
+        if url_suffix ~= "" then
+          url = url .. "/" .. url_suffix
+        end
+
+        if branch_name ~= "" and use_current_branch then
+          url = url .. "/tree/" .. branch_name
+        end
+
+        return {
+          repo = repo,
+          branch_name = branch_name,
+          url = url,
+        }
+      end
+
+      local function open_github_page_mapping(opts)
+        local key = opts.key
+        local url_suffix = opts.url_suffix or ""
+        local page_desc = opts.page_desc
+        local use_current_branch = opts.branch or false
+
         if not page_desc then
-          page_desc = string.gsub(" " .. suffix, "%W%l", string.upper):sub(2)
+          if url_suffix ~= "" then
+            page_desc = string.gsub(" " .. url_suffix, "%W%l", string.upper):sub(2)
+          else
+            page_desc = "Homepage"
+          end
+        end
+
+        local mapping_desc = page_desc
+        if url_suffix == "" and use_current_branch then
+          mapping_desc = ("Branch <%s>"):format(mapping_desc)
         end
 
         local mapping_table = {
           mode = "n",
           lhs = "<C-g>o" .. key,
           rhs = function()
-            if not git.initialized() then
+            local remote_repo_info = build_remote_repo_info(url_suffix, use_current_branch)
+            if not remote_repo_info then
               return
             end
 
-            local url = "https://github.com/" .. github.repo({ owner = true }) .. "/" .. suffix
-            run_shell_command({ cmd = "open " .. url })
+            vim.notify(
+              (
+                "🌐 Opening GitHub Page"
+                .. "\n-------------------------------"
+                .. "\nPage: **%s [[%s]]**"
+                .. "\nRepo: `%s`"
+                .. "\nURL: `%s`"
+                .. "\nBrowser: `%s`"
+              ):format(
+                page_desc,
+                remote_repo_info.branch_name,
+                remote_repo_info.repo,
+                remote_repo_info.url,
+                get_default_browser()
+              ),
+              log_info,
+              {
+                timeout = 0,
+                title = "Open in Browser",
+              }
+            )
+            util.run_shell_command({ cmd = "open " .. remote_repo_info.url })
           end,
-          desc = "GitHub CLI: open " .. page_desc .. " page",
+          desc = ("Open GitHub: %s"):format(mapping_desc),
         }
 
         return mapping_table
       end
 
-      map(open_github_page_mapping("i", "issues"))
-      map(open_github_page_mapping("p", "pulls", "Pull Requests"))
-      map(open_github_page_mapping("a", "actions"))
-      map(open_github_page_mapping("P", "projects"))
-      map(open_github_page_mapping("w", "wiki"))
-      map(open_github_page_mapping("S", "security"))
-      map(open_github_page_mapping("I", "pulse", "Insights"))
-      map(open_github_page_mapping("s", "settings"))
+      map(open_github_page_mapping({ key = "o" }))
+      map(open_github_page_mapping({ key = "b", branch = true }))
+      map(open_github_page_mapping({ key = "i", url_suffix = "issues" }))
+      map(open_github_page_mapping({ key = "p", url_suffix = "pulls", page_desc = "Pull Requests" }))
+      map(open_github_page_mapping({ key = "a", url_suffix = "actions" }))
+      map(open_github_page_mapping({ key = "P", url_suffix = "projects" }))
+      map(open_github_page_mapping({ key = "w", url_suffix = "wiki" }))
+      map(open_github_page_mapping({ key = "S", url_suffix = "security" }))
+      map(open_github_page_mapping({ key = "I", url_suffix = "pulse", page_desc = "Insights" }))
+      map(open_github_page_mapping({ key = "s", url_suffix = "settings" }))
     end,
   },
   {
@@ -887,7 +960,7 @@ return {
 
         if exit_code ~= 0 then
           vim.notify(
-            "File `" .. bufname .. "` is not tracked by *" .. github.repo() .. "*",
+            "File `" .. bufname .. "` is not tracked by *" .. github.repo().name .. "*",
             log_warning,
             { title = "Git Messenger" }
           )

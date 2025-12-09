@@ -32,22 +32,9 @@ local function account(opts)
   return username
 end
 
-local function repo(opts)
-  opts = opts or {}
-  local name = opts.name or true
-  local owner = opts.owner or false
-
-  local json_field, jq_filter
-  if name and owner then
-    json_field = "nameWithOwner"
-    jq_filter = ".nameWithOwner"
-  elseif name then
-    json_field = "name"
-    jq_filter = ".name"
-  elseif owner then
-    json_field = "owner"
-    jq_filter = ".owner.login"
-  end
+local function repo()
+  local json_field = "nameWithOwner"
+  local jq_filter = ".nameWithOwner"
 
   local exit, result = util.run_shell_command({
     cmd = string.format("gh repo view --json %s --jq '%s'", json_field, jq_filter),
@@ -62,7 +49,13 @@ local function repo(opts)
       )
   end
 
-  return result
+  local owner, name = result:match("([^/]+)/([^/]+)")
+
+  return {
+    nameWithOwner = result,
+    owner = owner,
+    name = name,
+  }
 end
 
 -- ╭─────────────────────╮
