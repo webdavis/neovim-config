@@ -5,11 +5,6 @@ local git = require("custom_api.git")
 local github = require("custom_api.github")
 local util = require("custom_api.util")
 
-local run_shell_command = util.run_shell_command
-local trim = util.trim
-local sanitize_input = util.sanitize_input
-local overseer_runner = util.overseer_runner
-
 -- ╭─────────────╮
 -- │   Helpers   │
 -- ╰─────────────╯
@@ -275,14 +270,14 @@ return {
 
           local github_project_prompt = "What's the name of your GitHub project (default: " .. directory .. ")? "
           vim.ui.input({ prompt = github_project_prompt }, function(project_name_input)
-            local project = trim(project_name_input)
+            local project = util.trim(project_name_input)
             if project == "" then
               project = directory
             end
 
             local confirmation_prompt = "Create project '" .. project .. "' on GitHub? [y]es／[n]o／[q]uit: "
             vim.ui.input({ prompt = confirmation_prompt }, function(answer)
-              local confirm_creation = trim(answer):lower()
+              local confirm_creation = util.trim(answer):lower()
               local yes_values = { y = true, ye = true, yes = true, yep = true, ok = true }
 
               if not yes_values[confirm_creation] then
@@ -290,7 +285,7 @@ return {
                 return
               end
 
-              local gh_exit, _ = run_shell_command({ cmd = "gh repo view '" .. project .. "'" })
+              local gh_exit, _ = util.run_shell_command({ cmd = "gh repo view '" .. project .. "'" })
 
               if gh_exit == 0 then
                 local message = {
@@ -307,7 +302,7 @@ return {
               end
               table.insert(cmds, 'gh repo create --public "' .. project .. '"')
 
-              overseer_runner({ cmds = cmds })
+              util.overseer_runner({ cmds = cmds })
             end)
           end)
         end,
@@ -365,7 +360,7 @@ return {
         mode = "n",
         lhs = "<C-g>SP",
         rhs = function()
-          local index = trim(vim.fn.input("Stash index to pop: "))
+          local index = util.trim(vim.fn.input("Stash index to pop: "))
           if index ~= "" then
             vim.cmd("Git stash pop " .. index)
           end
@@ -380,7 +375,7 @@ return {
         mode = "n",
         lhs = "<C-g>SA",
         rhs = function()
-          local index = trim(vim.fn.input("Stash index to pop: "))
+          local index = util.trim(vim.fn.input("Stash index to pop: "))
           if index ~= "" then
             vim.cmd("Git stash apply " .. index)
           end
@@ -395,10 +390,10 @@ return {
       map(copy_url_mapping_helper("<C-g>rS", "upstream", "ssh"))
 
       -- stylua: ignore start
-      -- Branch / Checkout:
+      -- Checkout:
       map({
         mode = "n",
-        lhs = "<C-g>bc",
+        lhs = "<C-g>Cb",
         rhs = function()
           local repo = github.repo().name
           if not repo then
@@ -426,25 +421,31 @@ return {
           vim.ui.input({ prompt = prompt }, function(new_branch)
             if not new_branch or new_branch:match("^%s*$") then
               local cancel_message = string.format(
-                "Branch checkout cancelled in repo `%s`: no branch entered.",
-                repo
+                "Branch creation and checkout cancelled - *no branch name provided*"
+                .. "\n\n---------------------------------------"
+                .. "\n**Repository:** %s"
+                .. "\n**Active Branch:** `%s`",
+                repo,
+                branch.name
               )
-              vim.notify(cancel_message, log_warning, notify_fugitive_title)
+              vim.notify(cancel_message, log_warning, { title = "Git", timeout = 10000 })
               return
             end
-            new_branch = trim(new_branch)
+            new_branch = util.trim(new_branch)
 
             local cmd = "Git checkout -b " .. new_branch
             vim.cmd(cmd)
           end)
 
         end,
-        desc = "Fugitive (checkout): create new <branch>",
+        desc = "Git (checkout): create new <branch>",
       })
 
-      map({ mode = "n", lhs = "<C-g>b-", rhs = "Git checkout -", desc = "Fugitive (checkout): switch to previous branch" })
+      map({ mode = "n", lhs = "<C-g>C-", rhs = "Git checkout -", desc = "Fugitive (checkout): previous branch" })
+      map({ mode = "n", lhs = "<C-g>Cm", rhs = "Git checkout main", desc = "Fugitive (checkout): main" })
       -- stylua: ignore end
 
+      -- Branch:
       map({
         mode = "n",
         lhs = "<C-g>bb",
@@ -580,11 +581,9 @@ return {
 
       -- stylua: ignore start
       -- Commit:
-      map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit", desc = "Fugitive: commit" })
-      map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only the current file)" })
-      map({ mode = "n", lhs = "<C-g>cv", rhs = "Git commit --verbose", desc = "Fugitive: commit -v" })
+      map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit --verbose", desc = "Fugitive: commit" })
+      map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only current file)" })
       map({ mode = "n", lhs = "<C-g>ca", rhs = "Git commit --amend", desc = "Fugitive: commit --amend" })
-      map({ mode = "n", lhs = "<C-g>cA", rhs = "Git commit --amend --verbose", desc = "Fugitive: commit --amend --verbose" })
       map({ mode = "n", lhs = "<C-g>cn", rhs = "Git commit --amend --no-edit", desc = "Fugitive: commit --amend --no-edit" })
       -- stylua: ignore end
 
@@ -600,13 +599,13 @@ return {
           vim.fn.setreg('"', summary .. "\n\n" .. (body or ""))
           vim.cmd("normal! ]p")
         end,
-        desc = "Fugitive: read latest commit into buffer",
+        desc = "Fugitive: paste latest commit into buffer",
       })
 
       -- An interactive command to amend the author/email of the latest commit:
       map({
         mode = "n",
-        lhs = "<C-g>c.",
+        lhs = "<C-g>cA",
         rhs = function()
           local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
@@ -622,7 +621,7 @@ return {
               vim.notify(message_helper("author"), log_warning, notify_fugitive_title)
               return
             end
-            author = trim(author)
+            author = util.trim(author)
 
             vim.ui.input({ prompt = "Email for " .. author .. ": " }, function(email)
               if not email or email:match("^%s*$") then
@@ -630,7 +629,7 @@ return {
                 return
               end
 
-              email = trim(email)
+              email = util.trim(email)
               vim.cmd('Git commit -C HEAD --amend --author="' .. author .. " <" .. email .. '>"')
             end)
           end)
@@ -658,7 +657,7 @@ return {
           vim.ui.input(
             { prompt = ("(Branch: %s) Number of commits [default %d, q to quit]: "):format(branch, default_commits) },
             function(input)
-              local sanitized = sanitize_input(input or "")
+              local sanitized = util.sanitize_input(input or "")
 
               if sanitized:lower() == "q" then
                 vim.notify(("Cancelled Git log for branch `%s`"):format(branch), log_info, notify_fugitive_title)
@@ -738,7 +737,7 @@ return {
           if not hash then
             return
           end
-          overseer_runner({ cmds = "git diff --color-words" })
+          util.overseer_runner({ cmds = "git diff --color-words" })
         end,
         desc = "Git (Overseer): highlight changed words",
       })
@@ -751,7 +750,7 @@ return {
           if not hash then
             return
           end
-          overseer_runner({ cmds = "git diff --color-moved" })
+          util.overseer_runner({ cmds = "git diff --color-moved" })
         end,
         desc = "Git (Overseer): highlight moved lines",
       })
@@ -779,7 +778,7 @@ return {
           end
 
           vim.ui.input({ prompt = "Push " .. branch .. " to origin? [y]es／[n]o／[q]uit: " }, function(input)
-            local confirm_push = sanitize_input(input)
+            local confirm_push = util.sanitize_input(input)
             local yes_values = { y = true, ye = true, yes = true, yep = true, ok = true }
 
             if not yes_values[confirm_push] then
@@ -956,7 +955,8 @@ return {
           return
         end
 
-        local exit_code, _ = run_shell_command({ cmd = "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname) })
+        local exit_code, _ =
+          util.run_shell_command({ cmd = "git ls-files --error-unmatch " .. vim.fn.fnameescape(bufname) })
 
         if exit_code ~= 0 then
           vim.notify(

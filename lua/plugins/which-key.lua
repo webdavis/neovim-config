@@ -11,6 +11,7 @@ return {
         { "<C-g>", group = "git-1" },
         { "<C-g>b", group = "branch／blame" },
         { "<C-g>c", group = "commit" },
+        { "<C-g>C", group = "checkout" },
         { "<C-g>d", group = "diff" },
         { "<C-g>F", group = "fetch／pull" },
         { "<C-g>l", group = "log" },
