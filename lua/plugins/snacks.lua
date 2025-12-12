@@ -100,6 +100,17 @@ return {
           preset = "default",
         },
         sources = {
+          explorer = {
+            diagnostics_open = true,
+            git_status_open = true,
+            hidden = true,
+            ignored = true,
+          },
+          files = {
+            show_empty = true,
+            hidden = true,
+            ignored = true,
+          },
           git_branches = {
             layout = {
               preview = false,
