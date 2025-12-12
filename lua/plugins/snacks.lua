@@ -180,8 +180,9 @@ return {
       { "<leader><space>", function() Snacks.picker.smart() end, desc = "Snacks: smart find files" },
       { "<leader>s:", function() Snacks.picker.command_history() end, desc = "Snacks: command history" },
       { "<C-g><C-f>", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files" },
-      { "<leader>g,", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt.)" },
-      { "<leader>g.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
+      { "<leader>g,", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt)" },
+      { "<C-g>.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
+      { "<leader>g.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files (alt)" },
       { "<leader>ee", function() Snacks.explorer() end, desc = "File Explorer (Snacks)" },
 
       -- Notifications:
