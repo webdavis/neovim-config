@@ -168,7 +168,9 @@ return {
       -- Top Pickers:
       { "<leader><space>", function() Snacks.picker.smart() end, desc = "Snacks: smart find files" },
       { "<leader>s:", function() Snacks.picker.command_history() end, desc = "Snacks: command history" },
-      { "<leader>g,", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files" },
+      { "<C-g><C-f>", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files" },
+      { "<leader>g,", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt.)" },
+      { "<leader>g.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>ee", function() Snacks.explorer() end, desc = "File Explorer (Snacks)" },
 
       -- Notifications:
@@ -186,7 +188,6 @@ return {
       { "<leader>fR", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Snacks: recent files (cwd)" },
 
       -- Grep:
-      { "<leader>g.", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>/g", function() Snacks.picker.git_grep() end, desc = "Snacks (Git): grep git files" },
       { "<leader>/e", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
       { "<leader>/c", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
@@ -194,7 +195,6 @@ return {
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
       -- Git:
-      { "<C-g>f", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt)" },
       { "<leader>go", function() Snacks.gitbrowse() end, desc = "Snacks (Git): browse (opens file on GitHub)", mode = { "n", "v" } },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Snacks (Git): branches" },
       { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Snacks (Git): diff hunks" },
