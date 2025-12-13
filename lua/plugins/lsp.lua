@@ -317,6 +317,9 @@ return {
         lua = {
           exclude = { "lua_ls" },
         },
+        sh = {
+          exclude = { "bashls" },
+        },
         markdown = {
           exclude = {
             "prettierd",
