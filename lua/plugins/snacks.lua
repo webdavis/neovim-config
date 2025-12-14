@@ -204,7 +204,7 @@ return {
       { "<leader>/p", function() Snacks.picker.grep() end, desc = "Grep: entire project" },
       { "<leader>/e", function() Snacks.picker.grep() end, desc = "Grep: entire project (alt)" },
       { "<leader>//", function() Snacks.picker.lines() end, desc = "Grep: current buffer" },
-      { "<leader>/c", function() Snacks.picker.lines() end, desc = "Grep: current buffer (alt)" },
+      { "<leader>/B", function() Snacks.picker.lines() end, desc = "Grep: current buffer (alt)" },
       { "<leader>/w", function() Snacks.picker.grep_word() end, desc = "Grep: <cword> / visual selection", mode = { "n", "x" } },
       { "<leader>/b", function() Snacks.picker.grep_buffers() end, desc = "Grep: available buffers" },
 
