@@ -340,7 +340,7 @@ return {
             :map("<leader>uc")
           Snacks.toggle.diagnostics():map("<leader>ud")
           Snacks.toggle.dim():map("<leader>uD")
-          Snacks.toggle.indent():map("<leader>ug")
+          Snacks.toggle.indent():map("<leader>uI")
 
           Snacks.toggle({
             name = "Git Signs",

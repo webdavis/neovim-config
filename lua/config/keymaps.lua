@@ -151,19 +151,19 @@ map({
   sequence = true,
 })
 
--- ┏━━━━━━━━━━━━━━━┓
--- ┃    Toggles    ┃
--- ┗━━━━━━━━━━━━━━━┛
+-- ┏━━━━━━━━━━━━━━━━━━━┓
+-- ┃    Inspections    ┃
+-- ┗━━━━━━━━━━━━━━━━━━━┛
 map({
   mode = "n",
-  lhs = "<leader>ui",
+  lhs = "<leader>ip",
   rhs = vim.show_pos,
   desc = "Inspect Pos",
 })
 
 map({
   mode = "n",
-  lhs = "<leader>uI",
+  lhs = "<leader>it",
   rhs = function()
     vim.treesitter.inspect_tree()
     vim.api.nvim_input("I")

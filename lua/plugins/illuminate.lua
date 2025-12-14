@@ -29,7 +29,7 @@ return {
           end
         end,
       })
-      :map("<leader>ux")
+      :map("<leader>ui")
 
     local function map(key, dir, buffer)
       vim.keymap.set("n", key, function()
