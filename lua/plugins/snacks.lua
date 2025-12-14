@@ -267,6 +267,8 @@ return {
       { "<c-_>", function() Snacks.terminal() end, desc = "Snacks: which_key_ignore" },
       { "<leader>bd", function() Snacks.bufdelete() end, desc = "Snacks: delete buffer" },
       { "<leader>rf", function() Snacks.rename.rename_file() end, desc = "Snacks (Rename): file" },
+      { "<M-n>",         function() Snacks.words.jump(vim.v.count1, true) end, desc = "Next Reference", mode = { "n", "t" } },
+      { "<M-p>",         function() Snacks.words.jump(-vim.v.count1, true) end, desc = "Prev Reference", mode = { "n", "t" } },
 
       -- stylua: ignore end
       {
@@ -340,6 +342,7 @@ return {
             :map("<leader>uc")
           Snacks.toggle.diagnostics():map("<leader>ud")
           Snacks.toggle.dim():map("<leader>uD")
+          Snacks.toggle.words():map("<leader>ui")
           Snacks.toggle.indent():map("<leader>uI")
 
           Snacks.toggle({
