@@ -191,6 +191,7 @@ return {
         "revive",
         "shellcheck",
         "shfmt",
+        "tree-sitter-cli",
         "lua-language-server",
         "stylua",
         "swiftlint",

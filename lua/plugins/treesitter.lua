@@ -1,5 +1,8 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  dependencies = {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+  },
   lazy = false,
   branch = "main",
   build = ":TSUpdate",
