@@ -529,19 +529,37 @@ return {
         desc = "Git (branch): show current + commit (copy hash to +)",
       })
 
+      local function format_branch_field(label, value, active)
+        if value then
+          if label == "Hash" then
+            value = ("`%s`"):format(value)
+          end
+          if active then
+            label = ("*%s*"):format(label)
+          end
+
+          return ("%s: %s"):format(label, value)
+        end
+      end
+
       local function format_branch(branch)
-        local lines = { ("*Branch:* `%s`"):format(branch.name) }
+        local lines = {}
+        local fields = {
+          { "Branch", branch.name },
+          { "Hash", branch.hash },
+          { "Upstream", branch.upstream },
+          { "Message", branch.message },
+        }
 
-        if branch.hash then
-          table.insert(lines, "*Hash:* " .. branch.hash)
+        local active = branch.status == "active"
+        if not active then
+          table.insert(lines, "\nInactive\n---------")
         end
-
-        if branch.upstream then
-          table.insert(lines, "*Upstream:* " .. branch.upstream)
-        end
-
-        if branch.message then
-          table.insert(lines, "*Message:* " .. branch.message)
+        for _, f in ipairs(fields) do
+          local formatted_field = format_branch_field(f[1], f[2], active)
+          if formatted_field then
+            table.insert(lines, formatted_field)
+          end
         end
 
         return table.concat(lines, "\n")
@@ -550,28 +568,17 @@ return {
       local function show_all_branches()
         local all_branches = git.all_branches()
         if not all_branches or #all_branches == 0 then
+          vim.notify("No Git branches available!", log_info)
           return
         end
 
-        local nonactive_branches = {}
+        local formatted_branches = {}
 
-        for i, branch in ipairs(all_branches) do
-          local formatted = format_branch(branch)
-
-          if i == 1 then
-            vim.notify(formatted, log_info, { title = "Active Git Branch", timeout = 0 })
-          else
-            table.insert(nonactive_branches, formatted)
-          end
+        for _, branch in ipairs(all_branches) do
+          table.insert(formatted_branches, format_branch(branch))
         end
 
-        if #nonactive_branches > 0 then
-          vim.notify(
-            table.concat(nonactive_branches, "\n\n"),
-            log_trace,
-            { title = "Inactive Git Branch(es)", timeout = 0 }
-          )
-        end
+        vim.notify(table.concat(formatted_branches, "\n\n"), log_info, { title = "All Git Branches", timeout = 0 })
       end
 
       map({
