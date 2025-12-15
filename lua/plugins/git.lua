@@ -529,21 +529,39 @@ return {
         desc = "Git (branch): show current + commit (copy hash to +)",
       })
 
-      local function format_branch_field(label, value, active)
-        if value then
-          if label == "Hash" then
-            value = ("`%s`"):format(value)
-          end
-          if active then
-            label = ("*%s*"):format(label)
-          end
+      -- Helper functions for formatting:
+      local function bold(text)
+        return ("**%s**"):format(text)
+      end
+      local function italicize(text)
+        return ("*%s*"):format(text)
+      end
+      local function inline_code(text)
+        return ("`%s`"):format(text)
+      end
 
-          return ("%s: %s"):format(label, value)
+      local function format_branch_field(label, value, opts)
+        if not value then
+          return nil
         end
+
+        if label == "Hash" then
+          value = inline_code(value)
+        elseif label == "Branch" then
+          value = opts.bold_label and bold(value) or italicize(value)
+        end
+
+        if opts.bold_label then
+          label = italicize(label)
+        end
+
+        return ("%s: %s"):format(label, value)
       end
 
       local function format_branch(branch)
-        local lines = {}
+        local active = branch.status == "active"
+        local opts = { bold_label = active }
+
         local fields = {
           { "Branch", branch.name },
           { "Hash", branch.hash },
@@ -551,18 +569,47 @@ return {
           { "Message", branch.message },
         }
 
-        local active = branch.status == "active"
-        if not active then
-          table.insert(lines, "\nInactive\n---------")
-        end
+        local lines = {}
         for _, f in ipairs(fields) do
-          local formatted_field = format_branch_field(f[1], f[2], active)
+          local formatted_field = format_branch_field(f[1], f[2], opts)
           if formatted_field then
             table.insert(lines, formatted_field)
           end
         end
 
         return table.concat(lines, "\n")
+      end
+
+      local function group_branches(branches)
+        local active, inactive = {}, {}
+
+        for _, branch in ipairs(branches) do
+          local formatted = format_branch(branch)
+          if branch.status == "active" then
+            table.insert(active, formatted)
+          else
+            table.insert(inactive, formatted)
+          end
+        end
+
+        return active, inactive
+      end
+
+      local function build_notification(active, inactive)
+        local lines = {}
+
+        for _, b in ipairs(active) do
+          table.insert(lines, b)
+        end
+
+        if #inactive > 0 then
+          inactive[1] = "Inactive\n------------------------" .. "\n" .. inactive[1]
+          for _, b in ipairs(inactive) do
+            table.insert(lines, b)
+          end
+        end
+
+        return table.concat(lines, "\n\n")
       end
 
       local function show_all_branches()
@@ -572,13 +619,9 @@ return {
           return
         end
 
-        local formatted_branches = {}
-
-        for _, branch in ipairs(all_branches) do
-          table.insert(formatted_branches, format_branch(branch))
-        end
-
-        vim.notify(table.concat(formatted_branches, "\n\n"), log_info, { title = "All Git Branches", timeout = 0 })
+        local active, inactive = group_branches(all_branches)
+        local text = build_notification(active, inactive)
+        vim.notify(text, log_info, { title = "All Git Branches", timeout = 0 })
       end
 
       map({
