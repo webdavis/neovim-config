@@ -9,7 +9,8 @@ return {
       {
         mode = { "n", "v" },
         { "<C-g>", group = "git-1" },
-        { "<C-g>b", group = "branch／blame" },
+        { "<C-g>b", group = "branch" },
+        { "<C-g>B", group = "blame" },
         { "<C-g>c", group = "commit" },
         { "<C-g>C", group = "checkout" },
         { "<C-g>d", group = "diff" },

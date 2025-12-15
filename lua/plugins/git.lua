@@ -448,9 +448,14 @@ return {
       -- stylua: ignore end
 
       -- Branch:
+      map({ mode = "n", lhs = "<C-g>bb", rhs = "Git branch", desc = "Fugitive: local" })
+      map({ mode = "n", lhs = "<C-g>bV", rhs = "Git branch -vv", desc = "Fugitive: local (verbose)" })
+      map({ mode = "n", lhs = "<C-g>bR", rhs = "Git branch -rv", desc = "Fugitive: remotes (verbose)" })
+      map({ mode = "n", lhs = "<C-g>bA", rhs = "Git branch --all -vv", desc = "Fugitive: local + remote (verbose)" })
+
       map({
         mode = "n",
-        lhs = "<C-g>bb",
+        lhs = "<C-g>bc",
         rhs = function()
           local branch = git.current_branch().name
           if not branch then
@@ -458,7 +463,7 @@ return {
           end
           vim.notify("**Current Branch:** `" .. branch .. "`", log_info, { title = "Active Git Branch" })
         end,
-        desc = "Git (branch): show current",
+        desc = "Notify: current",
       })
 
       local function format_section(label, text, metatext)
@@ -526,7 +531,7 @@ return {
         mode = "n",
         lhs = "<C-g>bc",
         rhs = show_current_git_branch,
-        desc = "Git (branch): current + commit (copy hash to +)",
+        desc = "Notify: current + copy hash to clipboard (verbose)",
       })
 
       -- Helper functions for formatting:
@@ -628,7 +633,7 @@ return {
         mode = "n",
         lhs = "<C-g>bv",
         rhs = show_all_local_branches_with_info,
-        desc = "Git (branch): show all local + commits",
+        desc = "Notify: local + info",
       })
 
       -- stylua: ignore start
@@ -1117,10 +1122,10 @@ return {
     -- TODO: git-blame: put this somewhere so that it's only available when attached to a git project. (E.g. on_attach)
     "f-person/git-blame.nvim",
     config = function()
-      map({ mode = "n", lhs = "<C-g>bt", rhs = "GitBlameToggle", desc = "Git Blame: toggle virtual text" })
-      map({ mode = "n", lhs = "<C-g>by", rhs = "GitBlameCopySHA", desc = "Git Blame: copy commit SHA" })
-      map({ mode = "n", lhs = "<C-g>bo", rhs = "GitBlameOpenCommitURL", desc = "Git Blame: open commit URL" })
-      map({ mode = "n", lhs = "<C-g>bO", rhs = "GitBlameCopyCommitURL", desc = "Git Blame: copy commit URL" })
+      map({ mode = "n", lhs = "<C-g>Bt", rhs = "GitBlameToggle", desc = "Git Blame: toggle virtual text" })
+      map({ mode = "n", lhs = "<C-g>By", rhs = "GitBlameCopySHA", desc = "Git Blame: copy commit SHA" })
+      map({ mode = "n", lhs = "<C-g>Bo", rhs = "GitBlameOpenCommitURL", desc = "Git Blame: open commit URL" })
+      map({ mode = "n", lhs = "<C-g>BO", rhs = "GitBlameCopyCommitURL", desc = "Git Blame: copy commit URL" })
     end,
   },
   {
