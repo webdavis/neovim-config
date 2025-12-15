@@ -16,20 +16,33 @@ local log_warning = vim.log.levels.WARN
 local function account(opts)
   _ = opts or {}
 
-  local exit, username = util.run_shell_command({ cmd = "git config --get github.username" })
+  local fullname_exit, fullname = util.run_shell_command({ cmd = "git config --get user.name" })
 
-  if exit ~= 0 then
-    exit, username = util.run_shell_command({ cmd = "gh api user --jq .login" })
+  if fullname_exit ~= 0 then
+    fullname_exit, fullname = util.run_shell_command({ cmd = "gh api user --jq .name" })
   end
 
-  if exit ~= 0 then
+  if fullname_exit ~= 0 then
     return nil,
-      "Unable to read git *github.username* and not logged into GitHub CLI.\n"
-        .. 'Run `git config --global github.username "github_account"` to set it.\n\n'
+      "Unable to read gitconfig *user.name* and not logged into GitHub CLI.\n"
+        .. 'Run `git config --global user.name "Aaron H. Swartz"` to set it.\n\n'
         .. "Additionally, run `gh auth login` to login to GitHub"
   end
 
-  return username
+  local username_exit, username = util.run_shell_command({ cmd = "git config --get github.username" })
+
+  if username_exit ~= 0 then
+    username_exit, username = util.run_shell_command({ cmd = "gh api user --jq .login" })
+  end
+
+  if username_exit ~= 0 then
+    return nil,
+      "Unable to read gitconfig *github.username* and not logged into GitHub CLI.\n"
+        .. 'Run `git config --global github.username "github_account_name"` to set it.\n\n'
+        .. "Additionally, run `gh auth login` to login to GitHub"
+  end
+
+  return { fullname = fullname, username = username }
 end
 
 local function repo()

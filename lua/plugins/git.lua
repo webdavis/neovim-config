@@ -23,7 +23,7 @@ local function copy_url_mapping_helper(lhs, remote, protocol)
       if git.initialized() then
         local url = git.url({
           remote = remote,
-          account_name = github.account(),
+          account_name = github.account().username,
           repo_name = github.repo().name,
         })
 
@@ -193,25 +193,6 @@ return {
 
           map({
             mode = "n",
-            lhs = "<leader>gd",
-            rhs = gitsigns.diffthis,
-            desc = "Gitsigns: diff vs index",
-            buffer = bufnr,
-          })
-
-          map({
-            mode = "n",
-            lhs = "<leader>gD",
-            rhs = function()
-              ---@diagnostic disable-next-line: param-type-mismatch
-              gitsigns.diffthis("~")
-            end,
-            desc = "Gitsigns: diff vs last commit",
-            buffer = bufnr,
-          })
-
-          map({
-            mode = "n",
             lhs = "<leader>gB",
             rhs = function()
               gitsigns.blame_line({ full = true })
@@ -227,6 +208,27 @@ return {
               gitsigns.show_commit()
             end,
             desc = "Gitsigns: Show Commit",
+            buffer = bufnr,
+          })
+
+          -- Diff (HEAD / latest commit):
+          map({
+            mode = "n",
+            lhs = "<C-g>dhd",
+            rhs = function()
+              ---@diagnostic disable-next-line: param-type-mismatch
+              gitsigns.diffthis("~1")
+            end,
+            desc = "Gitsigns: side-by-side",
+            buffer = bufnr,
+          })
+
+          -- Diff (index / staging):
+          map({
+            mode = "n",
+            lhs = "<C-g>did",
+            rhs = gitsigns.diffthis,
+            desc = "Gitsigns: side-by-side",
             buffer = bufnr,
           })
 
@@ -638,14 +640,96 @@ return {
       })
 
       -- Log:
-      map({ mode = "n", lhs = "<C-g>lo", rhs = "Git log --oneline", desc = "Fugitive: log --oneline" })
-      map({ mode = "n", lhs = "<C-g>ll", rhs = "Git log", desc = "Fugitive: log" })
+      -- stylua: ignore start
+      map({ mode = "n", lhs = "<C-g>lo", rhs = "Git log --oneline", desc = "Fugitive: oneline" })
+      map({ mode = "n", lhs = "<C-g>lO", rhs = "Git log --oneline -- %", desc = "Fugitive: oneline (current file)" })
+      map({ mode = "n", lhs = "<C-g>lc", rhs = "Git log --oneline -- %", desc = "Fugitive: oneline (current file) (alt)" })
+
+      map({ mode = "n", lhs = "<C-g>ll", rhs = "Git log", desc = "Fugitive: default" })
+      map({ mode = "n", lhs = "<C-g>lL", rhs = "Git log -- %", desc = "Fugitive: default (current file)" })
+      map({ mode = "n", lhs = "<C-g>lso", rhs = "Git log --oneline --no-merges origin/main..HEAD", desc = "Fugitive: oneline" })
+      map({ mode = "n", lhs = "<C-g>lsl", rhs = "Git log --no-merges origin/main..HEAD", desc = "Fugitive: default" })
+      -- stylua: ignore end
 
       map({
         mode = "n",
-        lhs = "<C-g>lc",
-        rhs = "Git log --oneline -- %",
-        desc = "Fugitive: log --oneline (current file only)",
+        lhs = "<C-g>lr",
+        rhs = function()
+          util.overseer_runner({
+            cmds = "git log --pretty=format:'%<(7)%C(yellow)%h%C(reset) %<(15,trunc)%C(cyan)%ar%C(reset) %<(16,trunc)%C(green)%an%C(reset) %<(80,trunc)%s'",
+          })
+        end,
+        desc = "Overseer: pretty (relative time)",
+      })
+
+      local function last_monday()
+        local now = os.time()
+        local day_of_week = tonumber(os.date("%w", now)) -- 0 = Sunday, 1 = Monday ...
+        -- Compute days since Monday
+        local days_since_monday = (day_of_week == 0) and 6 or (day_of_week - 1)
+        local monday = now - days_since_monday * 24 * 60 * 60
+        return os.date("%Y-%m-%d", monday)
+      end
+
+      map({
+        mode = "n",
+        lhs = "<C-g>lw",
+        rhs = function()
+          local author = github.account().fullname
+          if not author then
+            return 1
+          end
+
+          local monday = last_monday()
+          local args = {
+            "Git",
+            "log",
+            ("--since='%s'"):format(monday),
+            ("--author='%s'"):format(author),
+            "--date=format-local:'%a, %Y-%m-%d %H:%M'",
+            "--pretty=format:'%<(8)%C(yellow)%h%C(reset)  %>>(20)%C(magenta)%ad%C(reset)  %s'",
+          }
+          local git_cmd = table.concat(args, " ")
+
+          vim.cmd(git_cmd)
+        end,
+        desc = "Fugitive: my contributions this-week (no color)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>lW",
+        rhs = function()
+          local author = github.account().fullname
+          if not author then
+            return 1
+          end
+
+          local monday = last_monday()
+          local args = {
+            "git",
+            "log",
+            ("--since='%s'"):format(monday),
+            ("--author='%s'"):format(author),
+            "--date=format-local:'%a, %Y-%m-%d %H:%M'",
+            "--pretty=format:'%<(8)%C(yellow)%h%C(reset)  %>>(20)%C(magenta)%ad%C(reset)  %<(80,trunc)%s'",
+          }
+          local git_cmd = table.concat(args, " ")
+
+          util.overseer_runner({ cmds = git_cmd })
+        end,
+        desc = "Overseer: my contributions this-week (color)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>lsr",
+        rhs = function()
+          util.overseer_runner({
+            cmds = "git log --no-merges --pretty=format:'%<(7)%C(yellow)%h%C(reset) %<(15,trunc)%C(cyan)%ar%C(reset) %<(16,trunc)%C(green)%an%C(reset) %<(80,trunc)%s' origin/main..HEAD",
+          })
+        end,
+        desc = "Overseer: pretty (relative time)",
       })
 
       map({
@@ -683,55 +767,27 @@ return {
             end
           )
         end,
-        desc = "Fugitive: pretty log (enter number of commits)",
+        desc = "Fugitive: pretty (enter number of commits)",
       })
 
-      -- Diff:
+      -- Diff (HEAD / latest commit):
       map({
         mode = "n",
-        lhs = "<C-g>dd",
-        rhs = "Gvdiffsplit!",
-        desc = "Fugitive (diff): file vs staged/commit (vertical)",
-      })
-
-      map({
-        mode = "n",
-        lhs = "<C-g>dD",
-        rhs = "Ghdiffsplit!",
-        desc = "Fugitive (diff): file vs staged/commit (horizontal)",
+        lhs = "<C-g>dhf",
+        rhs = "vertical Git diff -p --stat --function-context",
+        desc = "Fugitive: with function context (vertical)",
       })
 
       map({
         mode = "n",
-        lhs = "<C-g>ds",
-        rhs = "Git diff --cached -U0",
-        desc = "Git (diff): staged changes (no ctx) (all files)",
+        lhs = "<C-g>dhF",
+        rhs = "Git diff -p --stat --function-context",
+        desc = "Fugitive: with function context (horizontal)",
       })
 
       map({
         mode = "n",
-        lhs = "<C-g>dS",
-        rhs = "Git diff --cached -U0 -- %",
-        desc = "Git (diff): staged changes (no ctx) (current file)",
-      })
-
-      map({
-        mode = "n",
-        lhs = "<C-g>df",
-        rhs = "vertical Git diff -W --function-context",
-        desc = "Fugitive (diff): commit (with function context)",
-      })
-
-      map({
-        mode = "n",
-        lhs = "<C-g>dF",
-        rhs = "vertical Git diff --cached -W --function-context",
-        desc = "Fugitive (diff): staged (with function context)",
-      })
-
-      map({
-        mode = "n",
-        lhs = "<C-g>dw",
+        lhs = "<C-g>dhw",
         rhs = function()
           local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
@@ -739,12 +795,12 @@ return {
           end
           util.overseer_runner({ cmds = "git diff --color-words" })
         end,
-        desc = "Git (Overseer): highlight changed words",
+        desc = "Overseer: emphasize changed words",
       })
 
       map({
         mode = "n",
-        lhs = "<C-g>dm",
+        lhs = "<C-g>dhm",
         rhs = function()
           local hash, _, _ = git.latest_commit({ repo_name = github.repo().name })
           if not hash then
@@ -752,7 +808,36 @@ return {
           end
           util.overseer_runner({ cmds = "git diff --color-moved" })
         end,
-        desc = "Git (Overseer): highlight moved lines",
+        desc = "Overseer: emphasize moved lines",
+      })
+
+      -- Diff (index / staging):
+      map({
+        mode = "n",
+        lhs = "<C-g>dic",
+        rhs = "Git diff --cached -U0",
+        desc = "Git: no context",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>diC",
+        rhs = "Git diff --cached -U0 -- %",
+        desc = "Git: no context (current file)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>dif",
+        rhs = "vertical Git diff -p --stat --cached --function-context",
+        desc = "Fugitive: function context (vertical)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>diF",
+        rhs = "Git diff -p --stat --cached --function-context",
+        desc = "Fugitive: function context (horizontal)",
       })
 
       -- Fetch/Pull:
