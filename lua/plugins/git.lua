@@ -323,7 +323,7 @@ return {
         mode = "n",
         lhs = "<C-g>!",
         rhs = "Gwrite|Git commit --amend --no-edit|Git push --force",
-        desc = "Fugitive: stage current file → amend last commit (no edit) → force push",
+        desc = "Fugitive: stage → amend (no edit) → force push",
       })
 
       -- Stash push:
