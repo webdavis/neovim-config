@@ -612,7 +612,7 @@ return {
         return table.concat(lines, "\n\n")
       end
 
-      local function show_all_branches()
+      local function show_all_local_branches_with_info()
         local all_branches = git.all_branches()
         if not all_branches or #all_branches == 0 then
           vim.notify("No Git branches available!", log_info)
@@ -626,9 +626,9 @@ return {
 
       map({
         mode = "n",
-        lhs = "<C-g>ba",
-        rhs = show_all_branches,
-        desc = "Git (branch): show all branches",
+        lhs = "<C-g>bv",
+        rhs = show_all_local_branches_with_info,
+        desc = "Git (branch): show all local + commits",
       })
 
       -- stylua: ignore start
