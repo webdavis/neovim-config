@@ -583,10 +583,10 @@ return {
 
       -- stylua: ignore start
       -- Commit:
-      map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit --verbose", desc = "Fugitive: commit" })
-      map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: commit (only current file)" })
-      map({ mode = "n", lhs = "<C-g>ca", rhs = "Git commit --amend", desc = "Fugitive: commit --amend" })
-      map({ mode = "n", lhs = "<C-g>cn", rhs = "Git commit --amend --no-edit", desc = "Fugitive: commit --amend --no-edit" })
+      map({ mode = "n", lhs = "<C-g>cc", rhs = "Git commit --verbose", desc = "Fugitive: entire index (all staged changes)" })
+      map({ mode = "n", lhs = "<C-g>cf", rhs = "Git commit %", desc = "Fugitive: current file only" })
+      map({ mode = "n", lhs = "<C-g>ca", rhs = "Git commit --amend --verbose", desc = "Fugitive: amend latest (edit message)" })
+      map({ mode = "n", lhs = "<C-g>cn", rhs = "Git commit --amend --no-edit", desc = "Fugitive: amend latest (don't edit message)" })
       -- stylua: ignore end
 
       map({
@@ -601,7 +601,7 @@ return {
           vim.fn.setreg('"', summary .. "\n\n" .. (body or ""))
           vim.cmd("normal! ]p")
         end,
-        desc = "Fugitive: paste latest commit into buffer",
+        desc = "Fugitive: paste latest message into buffer",
       })
 
       -- An interactive command to amend the author/email of the latest commit:
@@ -636,7 +636,7 @@ return {
             end)
           end)
         end,
-        desc = "Fugitive: change the author of the latest commit",
+        desc = "Fugitive: amend latest (author only)",
       })
 
       -- Log:
