@@ -509,7 +509,7 @@ return {
         return table.concat(lines, "\n")
       end
 
-      local function show_git_branch()
+      local function show_current_git_branch()
         local branch = git.current_branch()
         if not branch then
           return
@@ -524,9 +524,9 @@ return {
 
       map({
         mode = "n",
-        lhs = "<C-g>bB",
-        rhs = show_git_branch,
-        desc = "Git (branch): show current + commit (copy hash to +)",
+        lhs = "<C-g>bc",
+        rhs = show_current_git_branch,
+        desc = "Git (branch): current + commit (copy hash to +)",
       })
 
       -- Helper functions for formatting:
