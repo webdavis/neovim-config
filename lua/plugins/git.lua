@@ -477,7 +477,7 @@ return {
         local sections = {}
 
         if summary then
-          table.insert(sections, { "\n" .. summary })
+          table.insert(sections, { summary })
           if body then
             table.insert(sections, { "\n" .. body })
           end
@@ -519,7 +519,7 @@ return {
         local sections = build_sections(branch, hash, summary, body)
         local message = sections_to_message(sections)
 
-        vim.notify(message, vim.log.levels.INFO, { title = "Active Git Branch", timeout = 0 })
+        vim.notify(message, vim.log.levels.INFO, { title = "Active Git Branch & Latest Commit", timeout = 0 })
       end
 
       map({
