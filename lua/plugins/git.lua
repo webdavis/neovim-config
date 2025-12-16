@@ -1019,7 +1019,7 @@ return {
 
         local mapping_desc = page_desc
         if url_suffix == "" and use_current_branch then
-          mapping_desc = ("Branch <%s>"):format(mapping_desc)
+          mapping_desc = ("Current Branch (%s)"):format(mapping_desc)
         end
 
         local mapping_table = {
