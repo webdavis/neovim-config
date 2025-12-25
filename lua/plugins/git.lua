@@ -900,9 +900,11 @@ return {
       map({ mode = "n", lhs = "<C-g>Fp", rhs = "Git pull", desc = "Fugitive: pull" })
       map({ mode = "n", lhs = "<C-g>Fr", rhs = "Git pull --rebase", desc = "Fugitive: pull --rebase" })
 
+      -- stylua: ignore start
       -- Push:
       map({ mode = "n", lhs = "<C-g>pp", rhs = "Git push", desc = "Fugitive: push" })
-      map({ mode = "n", lhs = "<C-g>pf", rhs = "Git push --force", desc = "Fugitive: push --force" })
+      map({ mode = "n", lhs = "<C-g>pf", rhs = "Git push --force-with-lease", desc = "Fugitive: push --force-with-lease" })
+      -- stylua: ignore end
 
       -- An interactive `git push -u origin <current_branch>` implementation:
       --   ∙ Prompts the user for confirmation before pushing the current branch to GitHub.
