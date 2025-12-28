@@ -57,14 +57,14 @@ return {
       desc = "Snacks: search all todo-comments keywords",
     },
     {
-      "[k",
+      "[T",
       function()
         require("todo-comments").jump_prev({ keywords = todo_keywords })
       end,
       desc = "Jump to previous todo-comments keyword",
     },
     {
-      "]k",
+      "]T",
       function()
         require("todo-comments").jump_next({ keywords = todo_keywords })
       end,
