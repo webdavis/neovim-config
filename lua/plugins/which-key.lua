@@ -39,6 +39,7 @@ return {
         { "<leader>G", group = "gh" },
         { "<leader>gh", group = "GitHub (Octo)" },
         { "<leader>h", group = "harpoon" },
+        { "<leader>i", group = "inspect" },
         { "<leader>j", group = "treejs" },
         { "<leader>L", group = "lazyvim" },
         { "<leader>l", group = "LSP" },

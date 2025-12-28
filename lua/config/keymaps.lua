@@ -158,7 +158,7 @@ map({
   mode = "n",
   lhs = "<leader>ip",
   rhs = vim.show_pos,
-  desc = "Inspect Pos",
+  desc = "Inspect: syntax under cursor",
 })
 
 map({
@@ -168,7 +168,7 @@ map({
     vim.treesitter.inspect_tree()
     vim.api.nvim_input("I")
   end,
-  desc = "Inspect Tree",
+  desc = "Inspect: treesitter syntax tree",
 })
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓
