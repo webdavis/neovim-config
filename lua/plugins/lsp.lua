@@ -184,7 +184,6 @@ return {
         "impl",
         "markdown-toc",
         "markdownlint-cli2",
-        "mdformat",
         -- "misspell",
         "nil",
         "nixfmt",
