@@ -2,7 +2,9 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   dependencies = {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
     {
       "nvim-treesitter/nvim-treesitter-context",
       opts = {
