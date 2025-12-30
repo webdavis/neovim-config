@@ -75,6 +75,8 @@ return {
           changedelete = { text = "▎" },
         },
         signs_staged_enable = true,
+        signcolumn = true,
+        numhl = true,
         on_attach = function(bufnr)
           -- `bufnr` comes from `on_attach` and ensures the mapping only works in this buffer.
 
