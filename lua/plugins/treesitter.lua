@@ -267,11 +267,13 @@ return {
       group = treesitter_setup_group,
       desc = "Enable treesitter highlighting and indentation",
       callback = function(event)
-        if ignore_filetypes[event.match] then
+        local filetype = event.match
+
+        if ignore_filetypes[filetype] then
           return
         end
 
-        local language = vim.treesitter.language.get_lang(event.match) or event.match
+        local language = vim.treesitter.language.get_lang(filetype) or filetype
         local buffer = event.buf
 
         if not enable_treesitter(buffer, language) then
