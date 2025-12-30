@@ -1,11 +1,16 @@
 return {
   "stevearc/overseer.nvim",
-  version = "1.6.0", -- (per Overseer warning about upcoming breaking changes)
   opts = {},
   config = function()
     local overseer = require("overseer")
     overseer.setup({
       -- Default task strategy
+      output = {
+        -- Use a terminal buffer to display output. If false, a normal buffer is used
+        use_terminal = false,
+        -- If true, don't clear the buffer when a task restarts
+        preserve_output = false,
+      },
       strategy = "terminal",
       open_on_start = true,
       -- Template modules to load
@@ -16,6 +21,8 @@ return {
       dap = true,
       -- Configure the task list
       task_list = {
+        -- Default direction. Can be "left", "right", or "bottom"
+        direction = "right",
         -- Default detail level for tasks. Can be 1-3.
         default_detail = 1,
         -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
@@ -31,37 +38,42 @@ return {
         height = nil,
         -- String that separates tasks
         separator = "────────────────────────────────────────",
-        -- Default direction. Can be "left", "right", or "bottom"
-        direction = "left",
+        -- Indentation for child tasks
+        child_indent = { "┃ ", "┣━", "┗━" },
+        -- Function that renders tasks. See lua/overseer/render.lua for built-in options
+        -- and for useful functions if you want to build your own.
+        render = function(task)
+          return require("overseer.render").format_standard(task)
+        end,
+        -- The sort function for tasks
+        sort = function(a, b)
+          return require("overseer.task_list").default_sort(a, b)
+        end,
         -- Set keymap to false to remove default behavior
         -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
-        bindings = {
-          ["?"] = "ShowHelp",
-          ["g?"] = "ShowHelp",
-          ["<CR>"] = "RunAction",
-          ["<C-e>"] = "Edit",
-          ["o"] = "Open",
-          ["<C-v>"] = "OpenVsplit",
-          ["<C-s>"] = "OpenSplit",
-          ["<C-f>"] = "OpenFloat",
-          ["<C-q>"] = false,
-          ["<C-o>"] = "OpenQuickFix",
-          ["p"] = "TogglePreview",
-          ["<C-l>"] = false,
-          ["<C-h>"] = false,
-          ["<M-l>"] = "IncreaseDetail",
-          ["<M-h>"] = "DecreaseDetail",
-          ["L"] = "IncreaseAllDetail",
-          ["H"] = "DecreaseAllDetail",
-          ["["] = "DecreaseWidth",
-          ["]"] = "IncreaseWidth",
-          ["{"] = "PrevTask",
-          ["}"] = "NextTask",
-          ["<C-k>"] = false,
-          ["<C-j>"] = false,
-          ["<M-k>"] = "ScrollOutputUp",
-          ["<M-j>"] = "ScrollOutputDown",
-          ["q"] = "Close",
+        keymaps = {
+          ["?"] = "keymap.show_help",
+          ["g?"] = "keymap.show_help",
+          ["<CR>"] = "keymap.run_action",
+          ["dd"] = { "keymap.run_action", opts = { action = "dispose" }, desc = "Dispose task" },
+          ["<C-e>"] = { "keymap.run_action", opts = { action = "edit" }, desc = "Edit task" },
+          ["o"] = "keymap.open",
+          ["<C-v>"] = { "keymap.open", opts = { dir = "vsplit" }, desc = "Open task output in vsplit" },
+          ["<C-s>"] = { "keymap.open", opts = { dir = "split" }, desc = "Open task output in split" },
+          ["<C-t>"] = { "keymap.open", opts = { dir = "tab" }, desc = "Open task output in tab" },
+          ["<C-f>"] = { "keymap.open", opts = { dir = "float" }, desc = "Open task output in float" },
+          ["<C-q>"] = {
+            "keymap.run_action",
+            opts = { action = "open output in quickfix" },
+            desc = "Open task output in the quickfix",
+          },
+          ["p"] = "keymap.toggle_preview",
+          ["{"] = "keymap.prev_task",
+          ["}"] = "keymap.next_task",
+          ["<C-k>"] = "keymap.scroll_output_up",
+          ["<C-j>"] = "keymap.scroll_output_down",
+          ["g."] = "keymap.toggle_show_wrapped",
+          ["q"] = { "<CMD>close<CR>", desc = "Close task list" },
         },
       },
       -- See :help overseer-actions
@@ -157,17 +169,21 @@ return {
       component_aliases = {
         -- Most tasks are initialized with the default components
         default = {
-          { "display_duration", detail_level = 2 },
-          "on_output_summarize",
           "on_exit_set_status",
           "on_complete_notify",
-          "on_complete_dispose",
+          "on_output_quickfix",
+          -- { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
         },
         -- Tasks from tasks.json use these components
         default_vscode = {
           "default",
           "on_result_diagnostics",
-          "on_result_diagnostics_quickfix",
+        },
+        -- Tasks created from experimental_wrap_builtins
+        default_builtin = {
+          "on_exit_set_status",
+          "on_complete_dispose",
+          { "unique", soft = true },
         },
       },
       bundles = {
@@ -213,11 +229,20 @@ return {
     local overseer_title = { title = "Overseer" }
 
     vim.api.nvim_create_user_command("OverseerRestartLast", function()
-      local tasks = overseer.list_tasks({ recent_first = true })
+      local task_list = require("overseer.task_list")
+      local tasks = overseer.list_tasks({
+        status = {
+          overseer.STATUS.SUCCESS,
+          overseer.STATUS.FAILURE,
+          overseer.STATUS.CANCELED,
+        },
+        sort = task_list.sort_finished_recently,
+      })
       if vim.tbl_isempty(tasks) then
         vim.notify("No tasks found", vim.log.levels.WARN, overseer_title)
       else
-        overseer.run_action(tasks[1], "restart")
+        local most_recent = tasks[1]
+        overseer.run_action(most_recent, "restart")
       end
     end, {})
 
@@ -239,24 +264,29 @@ return {
       end)
     end, { desc = overseer_watch_run_desc })
 
-    local toggle_runner = function(cmd)
-      -- Close if terminal
-      if vim.bo.buftype == "terminal" then
+    local function toggle_runner(window)
+      if vim.bo.buftype == "nofile" then
         vim.cmd("close")
         return
       end
 
-      -- Check for Overseer window
-      for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        if vim.bo[buf].filetype == "Overseer" then
-          vim.api.nvim_win_close(win, true)
-          return
-        end
-      end
+      -- Check for Overseer window.
+      local task_list = require("overseer.task_list")
+      local tasks = overseer.list_tasks({
+        status = {
+          overseer.STATUS.SUCCESS,
+          overseer.STATUS.FAILURE,
+          overseer.STATUS.CANCELED,
+        },
+        sort = task_list.sort_finished_recently,
+      })
 
-      -- Otherwise, run command
-      vim.cmd(cmd)
+      if vim.tbl_isempty(tasks) then
+        vim.notify("No tasks found", vim.log.levels.WARN, overseer_title)
+      else
+        local most_recent = tasks[1]
+        overseer.run_action(most_recent, "open " .. window)
+      end
     end
 
     map({
@@ -282,29 +312,11 @@ return {
 
     map({
       mode = "n",
-      lhs = "<leader>ob",
-      rhs = "OverseerBuild",
-      remap = false,
-      silent = true,
-      desc = "Overseer: build",
-    })
-
-    map({
-      mode = "n",
       lhs = "<leader>ol",
       rhs = "OverseerRestartLast",
       remap = false,
       silent = true,
       desc = "Overseer: run last task",
-    })
-
-    map({
-      mode = "n",
-      lhs = "<leader>ow",
-      rhs = "OverseerQuickAction watch",
-      remap = false,
-      silent = true,
-      desc = "Overseer: watch",
     })
 
     map({
@@ -364,27 +376,27 @@ return {
 
     map({
       mode = "n",
-      lhs = { "<leader>o%", "<M-8>" },
-      rhs = function()
-        toggle_runner("OverseerQuickAction open vsplit")
-      end,
-      desc = "Overseer: open task in vsplit",
-    })
-
-    map({
-      mode = "n",
       lhs = { '<leader>o"', "<M-7>" },
       rhs = function()
-        toggle_runner("OverseerQuickAction open hsplit")
+        toggle_runner("hsplit")
       end,
       desc = "Overseer: open task in hsplit",
     })
 
     map({
       mode = "n",
+      lhs = { "<leader>o%", "<M-8>" },
+      rhs = function()
+        toggle_runner("vsplit")
+      end,
+      desc = "Overseer: open task in vsplit",
+    })
+
+    map({
+      mode = "n",
       lhs = "<M-;>",
       rhs = function()
-        toggle_runner("OverseerQuickAction open float")
+        toggle_runner("float")
       end,
       desc = "Overseer: open task in floating window",
     })
