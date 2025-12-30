@@ -178,13 +178,13 @@ return {
         "staticcheck", -- go
         "docker-language-server",
         "hadolint", -- Dockerfiles.
-        "kubescape", -- Kubernetes security.
+        -- "kubescape", -- Kubernetes security scanner. (ISSUE: Currently disabled because the download URL in the Mason registry (https://mason-registry.dev/) is broken.)
         "impl",
         "markdown-toc",
         "markdownlint-cli2",
         -- "misspell",
         "nil",
-        "nixfmt",
+        -- "nixfmt", -- (ISSUE: currently disabled because macOS platform is not supported by Mason. Downloaded using Hombrew, instead.)
         "prettierd",
         "revive",
         "shellcheck",
