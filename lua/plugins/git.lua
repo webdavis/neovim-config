@@ -88,10 +88,10 @@ return {
                 vim.cmd.normal({ "]c", bang = true })
               else
                 ---@diagnostic disable-next-line: param-type-mismatch
-                gitsigns.nav_hunk("next")
+                gitsigns.nav_hunk("next", { target = "all" })
               end
             end,
-            desc = "Gitsigns: Go to Next Hunk",
+            desc = "Gitsigns: go to next hunk",
             buffer = bufnr,
           })
 
@@ -103,10 +103,10 @@ return {
                 vim.cmd.normal({ "[c", bang = true })
               else
                 ---@diagnostic disable-next-line: param-type-mismatch
-                gitsigns.nav_hunk("prev")
+                gitsigns.nav_hunk("prev", { target = "all" })
               end
             end,
-            desc = "Gitsigns: Go to Previous Hunk",
+            desc = "Gitsigns: go to previous hunk",
             buffer = bufnr,
           })
 
