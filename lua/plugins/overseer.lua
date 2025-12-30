@@ -373,7 +373,7 @@ return {
 
     map({
       mode = "n",
-      lhs = { "<leader>o'", "<M-7>" },
+      lhs = { '<leader>o"', "<M-7>" },
       rhs = function()
         toggle_runner("OverseerQuickAction open hsplit")
       end,
