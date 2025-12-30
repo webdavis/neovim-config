@@ -255,11 +255,6 @@ return {
       noice = true,
       qf = true,
       toggleterm = true,
-      snacks_picker_input = true,
-      snacks_picker_list = true,
-      snacks_picker_preview = true,
-      oil = true,
-      OverseerList = true,
     }
 
     -- Auto-install parsers and enable highlighting on FileType.
