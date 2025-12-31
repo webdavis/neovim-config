@@ -1,5 +1,30 @@
 -- Keymaps
 
+-- ┏━━━━━━━━━━━━━━━━━┓
+-- ┃    Delegates    ┃
+-- ┗━━━━━━━━━━━━━━━━━┛
+require("custom_api.delegate").setup()
+
+map({
+  mode = "n",
+  lhs = "<leader>dx",
+  rhs = function()
+    local file = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+    vim.cmd("!chmod +x " .. file)
+    vim.notify("⚡ Made *" .. file .. "* executable", vim.log.levels.INFO)
+  end,
+  desc = "Action: chmod +x %>",
+})
+
+map({
+  mode = "n",
+  lhs = "<leader>da",
+  rhs = function()
+    vim.lsp.buf.code_action()
+  end,
+  desc = "LSP: code action",
+})
+
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 -- ┃    Faster File Manipulation    ┃
 -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
@@ -22,17 +47,6 @@ map({ mode = "n", lhs = "<leader>00", rhs = "quit", desc = "Quit: file" })
 map({ mode = "n", lhs = "<leader>0a", rhs = "qa", desc = "Quit: all files" })
 map({ mode = "n", lhs = "<leader>0A", rhs = "qa!", desc = "Quit: all files (force)" })
 
-map({
-  mode = "n",
-  lhs = "<leader>cx",
-  rhs = function()
-    local file = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
-    vim.cmd("!chmod +x " .. file)
-    vim.notify("⚡ Made *" .. file .. "* executable", vim.log.levels.INFO)
-  end,
-  desc = "Action: chmod +x %>",
-})
-
 -- ┏━━━━━━━━━━━━━━┓
 -- ┃    LazyVim   ┃
 -- ┗━━━━━━━━━━━━━━┛
@@ -52,18 +66,6 @@ map({ mode = "n", lhs = "<leader>Ld", rhs = "Lazy debug", desc = "LazyVim: debug
 -- ┃    Mason   ┃
 -- ┗━━━━━━━━━━━━┛
 map({ mode = "n", lhs = "<leader>lm", rhs = "Mason", desc = "Mason: open" })
-
--- ┏━━━━━━━━━━┓
--- ┃    LSP   ┃
--- ┗━━━━━━━━━━┛
-map({
-  mode = "n",
-  lhs = "<leader>ca",
-  rhs = function()
-    vim.lsp.buf.code_action()
-  end,
-  desc = "LSP: code action",
-})
 
 -- ┏━━━━━━━━━━━━━━━━┓
 -- ┃    Movement    ┃
@@ -151,24 +153,24 @@ map({
   sequence = true,
 })
 
--- ┏━━━━━━━━━━━━━━━━━━━┓
--- ┃    Inspections    ┃
--- ┗━━━━━━━━━━━━━━━━━━━┛
+-- ┏━━━━━━━━━━━━━┓
+-- ┃    Debug    ┃
+-- ┗━━━━━━━━━━━━━┛
 map({
   mode = "n",
-  lhs = "<leader>ip",
+  lhs = "<leader>Ds",
   rhs = vim.show_pos,
-  desc = "Inspect: syntax under cursor",
+  desc = "Debug: syntax under cursor",
 })
 
 map({
   mode = "n",
-  lhs = "<leader>it",
+  lhs = "<leader>Dt",
   rhs = function()
     vim.treesitter.inspect_tree()
     vim.api.nvim_input("I")
   end,
-  desc = "Inspect: treesitter syntax tree",
+  desc = "Debug: treesitter syntax tree",
 })
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓

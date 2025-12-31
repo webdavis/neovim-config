@@ -256,7 +256,7 @@ return {
       { "<leader>lt", function() Snacks.picker.lsp_type_definitions() end, desc = "Snacks (LSP): go-to type definition" },
 
       -- Debug:
-      { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Snacks (Debug): profiler scratch buffer" },
+      { "<leader>Dps", function() Snacks.profiler.scratch() end, desc = "Snacks (Debug): profiler scratch buffer" },
 
       -- Scratch Buffer:
       { "<leader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
@@ -408,8 +408,8 @@ return {
             end,
           }):map("<leader>uq")
 
-          Snacks.toggle.profiler():map("<leader>dpp")
-          Snacks.toggle.profiler_highlights():map("<leader>dph")
+          Snacks.toggle.profiler():map("<leader>Dpp")
+          Snacks.toggle.profiler_highlights():map("<leader>Dph")
 
           local function pick_cmd_result(picker_opts)
             local git_root = Snacks.git.get_root()
