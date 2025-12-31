@@ -296,12 +296,12 @@ return {
       mode = "n",
       lhs = "<leader>or",
       rhs = function()
+        vim.cmd("OverseerOpen!")
         vim.cmd("OverseerRun")
-        vim.cmd("OverseerOpen")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: run",
+      desc = "Overseer: run (and open list)",
     })
 
     map({
@@ -309,11 +309,10 @@ return {
       lhs = "<leader>oR",
       rhs = function()
         vim.cmd("OverseerRun")
-        vim.cmd("OverseerOpen!")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: run & open list",
+      desc = "Overseer: run",
     })
 
     map({
