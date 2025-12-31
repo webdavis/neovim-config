@@ -7,11 +7,10 @@ return {
       -- Default task strategy
       output = {
         -- Use a terminal buffer to display output. If false, a normal buffer is used
-        use_terminal = false,
+        use_terminal = true,
         -- If true, don't clear the buffer when a task restarts
         preserve_output = false,
       },
-      strategy = "terminal",
       open_on_start = true,
       -- Template modules to load
       templates = { "builtin", "user.run_script" },
@@ -57,6 +56,7 @@ return {
           ["<CR>"] = "keymap.run_action",
           ["<C-r>"] = { "keymap.run_action", opts = { action = "restart" }, desc = "Restart task" },
           ["<localleader>w"] = { "keymap.run_action", opts = { action = "watch" }, desc = "Watch task" },
+          ["<localleader>W"] = { "keymap.run_action", opts = { action = "unwatch" }, desc = "Unwatch task" },
           ["dd"] = { "keymap.run_action", opts = { action = "dispose" }, desc = "Dispose task" },
           ["<C-e>"] = { "keymap.run_action", opts = { action = "edit" }, desc = "Edit task" },
           ["o"] = "keymap.open",
@@ -268,7 +268,7 @@ return {
     end, { desc = overseer_watch_run_desc })
 
     local function toggle_runner(window)
-      if vim.bo.buftype == "nofile" then
+      if vim.bo.buftype == "terminal" then
         vim.cmd("close")
         return
       end
