@@ -177,7 +177,7 @@ return {
       -- stylua: ignore start
 
       -- Top Pickers:
-      { "<leader><space>", function() Snacks.picker.smart() end, desc = "Snacks: smart find files" },
+      { "<leader>fs", function() Snacks.picker.smart() end, desc = "Snacks: smart find files" },
       { "<leader>s:", function() Snacks.picker.command_history() end, desc = "Snacks: command history" },
       { "<C-g><C-f>", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files" },
       { "<leader>g,", function() Snacks.picker.git_files() end, desc = "Snacks (Git): find files (alt)" },
