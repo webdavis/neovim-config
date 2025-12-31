@@ -292,7 +292,10 @@ return {
     map({
       mode = "n",
       lhs = "<leader>or",
-      rhs = "OverseerRun",
+      rhs = function()
+        vim.cmd("OverseerRun")
+        vim.cmd("OverseerOpen")
+      end,
       remap = false,
       silent = true,
       desc = "Overseer: run",
@@ -323,22 +326,22 @@ return {
       mode = "n",
       lhs = "<leader>oo",
       rhs = function()
-        vim.cmd("OverseerOpen!")
+        vim.cmd("OverseerOpen")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: open (don't focus)",
+      desc = "Overseer: open (and focus)",
     })
 
     map({
       mode = "n",
       lhs = "<leader>oO",
       rhs = function()
-        vim.cmd("OverseerOpen")
+        vim.cmd("OverseerOpen!")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: open (and focus)",
+      desc = "Overseer: open (without focus)",
     })
 
     map({
@@ -356,22 +359,22 @@ return {
       mode = "n",
       lhs = "<leader>ot",
       rhs = function()
-        vim.cmd("OverseerToggle!")
+        vim.cmd("OverseerToggle")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: toggle (don't focus)",
+      desc = "Overseer: toggle (and focus)",
     })
 
     map({
       mode = "n",
       lhs = "<leader>oT",
       rhs = function()
-        vim.cmd("OverseerToggle")
+        vim.cmd("OverseerToggle!")
       end,
       remap = false,
       silent = true,
-      desc = "Overseer: toggle (and focus)",
+      desc = "Overseer: toggle (without focus)",
     })
 
     map({
