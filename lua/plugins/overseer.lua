@@ -277,6 +277,7 @@ return {
       local task_list = require("overseer.task_list")
       local tasks = overseer.list_tasks({
         status = {
+          overseer.STATUS.RUNNING,
           overseer.STATUS.SUCCESS,
           overseer.STATUS.FAILURE,
           overseer.STATUS.CANCELED,
