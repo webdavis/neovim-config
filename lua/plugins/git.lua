@@ -331,34 +331,41 @@ return {
       -- Stash push:
       map({
         mode = "n",
-        lhs = "<C-g>SS",
+        lhs = "<C-g>Sd",
         rhs = "Git stash --include-untracked",
-        desc = "Stash (push): tracked + untracked (default)",
+        desc = "Push: tracked + untracked (default)",
       })
 
       map({
         mode = "n",
         lhs = "<C-g>Se",
         rhs = "Git stash --all",
-        desc = "Stash (push): tracked + untracked + ignored",
+        desc = "Push: all (tracked + untracked + ignored)",
       })
 
       map({
         mode = "n",
         lhs = "<C-g>Sw",
         rhs = "Git stash --keep-index",
-        desc = "Stash (push): working (keep staged changes)",
+        desc = "Push: working (keep staged changes)",
       })
 
       map({
         mode = "n",
         lhs = "<C-g>SW",
         rhs = "Git stash --keep-index --include-untracked",
-        desc = "Stash (push): working + untracked (keep staged changes)",
+        desc = "Push: working + untracked (keep staged changes)",
+      })
+
+      map({
+        mode = "n",
+        lhs = "<C-g>Ss",
+        rhs = "Git stash --staged",
+        desc = "Push: staged",
       })
 
       -- Stash pop:
-      map({ mode = "n", lhs = "<C-g>Sp", rhs = "Git stash pop", desc = "Stash (pop): most recent (default)" })
+      map({ mode = "n", lhs = "<C-g>Sp", rhs = "Git stash pop", desc = "Pop: most recent (default)" })
 
       map({
         mode = "n",
@@ -369,11 +376,11 @@ return {
             vim.cmd("Git stash pop " .. index)
           end
         end,
-        desc = "Stash (pop): by index <#>",
+        desc = "Pop: by index <#>",
       })
 
       -- Stash apply:
-      map({ mode = "n", lhs = "<C-g>Sa", rhs = "Git stash apply", desc = "Stash (apply): most recent (default)" })
+      map({ mode = "n", lhs = "<C-g>Sa", rhs = "Git stash apply", desc = "Apply: most recent (default)" })
 
       map({
         mode = "n",
@@ -384,7 +391,7 @@ return {
             vim.cmd("Git stash apply " .. index)
           end
         end,
-        desc = "Stash (apply): by index <#>",
+        desc = "Apply: by index <#>",
       })
 
       -- Remote:
