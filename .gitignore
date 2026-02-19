@@ -4,3 +4,6 @@
 # Temporarily ignore this folder and all its contents.
 # ⚠️ This is not a safe long-term solution; it only prevents Git tracking for now.
 private/
+
+# Ignore Vim/Neovim swap files.
+*.sw*
