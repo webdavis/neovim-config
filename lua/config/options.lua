@@ -52,6 +52,7 @@ opt.fillchars = {
   eob = " ",
   vert = "│",
 }
+opt.directory = "."
 opt.foldlevel = 99
 opt.foldmethod = "indent"
 opt.foldtext = ""
