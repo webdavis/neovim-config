@@ -9,7 +9,6 @@ local util = require("custom_api.util")
 -- │   Helpers   │
 -- ╰─────────────╯
 local log_info = vim.log.levels.INFO
-local log_trace = vim.log.levels.TRACE
 local log_warning = vim.log.levels.WARN
 local log_error = vim.log.levels.ERROR
 local notify_fugitive_title = { title = "Fugitive" }
