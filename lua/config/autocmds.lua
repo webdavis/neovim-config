@@ -132,6 +132,32 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
+-- Close sidebar windows (Snacks Explorer, Overseer) when they are the last non-floating windows.
+vim.api.nvim_create_autocmd("QuitPre", {
+  group = augroup("close_sidebars_on_quit"),
+  callback = function()
+    local sidebar_windows = {}
+    local floating_windows = {}
+    local windows = vim.api.nvim_list_wins()
+    for _, w in ipairs(windows) do
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_win_get_buf(w) })
+      if filetype:match("snacks_") ~= nil or filetype == "OverseerList" then
+        table.insert(sidebar_windows, w)
+      elseif vim.api.nvim_win_get_config(w).relative ~= "" then
+        table.insert(floating_windows, w)
+      end
+    end
+    if
+      1 == #windows - #floating_windows - #sidebar_windows
+      and vim.api.nvim_win_get_config(vim.api.nvim_get_current_win()).relative == ""
+    then
+      for _, w in ipairs(sidebar_windows) do
+        vim.api.nvim_win_close(w, true)
+      end
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "AutoSaveWritePost",
   group = augroup("auto_save"),
